@@ -4,16 +4,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Battleship_HTTP"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="225" Width="400" ResizeMode="CanMinimize" Background="#FFC7EDFF">
+        xmlns:viewmodel="clr-namespace:Battleship_HTTP.ViewModels"
+        mc:Ignorable="d" Icon="/Resources/navy_.png"
+        Title="Battleship Server" Height="225" Width="400" ResizeMode="CanMinimize" Background="#FFC7EDFF">
 
     <StackPanel Margin="5">
         <TextBlock HorizontalAlignment="Center" FontWeight="Bold" FontSize="28" FontFamily="Arial Black">Batalla Naval - HTTP</TextBlock>
 
-        <WrapPanel HorizontalAlignment="Center" Margin="20">
-            <Button Margin="10,0" FontSize="22" Padding="5" FontWeight="DemiBold" Width="120" FontFamily="Arial" Foreground="White" Background="#00b100" BorderBrush="Transparent">Iniciar</Button>
-            <!--<Button Margin="10,0" FontSize="22" Padding="5" FontWeight="DemiBold" Width="120" FontFamily="Arial" Foreground="White" Background="#ff0013" BorderBrush="Transparent">Detener</Button>-->
+        <WrapPanel HorizontalAlignment="Center" Margin="25">
+            <Button Command="{Binding ToogleServidorCommand}" Margin="10,0" FontSize="22" Padding="5" FontWeight="DemiBold" Width="120" FontFamily="Arial" Foreground="White" BorderBrush="Transparent">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Encendido}" Value="False">
+                                <Setter Property="Background" Value="#00b100"></Setter>
+                                <Setter Property="Content" Value="Iniciar"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Encendido}" Value="True">
+                                <Setter Property="Background" Value="#ff0013"></Setter>
+                                <Setter Property="Content" Value="Detener"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </WrapPanel>
-        <TextBlock HorizontalAlignment="Center" FontSize="18" Padding="5,10" TextAlignment="Center" FontFamily="Arial" Foreground="White" Background="#FFFF9396" Width="280" TextWrapping="Wrap"> Error al iniciar el servidor</TextBlock>
+        <TextBlock Text="{Binding Error}" HorizontalAlignment="Center" FontSize="18" Padding="5,10" TextAlignment="Center" FontFamily="Arial" Foreground="White" Background="#FFFF9396" Width="280" TextWrapping="Wrap">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Error}" Value="">
+                            <Setter Property="Visibility" Value="Hidden"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
     </StackPanel>
 </Window>
