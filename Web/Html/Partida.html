@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battleship</title>
+    <link rel="styelesheet" source="/web/css/style.css">
+    <link rel="script" source="/web/js/index.js">
+</head>
+<body>
+    <main>
+        <h1>Batalla Naval</h1>
+        <div id="tarjeta">
+            <span>Id de sala #<b>123</b></span>
+            <span>Partida en curso</span>
+            <span>Turno de Jugador 1</span>
+        </div>
+
+        <div class="reloj">
+            <span>Tiempo:</span>
+            <span>020</span>
+        </div>
+
+        <table id="tablaJugador">
+            <thead>
+                <tr>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                    <th>D</th>
+                    <th>E</th>
+                    <th>F</th>
+                    <th>G</th>
+                    <th>H</th>
+                    <th>I</th>
+                    <th>J</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+
+        </table>
+
+        <div id="movmimiento">
+            <img src="/web/Resources/Images/flair_arrow_center_1.png" />
+            <img src="/web/Resources/Images/flair_arrow_center_2.png" />
+        </div>
+        <div id="contenedor">
+            <img src="/web/Resources/Images/navy_2809732.png" />
+            <img src="/web/Resources/Images/marine_3212013.png" style="height:32px; width: 60px;" />
+        </div>
+
+        <div id="instrucciones">
+            <strong>Objetivo:</strong>
+            <span>Hunde la flota de 5 naves que tiene tu adversario antes de que él hunda la tuya</span>
+
+            <strong>Instrucciones:</strong>
+            <p>
+                Arrastra las 5 naves del recuadro inferior al lugar de la cuadricula donde creas que serán más dificil de adivinar. <br/> 
+                <small>Puedes a acomodarlas todo lo que quieras durante la fase de despliegue</small>
+                Durante la fase de ataque tendrás que intentar adivinar la posición del enemigo,
+                Seleccionarla y analizar las posibles ubicaciones en base a la información que te de el tablero.
+            </p>
+            <p>
+                La fase de despliegue dura 40 segundos y durante el ataque, cada jugador tendrá 15 segundos por jugada. <br />
+                En caso de que una bomba haya tocado a la flota enemiga, el jugador atacante podrá repetir turno.
+            </p>
+            <button type="button">Ok!</button>
+        </div>
+
+        <div id="resultados">
+            <span>sala #1234</span>
+            <h3>Jugador 1 gana!!</h3>
+            
+            <button>Volver a jugar</button>
+            <button>Salir</button>
+        </div>
+
+    </main>
+</body>
+
+</html>

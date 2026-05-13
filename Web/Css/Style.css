@@ -1,0 +1,165 @@
+﻿
+:root {
+    --primaryColor: #1f3c88;
+    /*
+    --accentColor: #365dc1;
+    --cancelColor: #878787;
+    
+    --accentColorHover: #406fe7;
+    --cancelColorHover: #adadad; */
+
+    --backgroundColorTable: #bed2f3;
+    --borderColorTable: #0505a3;
+    --borderColorTd: #154076;
+    --fondoOscuro: #163252;
+    --gray: #ccc;
+    --colorRecuadro: #e5e7eb;
+    --mainBackground: #f1f3f6;
+    --secondaryBackground: #ffffff;
+    --TextoClaro: #e6f0f1;
+    --Green: #1cb03a;
+    --Yellow: #fde935;
+    --Orange: #ed7d31;
+    --Red: #ff0000;
+    --LightRed: #ff7575;
+}
+
+html {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: #d3dff2;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+    main h1 {
+        display: block;
+        justify-content: center;
+        text-align: center;
+        background-color: #163252;
+        color: white;
+        padding: 10px;
+        font-size: 2.4em;
+        margin: 0 0 0.8em 0;
+    }
+
+    main #tarjeta {
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        margin: 10px;
+        padding: 10px;
+        background-color: var(--backgroundColorTable);
+        border: 4px solid var(--fondoOscuro);
+    }
+
+        main #tarjeta span {
+            justify-self: center;
+            text-align: center;
+            color: var(--primaryColor);
+            font-size: 1.5em;
+        }
+
+            main #tarjeta span:first-of-type {
+                font-size: 1.3em;
+            }
+
+    main .reloj {
+        width: 120px;
+        display: flex;
+        flex-direction: column;
+        align-self: flex-end;
+        align-items: center;
+        font-size: 1.3em;
+        background-color: var(--fondoOscuro);
+        color: var(--colorRecuadro);
+        margin: 1em 0.5em;
+    }
+
+        main .reloj span:last-child {
+            font-weight: bold;
+        }
+
+
+    main table {
+        border-collapse: collapse;
+        margin-left: 40px; /* Espacio para que los números no se corten */
+        table-layout: fixed;
+        align-self: center;
+    }
+
+
+table tbody {
+    outline-offset: -1px;
+    outline: 2px solid var(--borderColorTable);
+    background-color: #cfe1fd;
+    counter-reset: rowNumber;
+}
+
+/* estos dos estilos tienen que ir juntos, 
+  basicamente cuando se coloca en relative, 
+  se cuenta siempre le tr de thead, así que lo oculto */
+table tr {
+    position: relative;
+}
+
+table thead tr::before {
+    visibility: hidden;
+}
+
+table tbody tr {
+    counter-increment: rowNumber; /* Incrementa en cada fila */
+    position: relative;
+}
+
+    table tbody tr:first-child td {
+        border-top: none;
+    }
+
+    table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+table tr::before {
+    content: counter(rowNumber); /* Muestra el número */
+    position: absolute;
+    left: -20px;
+    font-weight: bold;
+    color: #666;
+    line-height: 30px;
+    z-index: 2;
+}
+
+table tr td {
+    box-sizing: border-box;
+    border: 1px solid var(--borderColorTd);
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    cursor: pointer;
+}
+
+#contenedor {
+    margin: 20px;
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    align-self: center;
+    background-color: blue;
+    border: 10px solid var(--borderColorTable);
+    border-radius: 10px;
+    width: 70%;
+    max-width: 280px;
+}
+
+@media (min-width : 420px) {
+}
