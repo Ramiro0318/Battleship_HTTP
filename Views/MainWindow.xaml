@@ -1,0 +1,19 @@
+﻿<Window x:Class="Battleship_HTTP.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Battleship_HTTP"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="225" Width="400" ResizeMode="CanMinimize" Background="#FFC7EDFF">
+
+    <StackPanel Margin="5">
+        <TextBlock HorizontalAlignment="Center" FontWeight="Bold" FontSize="28" FontFamily="Arial Black">Batalla Naval - HTTP</TextBlock>
+
+        <WrapPanel HorizontalAlignment="Center" Margin="20">
+            <Button Margin="10,0" FontSize="22" Padding="5" FontWeight="DemiBold" Width="120" FontFamily="Arial" Foreground="White" Background="#00b100" BorderBrush="Transparent">Iniciar</Button>
+            <!--<Button Margin="10,0" FontSize="22" Padding="5" FontWeight="DemiBold" Width="120" FontFamily="Arial" Foreground="White" Background="#ff0013" BorderBrush="Transparent">Detener</Button>-->
+        </WrapPanel>
+        <TextBlock HorizontalAlignment="Center" FontSize="18" Padding="5,10" TextAlignment="Center" FontFamily="Arial" Foreground="White" Background="#FFFF9396" Width="280" TextWrapping="Wrap"> Error al iniciar el servidor</TextBlock>
+    </StackPanel>
+</Window>
