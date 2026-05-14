@@ -19,22 +19,32 @@ namespace Battleship_HTTP.ViewModels
         public MainViewModel(JuegoService service)
         {
             this.service = service;
+            service.ToogleServidor += Service_ToogleServidor;
+            service.MensajeError += Service_MensajeError;
         }
 
+        private void Service_MensajeError(string error)
+        {
+            Error = error;
+        }
 
         [RelayCommand]
         public void ToogleServidor()
         {
             if (!Encendido)
             {
-                Encendido = true;
-                Error = "";
+                //Error = "";
+                service.Iniciar();
             }
             else
             {
-                Encendido = false;
-                Error = "Servidor Apagado";
+                service.Detener();
             }
+        }
+        private void Service_ToogleServidor(bool encendido, string? mensaje)
+        {
+            Encendido = encendido;
+            Error = mensaje;
         }
     }
 }
