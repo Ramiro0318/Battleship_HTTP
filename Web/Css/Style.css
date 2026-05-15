@@ -9,6 +9,7 @@
     --cancelColorHover: #adadad; */
 
     --backgroundColorTable: #bed2f3;
+    --backgroundl: #b4d6f7;
     --borderColorTable: #0505a3;
     --borderColorTd: #154076;
     --fondoOscuro: #163252;
@@ -39,10 +40,116 @@ body {
 main {
     display: flex;
     flex-direction: column;
-    background-color:red;
 }
 
-    main h1 {
+    header h1 {
+        display: block;
+        justify-content: center;
+        text-align: center;
+        background-color: #163252;
+        color: white;
+        padding: 25px 10px;
+        font-size: 2.6em;
+        margin: 0em 0 0.8em 0;
+    }
+
+    main .menu {
+        justify-self:center;
+        background-color: var(--backgroundColorTable);
+        border: 4px outset var(--borderColorTd);
+        border-radius: 50px;
+        position: absolute;
+        justify-self: center;
+        width: 80%;
+        max-width: 600px;
+        min-height: 150px;
+        left: 50%;
+        right: 50%;
+        top: 25%;
+        font-size: 22px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 20px 10px;
+        min-height: 210px;
+        overflow: hidden;
+    }
+
+    main .menu form {
+        width: 100%;
+        height: 100%;
+        font-size: 22px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        margin: 10px;
+        min-height: 100%;
+    }
+
+    main #ingreso form label {
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    main .menu small {
+        text-align: center;
+    }
+
+    main .menu button, .menu#sala form button, #instrucciones button, #resultados button {
+        min-width: 230px;
+        width: 80%;
+        height: 40px;
+        background: var(--mainBackground);
+        border: 40%;
+        padding: 0;
+        box-shadow: 4px 5px 4px var(--borderColorTable);
+        color: var(--borderColorTd);
+        font-weight: bold;
+        font-size: 1em;
+        overflow: hidden;
+    }
+
+    main .menu form button {
+        width: fit-content;
+        align-self: center;
+        padding: 0.2em 0.8em;
+    }
+
+    main .menu form input {
+        padding: 0.3em 0.3em;
+    }
+    
+    main .menu form input[type="text"] {
+        font-size: 16px;
+    }
+
+    main .menu#sala form input[type="text"] {
+        text-align: center;
+        font-size: 0.9em;
+    }
+
+    main .menu dl {
+        align-self: flex-start;
+        margin: 20px 10%;
+        width: calc(100% - 20%);
+        font-size: 1em;
+        background-color: var(--backgroundl);
+    }
+
+    main .menu dd {
+        margin: 0 0 10px 50px;
+        font-size: 1.15em;
+    }
+
+
+
+
+    main .tituloJuego {
         display: block;
         justify-content: center;
         text-align: center;
@@ -51,12 +158,15 @@ main {
         padding: 10px;
         font-size: 2.4em;
         margin: 0 0 0.8em 0;
+
     }
 
     main #tarjeta {
         justify-content: center;
         display: flex;
         flex-direction: column;
+        align-self: center;
+        width: calc(100% - 40px);
         margin: 10px;
         padding: 10px;
         background-color: var(--backgroundColorTable);
@@ -70,9 +180,9 @@ main {
             font-size: 1.5em;
         }
 
-            main #tarjeta span:first-of-type {
-                font-size: 1.3em;
-            }
+        main #tarjeta span:first-of-type {
+            font-size: 1.3em;
+        }
 
     main .reloj {
         width: 120px;
@@ -93,7 +203,7 @@ main {
 
     main table {
         border-collapse: collapse;
-        margin-left: 40px; /* Espacio para que los números no se corten */
+        margin-left: 10px; /* Espacio para que los números no se corten */
         table-layout: fixed;
         align-self: center;
     }
@@ -111,11 +221,13 @@ table tbody {
   se cuenta siempre le tr de thead, así que lo oculto */
 table tr {
     position: relative;
+    color: #666;
 }
 
 table thead tr::before {
     visibility: hidden;
 }
+
 
 table tbody tr {
     counter-increment: rowNumber; /* Incrementa en cada fila */
@@ -133,18 +245,18 @@ table tbody tr {
 table tr::before {
     content: counter(rowNumber); /* Muestra el número */
     position: absolute;
-    left: -20px;
+    left: -23px;
     font-weight: bold;
     color: #666;
-    line-height: 30px;
+    line-height: 32px;
     z-index: 2;
 }
 
 table tr td {
     box-sizing: border-box;
     border: 1px solid var(--borderColorTd);
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     padding: 0;
     cursor: pointer;
 }
@@ -162,5 +274,271 @@ table tr td {
     max-width: 280px;
 }
 
+main #instrucciones, main #resultados {
+    position: absolute;
+    width: 70%;
+    min-width: 300px;
+    top: 40%;
+    left: 50%;
+    right: auto;
+    background-color: var(--backgroundColorTable);
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    display:  flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 5px;
+}
+
+main #instrucciones strong {
+    font-size: 1.4em;
+}
+
+main #instrucciones span {
+    margin: 0 0 12px;
+    font-size: 1.3em;
+}
+
+main #instrucciones p {
+    font-size: 1.1em;
+}
+
+#instrucciones button, #resultados button {
+    align-self: center;
+}
+
+main #resultados {
+    gap: 15px;
+}
+
+#resultados span {
+    align-self: center;
+    font-size: 1.7em;
+}
+
+#resultados h3 {
+    font-size: 1.8em;
+    display: inline;
+    align-content: center;
+    text-align: center;
+}
+
+
+main #fondo {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: var(--fondoOscuro);
+    z-index: 10;
+    opacity: 50%;
+}
+
+
 @media (min-width : 420px) {
+    header h1 {
+        font-size: 2.7em;
+    }
+
+    main .menu button, .menu#sala form button, #instrucciones button, #resultados button {
+        font-size: 1.25em;
+        height: 43px;
+        min-width: 260px;
+    }
+
+    main .menu#sala form input[type="text"] {
+        font-size: 1em;
+        min-width: 240px;
+    }
+
+    main .menu small {
+        font-size: 1em;
+    }
+
+    main .menu dl {
+        font-size: 1.1em;
+        margin: 20px 50px;
+        width: calc(100% - 20%);
+    }
+
+    main .menu dd {
+        font-size: 1.2em;
+        margin: 0 0 10px 50px;
+    }
+
+    table thead tr th {
+        line-height: 30px;
+        font-size: 18px;
+    }
+    table tr::before {
+        left: -30px;
+        font-size: 18px;
+    }
+
+}
+
+@media (min-width : 540px) {
+    header h1 {
+        font-size: 2.7em;
+    }
+
+    main .menu {
+        width: 500px;
+        gap: 13px
+    }
+
+    main #ingreso form label {
+        font-size: 1.6em;
+    }
+
+    main .menu form input[type="text"] {
+        font-size: 0.8em;
+        width: 200px;
+    }
+    
+    main .menu#sala form input[type="text"] {
+        font-size: 1.1em;
+        width: 300px;
+    }
+
+    main #resultados span {
+        font-size: 1.8em;
+    }
+
+
+    main .menu small {
+        font-size: 1.2em;
+    }
+
+    main .menu dl {
+        font-size: 1.28em;
+    }
+
+    main .menu dd {
+        font-size: 1.35em;
+    }
+
+    main .menu button, .menu#sala form button, #instrucciones button, #resultados button {
+        font-size: 1.3em;
+        height: 46px;
+        min-width: 300px;
+        width: 80%;
+    }
+
+    main #tarjeta {
+        width: 500px;
+        
+    }
+
+    main .reloj {
+        position: relative;
+        align-self: center;
+        width: 120px;
+        left: 200px;
+        font-size: 1.6em;
+        margin: 1em 0.5em;
+    }
+        
+    #resultados span {
+        font-size: 1.8em;
+    }
+
+    #resultados h3 {
+        font-size: 2em;
+    }
+
+    table tr td {
+        width: 40px;
+        height: 40px;
+    }
+
+    table thead tr th {
+        line-height: 40px;
+        font-size: 18px;
+    }
+    table tr::before {
+        left: -30px;
+        font-size: 18px;
+        line-height: 40px;
+    }
+}
+
+@media (min-width : 720px) {
+
+    header h1 {
+        font-size: 2.9em;
+    }
+
+    main .menu {
+        width: 500px;
+        gap: 17px
+    }
+
+    main .menu form input[type="text"] {
+        font-size: 1em;
+    }
+
+    main .menu#sala form input[type="text"] {
+        font-size: 1.25em;
+        width: 320px;
+    }
+
+    main .menu small {
+        font-size: 1.2em;
+    }
+
+    main .menu dl {
+        font-size: 1.3em;
+    }
+
+    main .menu dd {
+        font-size: 1.35em;
+    }
+
+    main #resultados {
+        width: 530px;
+    }
+
+    #resultados span {
+        font-size: 1.85em;
+    }
+
+    #resultados h3 {
+        font-size: 2.1em;
+    }
+
+    #resultados button {
+        font-size: 1.4em;
+    }
+
+    table tr td {
+        width: 48px;
+        height: 48px;
+    }
+
+    table thead tr th {
+        line-height: 48px;
+        font-size: 21px;
+    }
+    table tr::before {
+        left: -48px;
+        font-size: 21px;
+    }
+
+}
+@media (min-width : 1120px) {
+
+    table tr td {
+        width: 52px;
+        height: 52px;
+    }
+
+    table thead tr th {
+        line-height: 52px;
+        font-size: 24px;
+    }
+    table tr::before {
+        left: -35px;
+        font-size: 24px;
+        line-height: 52px;
+    }
 }

@@ -71,21 +71,25 @@ namespace Battleship_HTTP.Services
             var request = context.Request;
             var response = context.Response;
 
+            var url = request.RawUrl ?? "";
             try
             {
-                if (request.HttpMethod == "GET" && request.RawUrl == "/battleship/")
+                if (request.HttpMethod == "GET" && url == "/battleship/")
                 {
                     EntregarRecurso(response, "Index.html");
-                    
                 }
-                else if (request.RawUrl.StartsWith("/battleship/css/"))
+                if (request.HttpMethod == "POST" && url == "/battleship/partida")
                 {
-                    string archivo = Path.GetFileName(request.RawUrl);
+                    EntregarRecurso(response, "Index.html");
+                }
+                else if (url.StartsWith("/battleship/css/"))
+                {
+                    string archivo = Path.GetFileName(url);
                     EntregarRecurso(response, archivo);
                 }
-                else if (request.RawUrl.StartsWith("/battleship/js/"))
+                else if (url.StartsWith("/battleship/js/"))
                 {
-                    string archivo = Path.GetFileName(request.RawUrl);
+                    string archivo = Path.GetFileName(url);
                     EntregarRecurso(response, archivo);
                 }
                 else //if
@@ -93,6 +97,13 @@ namespace Battleship_HTTP.Services
 
                 }
             }
+            //else if (request.RawUrl.StartsWith("/battleship/images/"))
+            //{
+            //    string archivo = request.RawUrl.Replace("/battleship/", "");
+            //    string ruta = Path.Combine("Web", archivo);
+
+            //    ServirArchivo(response, ruta, "image/png");
+            //}
             catch (Exception ex)
             {
                 response.StatusCode = 500;

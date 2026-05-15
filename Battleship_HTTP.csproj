@@ -23,9 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Web\css\Style.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Web\html\Index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
