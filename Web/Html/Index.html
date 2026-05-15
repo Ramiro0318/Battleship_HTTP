@@ -13,33 +13,33 @@
     </header>
     <main>
 
-         <div id="ingreso" class="menu invisible">
-            <form>
-                <label for="nombreUsuario">Ingresa tu nombre</label>
-                <input id="nombreUsuario" type="text" />
+        <button id="cerrarSesion" class="invisible">Cerrar sesión</button>
 
-                <button id="ingresarNombre" type="submit">Siguiente</button>
-            </form>
+         <div id="ingreso" class="menu">
+             <form>
+                 <label for="nombreUsuario">Ingresa tu nombre</label>
+                 <input id="nombreUsuario" type="text" required />
+
+                 <span id="errorIngreso"></span>
+
+                 <button id="ingresarNombre" >Siguiente</button>
+             </form>
         </div> 
 
          <div id="seleccion" class="menu invisible">
-            <button id="matchmaking">Emparejamiento libre</button>
-            <button id="crearSala">Crear sala</button>
-            <button id="unirseSala">Unirse a sala</button>
-        </div> 
+             <button id="matchmaking">Emparejamiento libre</button>
+             <button id="crearSala">Crear sala</button>
+             <button id="unirseSala">Unirse a sala</button>
+         </div> 
 
          <div id="sala" class="menu invisible">
             <form>
-                <input id="numeroSala" type="text" placeholder="Ingresa el número de sala" />
-                <dl title="Jugadores">
-                    <dt>Jugador 1:</dt>
-                    <dd>Ramiro</dd>
-                    <dt>Jugador 2:</dt>
-                    <dd>Zapato</dd>
-                </dl>
-                <small> 1 de 2 jugadores listos...</small>
+                <input id="numeroSala" type="text" placeholder="Ingresa el número de sala" required />
 
-                <button class="listo">Iniciar</button>
+                <span id="errorNumSala"></span>
+
+                <button id="buscar">Buscar</button>
+                <button type="button" class="cancelar">Cancelar</button>
             </form>
         </div> 
 
@@ -54,7 +54,8 @@
             </dl>
 
             <small> 1 de 2 jugadores listos...</small>
-            <button class="iniciar">Iniciar</button>
+            <button class="listo">Listo</button>
+            <button type="button" class="cancelar">Regresar</button>
         </div>
 
        
