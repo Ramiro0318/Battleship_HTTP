@@ -333,6 +333,9 @@ main #fondo {
     opacity: 50%;
 }
 
+.invisible {
+    visibility: hidden;
+}
 
 @media (min-width : 420px) {
     header h1 {

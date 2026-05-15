@@ -92,7 +92,7 @@ namespace Battleship_HTTP.Services
                     string archivo = Path.GetFileName(url);
                     EntregarRecurso(response, archivo);
                 }
-                else //if
+                else if(request.HttpMethod == "POST")
                 {
 
                 }

@@ -13,21 +13,22 @@
     </header>
     <main>
 
-        <!-- <div class="menu" id="ingreso">
+         <div id="ingreso" class="menu invisible">
             <form>
-
                 <label for="nombreUsuario">Ingresa tu nombre</label>
                 <input id="nombreUsuario" type="text" />
 
-                <button type="submit">Siguiente</button>
+                <button id="ingresarNombre" type="submit">Siguiente</button>
             </form>
-        </div> -->
-        <!-- <div class="menu" id="seleccion">
-            <button>Emparejamiento libre</button>
-            <button>Crear sala</button>
-            <button>Unirse a sala</button>
-        </div> -->
-        <!-- <div class="menu" id="sala">
+        </div> 
+
+         <div id="seleccion" class="menu invisible">
+            <button id="matchmaking">Emparejamiento libre</button>
+            <button id="crearSala">Crear sala</button>
+            <button id="unirseSala">Unirse a sala</button>
+        </div> 
+
+         <div id="sala" class="menu invisible">
             <form>
                 <input id="numeroSala" type="text" placeholder="Ingresa el número de sala" />
                 <dl title="Jugadores">
@@ -38,11 +39,11 @@
                 </dl>
                 <small> 1 de 2 jugadores listos...</small>
 
-                <button>Iniciar</button>
+                <button class="listo">Iniciar</button>
             </form>
-        </div> -->
+        </div> 
 
-        <div class="menu" id="espera">
+        <div id="espera" class="menu invisible">
             <span>No. de sala <b>#123</b></span>
 
             <dl title="Jugadores">
@@ -53,9 +54,10 @@
             </dl>
 
             <small> 1 de 2 jugadores listos...</small>
-            <button>Iniciar</button>
+            <button class="iniciar">Iniciar</button>
         </div>
 
+       
     </main>
 </body>
 </html>

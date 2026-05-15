@@ -11,13 +11,13 @@
     <main>
         <h1 class="tituloJuego">Batalla Naval</h1>
         <div id="tarjeta">
-            <span>Id de sala #<b>123</b></span>
-            <span>Turno de Jugador 1</span>
+            <span>Id de sala #<b id="idSala">123</b></span>
+            <span id="turno">Turno de Jugador 1</span>
         </div>
 
         <div class="reloj">
             <span>Tiempo:</span>
-            <span>020</span>
+            <span id="tiempoRestante">020</span>
         </div>
 
         <table id="tablaJugador">
@@ -169,13 +169,13 @@
             <img src="/web/Resources/Images/marine_3212013.png" style="height:32px; width: 60px;" />
         </div>
 
-        <!-- <div id="instrucciones">
+        <div id="instrucciones" class="invisible">
             <strong>Objetivo:</strong>
             <span>Hunde la flota de 5 naves que tiene tu adversario antes de que él hunda la tuya</span>
 
             <strong>Instrucciones:</strong>
             <p>
-                Arrastra las 5 naves del recuadro inferior al lugar de la cuadricula donde creas que serán más dificil de adivinar. <br/>
+                Arrastra las 5 naves del recuadro inferior al lugar de la cuadricula donde creas que serán más dificil de adivinar. <br />
                 <small>Puedes a acomodarlas todo lo que quieras durante la fase de despliegue</small>
                 Durante la fase de ataque tendrás que intentar adivinar la posición del enemigo,
                 Seleccionarla y analizar las posibles ubicaciones en base a la información que te de el tablero.
@@ -184,18 +184,18 @@
                 La fase de despliegue dura 40 segundos y durante el ataque, cada jugador tendrá 15 segundos por jugada. <br />
                 En caso de que una bomba haya tocado a la flota enemiga, el jugador atacante podrá repetir turno.
             </p>
-            <button type="button">Ok!</button>
-        </div> -->
-        <!--
-                <div id="resultados">
-                    <span>sala #1234</span>
-                    <h3>Jugador 1 gana!!</h3>
+            <button id="ok" type="button">Ok!</button>
+        </div>
 
-                    <button>Volver a jugar</button>
-                    <button>Salir</button>
-                </div>
+        <div class="invisible" id="resultados">
+            <span>sala #1234</span>
+            <h3>Jugador 1 gana!!</h3>
 
-                <div id="fondo"></div> -->
+            <button class="listo">Volver a jugar</button>
+            <button id="salir">Salir</button>
+        </div>
+
+        <div id="fondo"></div>
     </main>
 </body>
 
