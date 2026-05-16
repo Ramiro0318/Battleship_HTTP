@@ -45,6 +45,36 @@ namespace Battleship_HTTP.Services
             }
         }
 
+        public Sala CrearSalaPrivada(string idJ, string nombreJ)
+        {
+            Sala sala = new Sala()
+            {
+                Id = Salas.SalasList.Count == 0 ? 1 : Salas.SalasList.Max(x => x.Id) + 1,
+                IdHash = r.Next(10000, 100000).ToString(),
+                IdJugador1 = idJ,
+                NombreJugador1 = nombreJ,
+                ListoJugador1 = false,
+                JugadoresListos = 0,
+                Publica = false,
+                Activa = false
+            };
+
+            Salas.SalasList.Add(sala);
+            return sala;
+        }
+
+        public Sala? UnirseSalaPrivada(string numS, string idJ, string nombreJ)
+        {
+            var salaUnirse = Salas.SalasList.Find(x => x.IdHash == numS && x.IdJugador2 == null);
+            if (salaUnirse == null) return null;
+
+            salaUnirse.IdJugador2 = idJ;
+            salaUnirse.NombreJugador2 = nombreJ;
+            salaUnirse.JugadoresListos = (byte)(salaUnirse.ListoJugador1 == true ? 1 : 0);
+            
+            return salaUnirse;
+        }
+
 
         public Sala? ActualizarSala(string numSala, string id, bool listo)
         {

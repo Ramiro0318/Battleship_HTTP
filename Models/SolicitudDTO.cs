@@ -9,6 +9,7 @@ namespace Battleship_HTTP.Models
         public string Id { get; set; } = null!;
         public string Nombre { set; get; } = null!;
         public string? NumSala { set; get; }
+        public bool? Publica { set; get; }
     }
 
     public class SolicitudActualizacionDTO

@@ -123,11 +123,12 @@
     btnBuscar.addEventListener('click', (e) => {
         e.preventDefault();
         num = txtNumSala.value;
-        if (num === "" || num.length >= 5) {
+        errorNumSala.textContent = "";
+        if (num === "" || num.length > 5) {
             errorNumSala.textContent = "Ingresa un numero de sala válido";
         }
         else {
-            errorNumSala.textContent = "";
+            
             buscarSala(num); //tal vez necesito una flag
         }
     });
@@ -157,8 +158,9 @@
         }
         if (!num) num = "";
 
+        let public = num == "" ? true : false;
 
-        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false };
+        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false, Publica : public };
 
         let response = await fetch("/battleship/sala", {
             method: "POST",
@@ -172,9 +174,42 @@
             let salaCreada = await response.json();
             actualizarMenu(salaCreada);
             escucharCambios(salaCreada.IdHash, salaCreada.JugadoresListos);
+            divSala.classList.add("invisible");
+            divEspera.classList.remove("invisible");
+        }
+        else {
+            let errorObj = await response.json();
+            errorNumSala.textContent = errorObj.Info;
         }
     }
-    function crearSala() { }
+
+    async function crearSala()
+    {
+        nombre = localStorage.getItem("nombre");
+        id = localStorage.getItem("IdUsuario");
+
+        if (!id) {
+            id = crypto.randomUUID();
+            localStorage.setItem("IdUsuario", id);
+        }
+        
+        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false, Publica: false  }
+
+        let response = await fetch("/battleship/crear-sala", {
+            method: "POST",
+            body: JSON.stringify(json),
+            headers: {
+                "content-type": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            let salaCreada = await response.json();
+            actualizarMenu(salaCreada);
+            escucharCambios(salaCreada.IdHash, salaCreada.JugadoresListos);
+        }
+    }
+
     async function enviarListo() {
 
         let json = { NumSala: num, Id: id, Listo: listo };
@@ -227,7 +262,7 @@
         if (response.ok) {
             let salaActualizada = await response.json();
 
-            // console.log(salaActualizada);
+            console.log(salaActualizada);
 
             actualizarMenu(salaActualizada);
 
@@ -247,7 +282,8 @@
 
 
 
-    ////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////
     if (tablero) {
         tablero.addEventListener('click', function (event) {
             const celda = event.target;

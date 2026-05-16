@@ -96,17 +96,43 @@ namespace Battleship_HTTP.Services
                     }
                     else
                     {
-                        if (SolicitudSala.NumSala == "")//Mathcmaking
+                        if (SolicitudSala.NumSala == "" && SolicitudSala.Publica == true)//Mathcmaking
                         {
                             var sala = salasService.SolicitarSala(SolicitudSala.Id, SolicitudSala.Nombre);
                             //Enviar respuesta
                             EnviarSala(response, sala);
                         }
-                        else
+                        else if (SolicitudSala.NumSala != null) //Unirse a Sala
                         {
-
-
+                            var sala = salasService.UnirseSalaPrivada(SolicitudSala.NumSala, SolicitudSala.Id, SolicitudSala.Nombre);
+                            //Enviar respuesta
+                            if (sala == null)
+                            {
+                                EnviarInfo(response, "El numero de sala no es correcto", 404); //O está llena
+                            }
+                            else
+                            {
+                                EnviarSala(response, sala);
+                            }
                         }
+                    }
+                }
+                else if (request.HttpMethod == "POST" && url == "/battleship/crear-sala")
+                {
+                    var buffer = new byte[request.ContentLength64];
+                    request.InputStream.ReadExactly(buffer, 0, buffer.Length);
+                    var json = Encoding.UTF8.GetString(buffer);
+
+                    var SolicitudCrear = JsonSerializer.Deserialize<SolicitudDTO>(json);
+
+                    if (SolicitudCrear == null)
+                    {
+                        response.StatusCode = 400;
+                    }
+                    else //Crear sala privada
+                    {
+                        var sala = salasService.CrearSalaPrivada(SolicitudCrear.Id, SolicitudCrear.Nombre);
+                        EnviarSala(response, sala);
                     }
                 }
                 else if (request.HttpMethod == "POST" && url == "/battleship/actualizada")
@@ -150,7 +176,6 @@ namespace Battleship_HTTP.Services
                     }
                     else
                     {
-                        //Sala? sala = null;
                         bool breakEspera = false;
                         var sala = salasService.BuscarSala(solicitud.NumSala);
                         while (!breakEspera)
@@ -251,6 +276,7 @@ namespace Battleship_HTTP.Services
         {
             var json = JsonSerializer.Serialize(sala);
             byte[] buffer = Encoding.UTF8.GetBytes(json);
+
             response.ContentLength64 = buffer.Length;
             response.ContentType = "application/json";
             response.StatusCode = 200;
@@ -258,9 +284,17 @@ namespace Battleship_HTTP.Services
 
         }
 
-        private void EnviarInfo(string info)
+        private void EnviarInfo(HttpListenerResponse response, string info, int statusCode)
         {
-
+            var infoObj = new { Info = info };
+            var jsonError = JsonSerializer.Serialize(infoObj);
+            byte[] buffer = Encoding.UTF8.GetBytes(jsonError);
+            
+            response.ContentLength64 = buffer.Length;
+            response.ContentType = "application/json";
+            response.StatusCode = statusCode;
+            response.OutputStream.Write(buffer, 0, buffer.Length);
         }
     }
+    
 }
