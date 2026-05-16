@@ -109,6 +109,78 @@ namespace Battleship_HTTP.Services
                         }
                     }
                 }
+                else if (request.HttpMethod == "POST" && url == "/battleship/actualizada")
+                {
+                    var buffer = new byte[request.ContentLength64];
+                    request.InputStream.ReadExactly(buffer, 0, buffer.Length);
+                    var json = Encoding.UTF8.GetString(buffer);
+
+                    var solicitudActualizacion = JsonSerializer.Deserialize<SolicitudActualizacionDTO>(json);
+
+                    if (solicitudActualizacion == null)
+                    {
+                        response.StatusCode = 400;
+                    }
+                    else
+                    {
+                        var sala = salasService.ActualizarSala(solicitudActualizacion.NumSala, solicitudActualizacion.Id, solicitudActualizacion.Listo);
+
+                        if (sala == null)
+                        {
+                            response.StatusCode = 404;
+                        }
+                        else
+                        {
+                            EnviarSala(response, sala);
+                        }
+                    }
+
+                }
+                else if (request.HttpMethod == "POST" && url == "/battleship/escuchar-cambio")
+                {
+                    var buffer = new byte[request.ContentLength64];
+                    request.InputStream.ReadExactly(buffer, 0, buffer.Length);
+                    var json = Encoding.UTF8.GetString(buffer);
+
+                    var solicitud = JsonSerializer.Deserialize<SolicitudCambioDTO>(json);
+
+                    if (solicitud == null)
+                    {
+                        response.StatusCode = 400;
+                    }
+                    else
+                    {
+                        //Sala? sala = null;
+                        bool breakEspera = false;
+                        var sala = salasService.BuscarSala(solicitud.NumSala);
+                        while (!breakEspera)
+                        {
+                            if (sala == null) { break; }
+                            if (sala.Activa || sala.JugadoresListos != solicitud.Listos)
+                            {
+                                breakEspera = true;
+                            }
+                            else
+                            {
+                                Thread.Sleep(500);
+                            }
+                        }
+                        if (sala == null)
+                        {
+                            response.StatusCode = 404;
+                        }
+                        else
+                        {
+
+                            EnviarSala(response, sala);
+                        }
+                    }
+
+                }
+
+
+
+
                 if (request.HttpMethod == "POST" && url == "/battleship/partida")
                 {
                     EntregarRecurso(response, "Index.html");

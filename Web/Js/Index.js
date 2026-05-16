@@ -49,10 +49,9 @@
     let ultimaPagina, paginaActual;
 
 
-
     nombre = localStorage.getItem("nombre") ?? "";
     id = localStorage.getItem("nombre") ?? "";
-    num = localStorage.getItem("") ?? "";
+    num = localStorage.getItem("numeroSala") ?? "";
 
     if (nombre !== "" && id !== null) {
         btnCerrarSesion.classList.remove("invisible");
@@ -140,35 +139,26 @@
         });
     });
 
-    let listo = true;
+    let listo = false;
     btnListo.addEventListener('click', () => {
-
-        if (listo) {
-            listo = false;
-            btnListo.textContent = "Cancelar";
-            enviarListo();
-        }
-        else {
-            listo = true;
-            btnListo.textContent = "Listo";
-            cancelarListo();
-        }
+        listo = !listo;
+        btnListo.textContent = listo ? "Cancelar" : "Listo";
+        enviarListo();
 
     });
 
-    async function buscarSala(num)
-    {
+    async function buscarSala(num) {
         nombre = localStorage.getItem("nombre");
-        let id = localStorage.getItem("IdUsuario");
+        id = localStorage.getItem("IdUsuario");
 
         if (!id) {
             id = crypto.randomUUID();
             localStorage.setItem("IdUsuario", id);
         }
         if (!num) num = "";
-        
 
-        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false};
+
+        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false };
 
         let response = await fetch("/battleship/sala", {
             method: "POST",
@@ -181,23 +171,78 @@
         if (response.ok) {
             let salaCreada = await response.json();
             actualizarMenu(salaCreada);
+            escucharCambios(salaCreada.IdHash, salaCreada.JugadoresListos);
         }
     }
     function crearSala() { }
-    function enviarListo() { }
-    function cancelarListo() { }
-    function reconectar() { }
+    async function enviarListo() {
+
+        let json = { NumSala: num, Id: id, Listo: listo };
+
+        let response = await fetch("/battleship/actualizada", {
+            method: "POST",
+            body: JSON.stringify(json),
+            headers: {
+                "content-type": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            let salaActualizada = await response.json();
+            actualizarMenu(salaActualizada);
+        }
+    }
 
 
 
-    function actualizarMenu(sala)
-    {
+
+
+
+
+    function actualizarMenu(sala) {
         console.log(sala);
+        num = sala.IdHash;
+        localStorage.setItem("numeroSala", sala.IdHash);
         lblNumSala.textContent = `#${sala.IdHash}`;
         ddJugador1.textContent = sala.NombreJugador1;
         ddJugador2.textContent = sala.NombreJugador2;
         smlCountJugadores.textContent = `${sala.JugadoresListos} de 2 jugadores listos...`;
+
+        if (sala.JugadoresListos === 2) {
+            btnListo.disabled = true;
+            btnListo.textContent = "Iniciando...";
+            smlCountJugadores.textContent = "Iniciando en 3 segundos...";
+        }
     }
+
+    async function escucharCambios(numSala, listos) {
+        let json = { NumSala: numSala, JugadoresListos: listos };
+
+        let response = await fetch("/battleship/escuchar-cambio", {
+            method: "POST",
+            body: JSON.stringify(json),
+            headers: { "content-type": "application/json" }
+        });
+
+        if (response.ok) {
+            let salaActualizada = await response.json();
+
+            // console.log(salaActualizada);
+
+            actualizarMenu(salaActualizada);
+
+            if (salaActualizada.Activa) {
+                console.log("¡Ambos listos! La batalla comienza.");
+                //Preparar el comienzo de partida
+
+            } else {
+                escucharCambios(numSala, salaActualizada.JugadoresListos);
+            }
+        }
+    }
+
+    function reconectar() { }
+
 
 
 
