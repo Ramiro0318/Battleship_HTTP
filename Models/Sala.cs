@@ -16,15 +16,17 @@ namespace Battleship_HTTP.Models
 
         public string? IdJugador2 { set; get; }
         public string? NombreJugador2 { set; get; }
-        public bool ListoJugador2 { get; set; }
+        public bool ListoJugador2 { get; set; } = false;
+        public byte JugadoresListos { set; get; }
+        public bool Publica { get; set; }
 
-        public bool EstaLlena => IdJugador1 != null && IdJugador2 != null;
+        public bool Llena => IdJugador1 != null && IdJugador2 != null;
 
         public bool Activa { set; get; }
     }
 
     public class Salas
     {
-        public List<Sala>? SalasList { get; set; }
+        public List<Sala> SalasList { get; set; } = new();
     }
 }

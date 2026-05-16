@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Battleship_HTTP.Models
 {
-    public class IniciarDTO
+    public class SolicitudDTO
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
         public string Nombre { set; get; } = null!;
-
+        public string? NumSala { set; get; }
         public bool Listo { set; get; }
     }
 }

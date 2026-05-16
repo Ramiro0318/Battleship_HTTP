@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Battleship_HTTP.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Net;
 using System.Security.Policy;
 using System.Text;
+using System.Text.Json;
 
 namespace Battleship_HTTP.Services
 {
@@ -15,6 +17,8 @@ namespace Battleship_HTTP.Services
 
         public event Action<string>? MensajeError;
         public event Action<bool, string>? ToogleServidor;
+
+        SalasService salasService = new SalasService();
         public JuegoService()
         {
             servidor = new HttpListener();
@@ -78,6 +82,33 @@ namespace Battleship_HTTP.Services
                 {
                     EntregarRecurso(response, "Index.html");
                 }
+                else if (request.HttpMethod == "POST" && url == "/battleship/sala")
+                {
+                    var buffer = new byte[request.ContentLength64];
+                    request.InputStream.ReadExactly(buffer, 0, buffer.Length);
+                    var json = Encoding.UTF8.GetString(buffer);
+
+                    var SolicitudSala = JsonSerializer.Deserialize<SolicitudDTO>(json);
+
+                    if (SolicitudSala == null)
+                    {
+                        response.StatusCode = 400;
+                    }
+                    else
+                    {
+                        if (SolicitudSala.NumSala == "")//Mathcmaking
+                        {
+                            var sala = salasService.SolicitarSala(SolicitudSala.Id, SolicitudSala.Nombre);
+                            //Enviar respuesta
+                            EnviarSala(response, sala);
+                        }
+                        else
+                        {
+
+
+                        }
+                    }
+                }
                 if (request.HttpMethod == "POST" && url == "/battleship/partida")
                 {
                     EntregarRecurso(response, "Index.html");
@@ -92,10 +123,7 @@ namespace Battleship_HTTP.Services
                     string archivo = Path.GetFileName(url);
                     EntregarRecurso(response, archivo);
                 }
-                else if(request.HttpMethod == "POST")
-                {
 
-                }
             }
             //else if (request.RawUrl.StartsWith("/battleship/images/"))
             //{
@@ -118,7 +146,7 @@ namespace Battleship_HTTP.Services
         }
 
 
-        private string GetMime(string ext) 
+        private string GetMime(string ext)
         {
             switch (ext)
             {
@@ -130,7 +158,7 @@ namespace Battleship_HTTP.Services
         private void EntregarRecurso(HttpListenerResponse response, string nombreArchivo)
         {
             var ext = Path.GetExtension(nombreArchivo).Replace(".", "");
-            var mime = GetMime(ext); 
+            var mime = GetMime(ext);
             string ruta = Path.Combine($"Web/{ext}", nombreArchivo);
 
             if (File.Exists(ruta))
@@ -138,13 +166,29 @@ namespace Battleship_HTTP.Services
                 byte[] buffer = File.ReadAllBytes(ruta);
                 response.ContentLength64 = buffer.Length;
                 response.ContentType = mime;
-                response.OutputStream.Write(buffer, 0, buffer.Length);
                 response.StatusCode = 200;
+                response.OutputStream.Write(buffer, 0, buffer.Length);
             }
             else
             {
                 response.StatusCode = 404;
             }
+        }
+
+        private void EnviarSala(HttpListenerResponse response, Sala sala)
+        {
+            var json = JsonSerializer.Serialize(sala);
+            byte[] buffer = Encoding.UTF8.GetBytes(json);
+            response.ContentLength64 = buffer.Length;
+            response.ContentType = "application/json";
+            response.StatusCode = 200;
+            response.OutputStream.Write(buffer, 0, buffer.Length);
+
+        }
+
+        private void EnviarInfo(string info)
+        {
+
         }
     }
 }

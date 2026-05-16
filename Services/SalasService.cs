@@ -1,0 +1,49 @@
+﻿using Battleship_HTTP.Models;
+using System;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
+using System.Text;
+
+namespace Battleship_HTTP.Services
+{
+    public class SalasService
+    {
+
+        Salas Salas = new Salas();
+        Random r = new();
+        public Sala SolicitarSala(string idJ, string nombreJ)
+        {
+            var salaDisponible = Salas.SalasList.Find(x => x.Publica && x.IdJugador2 == null);
+
+            if (salaDisponible == null)
+            {
+
+                Sala sala = new Sala()
+                {
+                    
+                    Id = Salas.SalasList.Count == 0 ? 1 : Salas.SalasList.Max(x => x.Id) + 1,
+                    IdHash = r.Next(10000, 100000).ToString(),
+                    IdJugador1 = idJ,
+                    NombreJugador1 = nombreJ,
+                    ListoJugador1 = false,
+                    JugadoresListos = 0,
+                    Publica = true,
+                    Activa = false
+
+                };
+
+                Salas.SalasList.Add(sala);
+                return sala;
+            }
+            else
+            {
+                salaDisponible.IdJugador2 = idJ;
+                salaDisponible.NombreJugador2 = nombreJ;
+                salaDisponible.JugadoresListos = (byte)(salaDisponible.ListoJugador1 == true ? 1 : 0);
+                return salaDisponible;
+            }
+        }
+
+    }
+}
