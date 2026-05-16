@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Battleship</title>
     <link rel="stylesheet" href="/battleship/css/Style.css">
-    <script src="/battleship/js/Index.js"></script>
+    <script src="/battleship/js/Partida.js"></script>
 </head>
 <body>
     <main>
         <h1 class="tituloJuego">Batalla Naval</h1>
         <div id="tarjeta">
-            <span>Id de sala #<b id="idSala">123</b></span>
+            <span>Id de sala #<b id="bidSala">123</b></span>
             <span id="turno">Turno de Jugador 1</span>
         </div>
 
@@ -160,16 +160,16 @@
 
         </table>
 
-        <div id="movmimiento">
+        <!--<div id="movmimiento">
             <img src="/web/Resources/Images/flair_arrow_center_1.png" />
             <img src="/web/Resources/Images/flair_arrow_center_2.png" />
         </div>
         <div id="contenedor">
             <img src="/web/Resources/Images/navy_2809732.png" />
             <img src="/web/Resources/Images/marine_3212013.png" style="height:32px; width: 60px;" />
-        </div>
+        </div>-->
 
-        <div id="instrucciones" class="invisible">
+        <div id="instrucciones">
             <strong>Objetivo:</strong>
             <span>Hunde la flota de 5 naves que tiene tu adversario antes de que él hunda la tuya</span>
 
@@ -188,10 +188,10 @@
         </div>
 
         <div class="invisible" id="resultados">
-            <span>sala #1234</span>
-            <h3>Jugador 1 gana!!</h3>
+            <span id="numSalaResultados">sala #1234</span>
+            <h3 id="Ganador">Jugador 1 gana!!</h3>
 
-            <button class="listo">Volver a jugar</button>
+            <button id="reiniciar">Volver a jugar</button>
             <button id="salir">Salir</button>
         </div>
 

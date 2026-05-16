@@ -30,27 +30,16 @@
 
 
 
-    //PARTIDA
-    const divInstrucciones = document.querySelector("#instrucciones");
-    const divResultados = document.querySelector("#resultados");
-    const bIdSala = document.querySelector("#idSala");
-    const spanTurno = document.querySelector("#turno");
-    const spanTiempo = document.querySelector("#tiempoRestante");
-    const TableJugador = document.querySelector("#tablaJugador");
-    const divMovimientos = document.querySelector("#movmimiento");
-    const divContenedor = document.querySelector("#contenedor");
-
-    const btnOk = document.querySelector("#ok");
-
-    const tablero = document.querySelector('#tablaJugador');
+    
 
 
+    //variables
     let nombre, id, num;
     let ultimaPagina, paginaActual;
 
 
     nombre = localStorage.getItem("nombre") ?? "";
-    id = localStorage.getItem("nombre") ?? "";
+    id = localStorage.getItem("IdUsuario") ?? "";
     num = localStorage.getItem("numeroSala") ?? "";
 
     if (nombre !== "" && id !== null) {
@@ -61,7 +50,6 @@
         paginaActual = divSeleccion;
     }
     if (num !== "") {
-        //Reconectar
         reconectar();
     }
 
@@ -128,7 +116,7 @@
             errorNumSala.textContent = "Ingresa un numero de sala válido";
         }
         else {
-            
+
             buscarSala(num); //tal vez necesito una flag
         }
     });
@@ -148,6 +136,7 @@
 
     });
 
+
     async function buscarSala(num) {
         nombre = localStorage.getItem("nombre");
         id = localStorage.getItem("IdUsuario");
@@ -160,7 +149,7 @@
 
         let public = num == "" ? true : false;
 
-        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false, Publica : public };
+        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false, Publica: public };
 
         let response = await fetch("/battleship/sala", {
             method: "POST",
@@ -183,8 +172,8 @@
         }
     }
 
-    async function crearSala()
-    {
+
+    async function crearSala() {
         nombre = localStorage.getItem("nombre");
         id = localStorage.getItem("IdUsuario");
 
@@ -192,8 +181,8 @@
             id = crypto.randomUUID();
             localStorage.setItem("IdUsuario", id);
         }
-        
-        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false, Publica: false  }
+
+        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false, Publica: false }
 
         let response = await fetch("/battleship/crear-sala", {
             method: "POST",
@@ -209,6 +198,7 @@
             escucharCambios(salaCreada.IdHash, salaCreada.JugadoresListos);
         }
     }
+
 
     async function enviarListo() {
 
@@ -227,11 +217,6 @@
             actualizarMenu(salaActualizada);
         }
     }
-
-
-
-
-
 
 
     function actualizarMenu(sala) {
@@ -269,7 +254,7 @@
             if (salaActualizada.Activa) {
                 console.log("¡Ambos listos! La batalla comienza.");
                 window.location.href = '/battleship/partida';
-                
+
 
             } else {
                 escucharCambios(numSala, salaActualizada.JugadoresListos);
@@ -279,26 +264,4 @@
 
     function reconectar() { }
 
-
-
-
-
-
-    /////////////////////////////////////////////////////////////
-    if (tablero) {
-        tablero.addEventListener('click', function (event) {
-            const celda = event.target;
-
-            if (celda.tagName === 'TD') {
-                if (celda.textContent === "") {
-                    celda.textContent = "💥";
-                    celda.style.fontSize = "20px";
-                    celda.style.textAlign = "center";
-                    celda.style.color = "blue";
-                } else {
-                    console.log("Esta celda ya fue atacada.");
-                }
-            }
-        });
-    }
 });
