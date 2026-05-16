@@ -268,7 +268,8 @@
 
             if (salaActualizada.Activa) {
                 console.log("¡Ambos listos! La batalla comienza.");
-                //Preparar el comienzo de partida
+                window.location.href = '/battleship/partida';
+                
 
             } else {
                 escucharCambios(numSala, salaActualizada.JugadoresListos);

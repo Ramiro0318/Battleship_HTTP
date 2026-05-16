@@ -16,12 +16,14 @@ namespace Battleship_HTTP
         private void OnStartup(object sender, StartupEventArgs e) 
         {
             // 1. Instanciar el servicio de lógica
-            JuegoService service = new JuegoService();
+            PartidaService partidaService = new PartidaService();
+            SalasService salasService = new SalasService(partidaService);
+            JuegoService service = new JuegoService(salasService, partidaService);
 
-            // 3. Instanciar el ViewModel y pasarle ambos servicios
+            // 3. Instanciar el ViewModel y pasarle el servicio
             var vm = new MainViewModel(service);
 
-            // 4. Crear la ventana y le asignamos el VM manualmente
+            // 4. Crear la ventana y asignarle el VM
             var mainWindow = new MainWindow();
             mainWindow.DataContext = vm;
 

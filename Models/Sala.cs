@@ -24,10 +24,4 @@ namespace Battleship_HTTP.Models
 
         public bool Activa { set; get; }
     }
-
-
-    public class Salas
-    {
-        public List<Sala> SalasList { get; set; } = new();
-    }
 }

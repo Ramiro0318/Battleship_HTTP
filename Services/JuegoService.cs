@@ -18,9 +18,14 @@ namespace Battleship_HTTP.Services
         public event Action<string>? MensajeError;
         public event Action<bool, string>? ToogleServidor;
 
-        SalasService salasService = new SalasService();
-        public JuegoService()
+        private readonly SalasService salasService;
+        private readonly PartidaService partidaService;
+
+        public JuegoService(SalasService salasService, PartidaService partidaService)
         {
+            this.salasService = salasService;
+            this.partidaService = partidaService;
+
             servidor = new HttpListener();
             string url = $"http://+:9090/battleship/";
             servidor.Prefixes.Add(url);
@@ -176,10 +181,12 @@ namespace Battleship_HTTP.Services
                     }
                     else
                     {
+                        Sala? sala = null;
                         bool breakEspera = false;
-                        var sala = salasService.BuscarSala(solicitud.NumSala);
                         while (!breakEspera)
                         {
+                            sala = salasService.BuscarSala(solicitud.NumSala);
+
                             if (sala == null) { break; }
                             if (sala.Activa || sala.JugadoresListos != solicitud.Listos)
                             {
@@ -202,14 +209,11 @@ namespace Battleship_HTTP.Services
                     }
 
                 }
-
-
-
-
-                if (request.HttpMethod == "POST" && url == "/battleship/partida")
+                else if (request.HttpMethod == "GET" && url == "/battleship/partida")
                 {
-                    EntregarRecurso(response, "Index.html");
+                    EntregarRecurso(response, "Partida.html");
                 }
+
                 else if (url.StartsWith("/battleship/css/"))
                 {
                     string archivo = Path.GetFileName(url);
@@ -289,12 +293,12 @@ namespace Battleship_HTTP.Services
             var infoObj = new { Info = info };
             var jsonError = JsonSerializer.Serialize(infoObj);
             byte[] buffer = Encoding.UTF8.GetBytes(jsonError);
-            
+
             response.ContentLength64 = buffer.Length;
             response.ContentType = "application/json";
             response.StatusCode = statusCode;
             response.OutputStream.Write(buffer, 0, buffer.Length);
         }
     }
-    
+
 }

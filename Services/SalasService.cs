@@ -10,11 +10,19 @@ namespace Battleship_HTTP.Services
     public class SalasService
     {
 
-        Salas Salas = new Salas();
+        public List<Sala> SalasList { get; set; } = new List<Sala>();
+
         Random r = new();
+        private readonly PartidaService partidaService;
+
+        public SalasService(PartidaService partidaService)
+        {
+            this.partidaService = partidaService;
+        }
+
         public Sala SolicitarSala(string idJ, string nombreJ)
         {
-            var salaDisponible = Salas.SalasList.Find(x => x.Publica && x.IdJugador2 == null);
+            var salaDisponible = SalasList.Find(x => x.Publica && x.IdJugador2 == null);
 
             if (salaDisponible == null)
             {
@@ -22,7 +30,7 @@ namespace Battleship_HTTP.Services
                 Sala sala = new Sala()
                 {
 
-                    Id = Salas.SalasList.Count == 0 ? 1 : Salas.SalasList.Max(x => x.Id) + 1,
+                    Id = SalasList.Count == 0 ? 1 : SalasList.Max(x => x.Id) + 1,
                     IdHash = r.Next(10000, 100000).ToString(),
                     IdJugador1 = idJ,
                     NombreJugador1 = nombreJ,
@@ -33,7 +41,7 @@ namespace Battleship_HTTP.Services
 
                 };
 
-                Salas.SalasList.Add(sala);
+                SalasList.Add(sala);
                 return sala;
             }
             else
@@ -49,7 +57,7 @@ namespace Battleship_HTTP.Services
         {
             Sala sala = new Sala()
             {
-                Id = Salas.SalasList.Count == 0 ? 1 : Salas.SalasList.Max(x => x.Id) + 1,
+                Id = SalasList.Count == 0 ? 1 : SalasList.Max(x => x.Id) + 1,
                 IdHash = r.Next(10000, 100000).ToString(),
                 IdJugador1 = idJ,
                 NombreJugador1 = nombreJ,
@@ -59,26 +67,26 @@ namespace Battleship_HTTP.Services
                 Activa = false
             };
 
-            Salas.SalasList.Add(sala);
+            SalasList.Add(sala);
             return sala;
         }
 
         public Sala? UnirseSalaPrivada(string numS, string idJ, string nombreJ)
         {
-            var salaUnirse = Salas.SalasList.Find(x => x.IdHash == numS && x.IdJugador2 == null);
+            var salaUnirse = SalasList.Find(x => x.IdHash == numS && x.IdJugador2 == null);
             if (salaUnirse == null) return null;
 
             salaUnirse.IdJugador2 = idJ;
             salaUnirse.NombreJugador2 = nombreJ;
             salaUnirse.JugadoresListos = (byte)(salaUnirse.ListoJugador1 == true ? 1 : 0);
-            
+
             return salaUnirse;
         }
 
 
         public Sala? ActualizarSala(string numSala, string id, bool listo)
         {
-            var sala = Salas.SalasList.Find(x => x.IdHash == numSala);
+            var sala = SalasList.Find(x => x.IdHash == numSala);
 
             if (sala == null) return null;
 
@@ -97,17 +105,27 @@ namespace Battleship_HTTP.Services
 
             if (listos == 2)
             {
-                sala.Activa = true;
+                Task.Run(async () =>
+                {
+                    await Task.Delay(3000);
+
+                    lock (SalasList)
+                    {
+                        partidaService.InicializarNuevaPartida(sala);
+                        sala.Activa = true;
+                    }
+                });
             }
+
             return sala;
         }
 
         public Sala? BuscarSala(string numSala)
         {
             Sala? sala = null;
-            lock (Salas.SalasList)
+            lock (SalasList)
             {
-                sala = Salas.SalasList.Find(x => x.IdHash == numSala);
+                sala = SalasList.Find(x => x.IdHash == numSala);
             }
             return sala;
         }
