@@ -290,6 +290,11 @@ namespace Battleship_HTTP.Services
                     string archivo = Path.GetFileName(url);
                     EntregarRecurso(response, archivo);
                 }
+                else if (url.StartsWith("/battleship/Resources/Images/"))
+                {
+                    string archivo = Path.GetFileName(url);
+                    EntregarRecurso(response, archivo);
+                }
 
             }
             //else if (request.RawUrl.StartsWith("/battleship/images/"))
@@ -321,6 +326,7 @@ namespace Battleship_HTTP.Services
                 case "html": return "text/html";
                 case "css": return "text/css";
                 case "js": return "text/js";
+                case "png": return "image/png";
             }
             return "";
         }
@@ -328,7 +334,12 @@ namespace Battleship_HTTP.Services
         {
             var ext = Path.GetExtension(nombreArchivo).Replace(".", "");
             var mime = GetMime(ext);
-            string ruta = Path.Combine($"Web/{ext}", nombreArchivo);
+            
+            string ruta = "";
+            if (ext == "png")   ruta = Path.Combine($"Web/Resources/Images", nombreArchivo);
+            else if (ext == "mp3")  ruta = Path.Combine($"Web/Resources/Music", nombreArchivo);
+            else    ruta = Path.Combine($"Web/{ext}", nombreArchivo);
+
 
             if (File.Exists(ruta))
             {

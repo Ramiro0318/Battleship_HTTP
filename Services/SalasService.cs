@@ -29,12 +29,9 @@ namespace Battleship_HTTP.Services
             if (salaDisponible == null)
             {
                 string idhash = ""; 
-                var colision = true;
-                while (colision)
-                {
-                    idhash = r.Next(10000, 100000).ToString();
-                    colision = SalasList.Any(x => x.IdHash == idhash);
-                }
+                
+                do { idhash = r.Next(10000, 100000).ToString(); }
+                while (SalasList.Any(x => x.IdHash == idhash));
 
                 Sala sala = new Sala()
                 {
