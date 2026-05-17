@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Timers;
+using System.Windows.Controls.Primitives;
 
 namespace Battleship_HTTP.Services
 {
     public class PartidaService
     {
+        Sala Sala = new();
+        System.Timers.Timer timer = new System.Timers.Timer(1000);
 
         public void InicializarNuevaPartida(Sala sala)
         {
@@ -18,21 +22,44 @@ namespace Battleship_HTTP.Services
                 Etapa = Etapa.ColocarBarcos,
                 TiempoRestante = 60
             };
+
+            Sala = sala;
+            timer.Elapsed += timer_Elapsed;
+            timer.AutoReset = true;
+            timer.Enabled = true;
+        }
+
+        private void timer_Elapsed(object? sender, ElapsedEventArgs e)
+        {
+            if (Sala.battleship != null)
+            {
+                if (Sala.battleship.TiempoRestante > 0)
+                {
+
+                    Sala.battleship.TiempoRestante--;
+                }
+                else if (Sala.battleship.TiempoRestante == 0)
+                {
+                    Sala.battleship.Etapa = Etapa.Batalla;
+                    timer.Stop();
+                }
+            }
         }
 
 
 
-//        // ¿Queda alguna otra casilla del jugador 1 con la Nave 3 que siga en estado "Nave"?
-//        bool sigueVivoBarco = partida.CuadriculaJ1.Any(c => c.NaveId == 3 && c.Estado == EstadoCasilla.Nave);
 
-//if (!sigueVivoBarco)
-//{
-//    // ¡Hundido! Buscas todas las casillas con NaveId == 3 y las pasas a EstadoCasilla.NaveHundida
-//    foreach(var c in partida.CuadriculaJ1.Where(c => c.NaveId == 3))
-//    {
-//        c.Estado = EstadoCasilla.NaveHundida;
-//    }
-//}
+        //        // ¿Queda alguna otra casilla del jugador 1 con la Nave 3 que siga en estado "Nave"?
+        //        bool sigueVivoBarco = partida.CuadriculaJ1.Any(c => c.NaveId == 3 && c.Estado == EstadoCasilla.Nave);
+
+        //if (!sigueVivoBarco)
+        //{
+        //    // ¡Hundido! Buscas todas las casillas con NaveId == 3 y las pasas a EstadoCasilla.NaveHundida
+        //    foreach(var c in partida.CuadriculaJ1.Where(c => c.NaveId == 3))
+        //    {
+        //        c.Estado = EstadoCasilla.NaveHundida;
+        //    }
+        //}
 
 
 

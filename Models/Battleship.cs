@@ -10,7 +10,7 @@ namespace Battleship_HTTP.Models
     {
         public string? Turno { get; set; }
         public string? Ganador { get; set; }
-        public bool Finalizado { get; set; }
+        public bool Finalizado { get; set; } // Posiblemente eliminado
         public int TiempoRestante { get; set; }
         public List<CuadriculaTablero> CuadriculaJ1 { get; set; } = new();
         public List<CuadriculaTablero> CuadriculaJ2 { get; set; } = new();

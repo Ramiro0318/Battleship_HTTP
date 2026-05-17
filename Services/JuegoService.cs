@@ -213,7 +213,7 @@ namespace Battleship_HTTP.Services
                 {
                     EntregarRecurso(response, "Partida.html");
                 }
-                else if (request.HttpMethod == "GET" && url.StartsWith("/battleship/estado-partida"))
+                else if (request.HttpMethod == "GET" && url.StartsWith("/battleship/inicio-partida"))
                 {
                     string idSala = request.QueryString["idSala"] ?? "";
 
@@ -229,6 +229,56 @@ namespace Battleship_HTTP.Services
                         EnviarBattleship(response, partida);
                     }
                 }
+                else if (request.HttpMethod == "POST" && url == "/battleship/escuchar-partida")
+                {
+                    var buffer = new byte[request.ContentLength64];
+                    request.InputStream.ReadExactly(buffer, 0, buffer.Length);
+                    var json = Encoding.UTF8.GetString(buffer);
+
+                    var solicitud = JsonSerializer.Deserialize<SolicitudMonitoreoPartidaDTO>(json);
+
+                    if (solicitud == null)
+                    {
+                        response.StatusCode = 400;
+                    }
+                    else
+                    {
+                        Sala? sala = null;
+                        bool breakEspera = false;
+                        int maxIntentosDeEspera = 30;
+                        int intentos = 0;
+
+                        while (!breakEspera && intentos < maxIntentosDeEspera)
+                        {
+                            sala = salasService.BuscarSalaId(solicitud.IdSala);
+
+                            if (sala == null || sala.battleship == null) { break; }
+
+                            var partida = sala.battleship;
+
+                            if (partida.TiempoRestante != solicitud.TiempoCliente || (int)partida.Etapa != solicitud.EtapaCliente ||
+                            partida.Turno != solicitud.TurnoCliente || partida.Finalizado != solicitud.FinalizadoCliente)
+                            {
+                                breakEspera = true;
+                            }
+                            else
+                            {
+                                Thread.Sleep(500);
+                                intentos++;
+                            }
+                        }
+                        if (sala == null || sala.battleship == null)
+                        {
+                            EnviarInfo(response, "Partida no encontrada.", 404);
+                        }
+                        else
+                        {
+                            EnviarBattleship(response, sala.battleship);
+                        }
+                    }
+                }
+
+
 
                 else if (url.StartsWith("/battleship/css/"))
                 {
@@ -261,6 +311,7 @@ namespace Battleship_HTTP.Services
 
 
         }
+
 
 
         private string GetMime(string ext)

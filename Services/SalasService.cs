@@ -1,8 +1,10 @@
 ﻿using Battleship_HTTP.Models;
 using System;
 using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
 using System.Text;
 
 namespace Battleship_HTTP.Services
@@ -26,12 +28,19 @@ namespace Battleship_HTTP.Services
 
             if (salaDisponible == null)
             {
+                string idhash = ""; 
+                var colision = true;
+                while (colision)
+                {
+                    idhash = r.Next(10000, 100000).ToString();
+                    colision = SalasList.Any(x => x.IdHash == idhash);
+                }
 
                 Sala sala = new Sala()
                 {
 
                     Id = SalasList.Count == 0 ? 1 : SalasList.Max(x => x.Id) + 1,
-                    IdHash = r.Next(10000, 100000).ToString(),
+                    IdHash = idhash,
                     IdJugador1 = idJ,
                     NombreJugador1 = nombreJ,
                     ListoJugador1 = false,
@@ -112,7 +121,7 @@ namespace Battleship_HTTP.Services
                     lock (SalasList)
                     {
                         partidaService.InicializarNuevaPartida(sala);
-                        
+
                         sala.Activa = true;
                     }
                 });

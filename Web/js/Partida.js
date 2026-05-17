@@ -40,22 +40,22 @@
 
 
     //Inicializar
-    //Hacer un clear de la tabla //
     bIdSala.textContent = numSala;
-    //Timer = 60
+    spanTiempo.textContent = "60";
 
 
-    //Etapa de Colocar barcos
+
 
     btnOk.addEventListener('click', function () {
         divInstrucciones.classList.add("invisible");
         fondo.classList.add("invisible");
     });
 
+    //Etapa de Colocar barcos
     verificarEtapaColocacion(idSala);
 
     async function verificarEtapaColocacion(idSala) {
-        let response = await fetch(`/battleship/estado-partida?idSala=${idSala}`, {
+        let response = await fetch(`/battleship/inicio-partida?idSala=${idSala}`, {
             method: "GET"
         });
 
@@ -63,24 +63,73 @@
             battleship = await response.json();
 
             if (battleship.Etapa === "ColocandoBarcos" || battleship.Etapa === 0) {
-                console.log("fase de colocación");
-                activarEtapaColocacion();
+                console.log(battleship);
+                monitorearPartida();
             }
-            spanTurno.textContent = battleship.Turno;
-            spanTiempo.textContent = battleship.TiempoRestante;
+            // spanTurno.textContent = battleship.Turno;
+            // spanTiempo.textContent = battleship.TiempoRestante;
 
         } else {
             window.location.href = "/battleship/";
         }
-
-        
     }
 
-    function activarEtapaColocacion(tiempoLimiteISO) {
-        spanTurno.textContent = "Acomoda tus naves...";
-        iniciarCronometro(tiempoLimiteISO);
+
+
+    async function monitorearPartida() {
+        let payload = {
+            IdSala: idSala,
+            TiempoCliente: battleship ? battleship.TiempoRestante : -1,
+            EtapaCliente: battleship ? battleship.Etapa : 0,
+            TurnoCliente: battleship ? battleship.Turno : "",
+            FinalizadoCliente: battleship ? battleship.Finalizado : false
+        };
+
+        try {
+            let response = await fetch("/battleship/escuchar-partida", {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (response.ok) {
+                battleship = await response.json();
+                console.log(battleship);
+
+                spanTurno.textContent = battleship.Turno;
+                spanTiempo.textContent = battleship.TiempoRestante;
+
+
+                if (battleship.Etapa === "Finalizado") {
+                    console.log("El juego ha terminado.");
+                    mostrarPantallaResultados(battleship.Ganador);
+                    return;
+                }
+                else if (battleship.Etapa === "ColocandoBarcos" || battleship.Etapa === 0) {
+                    activarEtapaColocacion();
+                }
+                else if (battleship.Etapa === "Jugando" || battleship.Etapa === 1) {
+                    gestionarTurnoDeAtaque();
+                }
+
+                // 3. El ciclo continúa: Volvemos a escuchar inmediatamente el siguiente cambio
+                setTimeout(() => monitorearPartida(idSala), 10);
+
+            } else {
+                window.location.href = "/battleship/";
+            }
+        } catch (error) {
+            console.error("Error en Long Polling:", error);
+            setTimeout(() => monitorearPartida(idSala), 2000); // Reintento 
+        }
     }
 
+
+
+    function activarEtapaColocacion() {
+        console.log("fase de colocación");
+    }
+    function gestionarTurnoDeAtaque() { }
 
 
 
@@ -102,6 +151,22 @@
         });
     }
 
+
     //Finalizar
 
+
+    //Hacer un clear de la tabla //
+    btnReiniciar.addEventListener('click', function (e) {
+        tablero.lastChild.remove();
+
+        let tbody = tablero.appendChild("TBODY");
+
+        for (var i = 0; i < 10; i++) {
+            let tr = tbody.appendChild("TR");
+
+            for (var i = 0; i < 10; i++) {
+                tr.appendChild("TD");
+            }
+        }
+    });
 });
