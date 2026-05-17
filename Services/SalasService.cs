@@ -112,6 +112,7 @@ namespace Battleship_HTTP.Services
                     lock (SalasList)
                     {
                         partidaService.InicializarNuevaPartida(sala);
+                        
                         sala.Activa = true;
                     }
                 });
@@ -126,6 +127,16 @@ namespace Battleship_HTTP.Services
             lock (SalasList)
             {
                 sala = SalasList.Find(x => x.IdHash == numSala);
+            }
+            return sala;
+        }
+
+        public Sala? BuscarSalaId(string id)
+        {
+            Sala? sala = null;
+            lock (SalasList)
+            {
+                sala = SalasList.Find(x => x.Id == int.Parse(id));
             }
             return sala;
         }

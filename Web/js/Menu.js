@@ -223,6 +223,7 @@
         console.log(sala);
         num = sala.IdHash;
         localStorage.setItem("numeroSala", sala.IdHash);
+        localStorage.setItem("idSala", sala.Id);
         lblNumSala.textContent = `#${sala.IdHash}`;
         ddJugador1.textContent = sala.NombreJugador1;
         ddJugador2.textContent = sala.NombreJugador2;

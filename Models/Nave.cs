@@ -12,15 +12,4 @@ namespace Battleship_HTTP.Models
         public List<Coordenada>? Coordenadas { get; set; }
     }
 
-    public struct Coordenada
-    {
-        public int Fila { get; set; }
-        public int Columna { get; set; }
-
-        public Coordenada(int fila, int columna)
-        {
-            Fila = fila;
-            Columna = columna;
-        }
-    }
 }

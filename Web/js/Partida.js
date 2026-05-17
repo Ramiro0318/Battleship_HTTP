@@ -7,7 +7,7 @@
     const fondo = document.querySelector("#fondo");
 
     //HUD
-    const bIdSala = document.querySelector("#idSala");
+    const bIdSala = document.querySelector("#bidSala");
     const spanTurno = document.querySelector("#turno");
     const spanTiempo = document.querySelector("#tiempoRestante");
     const TableJugador = document.querySelector("#tablaJugador");
@@ -28,26 +28,63 @@
     const nombre = localStorage.getItem("nombre") ?? "";
     const idUsuario = localStorage.getItem("IdUsuario") ?? "";
     const numSala = localStorage.getItem("numeroSala") ?? "";
+    const idSala = localStorage.getItem("idSala") ?? "";
 
 
+    let battleship;
 
     if (!numSala || !idUsuario) {
         window.location.href = "/battleship/";
         return;
     }
 
-    bIdSala.textContent = numSala;
-    // spanTurno.textContent = ///
-    // spanTiempo.textContent = //
+
+    //Inicializar
     //Hacer un clear de la tabla //
+    bIdSala.textContent = numSala;
+    //Timer = 60
+
+
+    //Etapa de Colocar barcos
 
     btnOk.addEventListener('click', function () {
         divInstrucciones.classList.add("invisible");
         fondo.classList.add("invisible");
-
     });
 
+    verificarEtapaColocacion(idSala);
 
+    async function verificarEtapaColocacion(idSala) {
+        let response = await fetch(`/battleship/estado-partida?idSala=${idSala}`, {
+            method: "GET"
+        });
+
+        if (response.ok) {
+            battleship = await response.json();
+
+            if (battleship.Etapa === "ColocandoBarcos" || battleship.Etapa === 0) {
+                console.log("fase de colocación");
+                activarEtapaColocacion();
+            }
+            spanTurno.textContent = battleship.Turno;
+            spanTiempo.textContent = battleship.TiempoRestante;
+
+        } else {
+            window.location.href = "/battleship/";
+        }
+
+        
+    }
+
+    function activarEtapaColocacion(tiempoLimiteISO) {
+        spanTurno.textContent = "Acomoda tus naves...";
+        iniciarCronometro(tiempoLimiteISO);
+    }
+
+
+
+
+    //Etapa de atacar
     if (tablero) {
         tablero.addEventListener('click', function (event) {
             const celda = event.target;
@@ -65,6 +102,6 @@
         });
     }
 
-
+    //Finalizar
 
 });

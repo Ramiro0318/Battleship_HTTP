@@ -23,5 +23,6 @@ namespace Battleship_HTTP.Models
         public bool Llena => IdJugador1 != null && IdJugador2 != null;
 
         public bool Activa { set; get; }
+        public Battleship? battleship { set; get; }
     }
 }

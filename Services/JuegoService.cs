@@ -188,7 +188,7 @@ namespace Battleship_HTTP.Services
                             sala = salasService.BuscarSala(solicitud.NumSala);
 
                             if (sala == null) { break; }
-                            if (sala.Activa || sala.JugadoresListos != solicitud.Listos)
+                            if (sala.Activa || sala.JugadoresListos != solicitud.Listos || sala.Llena)
                             {
                                 breakEspera = true;
                             }
@@ -212,6 +212,22 @@ namespace Battleship_HTTP.Services
                 else if (request.HttpMethod == "GET" && url == "/battleship/partida")
                 {
                     EntregarRecurso(response, "Partida.html");
+                }
+                else if (request.HttpMethod == "GET" && url.StartsWith("/battleship/estado-partida"))
+                {
+                    string idSala = request.QueryString["idSala"] ?? "";
+
+                    Sala? sala = salasService.BuscarSalaId(idSala);
+
+                    if (sala == null || sala.battleship == null)
+                    {
+                        EnviarInfo(response, "Partida no encontrada.", 404);
+                    }
+                    else
+                    {
+                        Battleship partida = sala.battleship;
+                        EnviarBattleship(response, partida);
+                    }
                 }
 
                 else if (url.StartsWith("/battleship/css/"))
@@ -253,6 +269,7 @@ namespace Battleship_HTTP.Services
             {
                 case "html": return "text/html";
                 case "css": return "text/css";
+                case "js": return "text/js";
             }
             return "";
         }
@@ -286,6 +303,17 @@ namespace Battleship_HTTP.Services
             response.StatusCode = 200;
             response.OutputStream.Write(buffer, 0, buffer.Length);
 
+        }
+        //Puedo hacerlo generico, pero me gusta tenerlos metodos separados
+        private void EnviarBattleship(HttpListenerResponse response, Battleship partida)
+        {
+            var json = JsonSerializer.Serialize(partida);
+            byte[] buffer = Encoding.UTF8.GetBytes(json);
+
+            response.ContentLength64 = buffer.Length;
+            response.ContentType = "application/json";
+            response.StatusCode = 200;
+            response.OutputStream.Write(buffer, 0, buffer.Length);
         }
 
         private void EnviarInfo(HttpListenerResponse response, string info, int statusCode)
