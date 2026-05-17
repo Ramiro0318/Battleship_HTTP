@@ -16,6 +16,7 @@
 
     //Tablero
     const tablero = document.querySelector('#tablaJugador');
+    const btnEnviar = document.querySelector('#enviarNaves');
 
     //FinPartida
     const divResultados = document.querySelector("#resultados");
@@ -62,7 +63,7 @@
         if (response.ok) {
             battleship = await response.json();
 
-            if (battleship.Etapa === "ColocandoBarcos" || battleship.Etapa === 0) {
+            if (battleship.Etapa === 0) {
                 console.log(battleship);
                 monitorearPartida();
             }
@@ -76,6 +77,7 @@
 
 
 
+    let tableroEnviado = false;
     async function monitorearPartida() {
         let payload = {
             IdSala: idSala,
@@ -86,54 +88,159 @@
         };
 
         try {
+
             let response = await fetch("/battleship/escuchar-partida", {
                 method: "POST",
                 body: JSON.stringify(payload),
                 headers: { "Content-Type": "application/json" }
             });
 
+
             if (response.ok) {
                 battleship = await response.json();
+
                 console.log(battleship);
 
                 spanTurno.textContent = battleship.Turno;
                 spanTiempo.textContent = battleship.TiempoRestante;
 
 
-                if (battleship.Etapa === "Finalizado") {
+                if (battleship.Etapa === 0) {
+                    if (!tableroEnviado && battleship.TiempoRestante > 0) {
+                        console.log("etapa de colocacion")
+                        btnEnviar.disabled = false;
+                    }
+                    if (battleship.TiempoRestante == 0 && !tableroEnviado) {
+                        enviarNavesPosicionadas();
+                    }
+                }
+                else if (battleship.Etapa === 1) {
+                    tableroEnviado = false;
+                    if (!tableroEnviado) {
+                        gestionarTurnoDeAtaque();
+
+                    }
+                }
+                else if (battleship.Etapa === 2) {
                     console.log("El juego ha terminado.");
                     mostrarPantallaResultados(battleship.Ganador);
                     return;
                 }
-                else if (battleship.Etapa === "ColocandoBarcos" || battleship.Etapa === 0) {
-                    activarEtapaColocacion();
-                }
-                else if (battleship.Etapa === "Jugando" || battleship.Etapa === 1) {
-                    gestionarTurnoDeAtaque();
-                }
 
-                // 3. El ciclo continúa: Volvemos a escuchar inmediatamente el siguiente cambio
-                setTimeout(() => monitorearPartida(idSala), 10);
+                setTimeout(monitorearPartida, 200);
 
             } else {
                 window.location.href = "/battleship/";
             }
         } catch (error) {
             console.error("Error en Long Polling:", error);
-            setTimeout(() => monitorearPartida(idSala), 2000); // Reintento 
+            setTimeout(monitorearPartida, 2000);
         }
     }
 
 
 
-    function activarEtapaColocacion() {
-        console.log("fase de colocación");
+
+
+    // Etapa de colocacion///////////////////////////////////////////////////////////
+
+    btnEnviar.addEventListener("click", enviarNavesPosicionadas);
+    async function enviarNavesPosicionadas() {
+        tableroEnviado = true;
+        btnEnviar.disabled = true;
+
+        const navesEnTablero = document.querySelectorAll("#tablaJugador tbody td img");
+        let navesList = [];
+
+
+        navesEnTablero.forEach(img => {
+            const celdaPadre = img.parentElement;
+            const fila = celdaPadre.parentElement.rowIndex;
+            const columna = celdaPadre.cellIndex;
+
+            let naveDTO = {
+                IdNave: parseInt(img.id),
+                Coordenadas: [
+                    { "Fila": fila, "Columna": columna }
+                ]
+            };
+
+            navesList.push(naveDTO);
+        });
+        let json = {
+            IdSala: idSala,
+            IdUsuario: idUsuario,
+            NavesColocadas: navesList
+        };
+        try {
+            let response = await fetch("/battleship/enviar-naves", {
+                method: "POST",
+                body: JSON.stringify(json),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                console.log("Tablero guardado con éxito en el servidor.");
+            } else {
+                console.error("El servidor rechazó la configuración del tablero.");
+                //Creo que deberiamos regresarlo a la sala
+            }
+        } catch (error) {
+            console.error("Error de red al enviar las naves:", error);
+        }
     }
-    function gestionarTurnoDeAtaque() { }
+
+
+    //DRAG
+    let naveMoviendo = null;
+    document.addEventListener("dragstart", function (e) {
+
+        if (e.target.tagName == "IMG") {
+            naveMoviendo = e.target;
+            console.log("arrastrando:", e.target.id);
+        }
+        else {
+            e.preventDefault();
+        }
+    });
+
+    //DRAG SOBRE TABLERO
+
+    const tbodyTablero = document.querySelector("#tablaJugador tbody");
+    if (tbodyTablero) {
+        tbodyTablero.addEventListener("dragover", function (e) {
+            e.preventDefault();
+        });
+
+        tbodyTablero.addEventListener("drop", function (e) {
+            e.preventDefault();
+
+            const celdaDestino = e.target
+
+            if (e.target.tagName == "TD") {
+                if (celdaDestino.children.length === 0) {
+                    celdaDestino.appendChild(naveMoviendo);
+
+
+                }
+                else {
+                    console.log("Casilla ocupada");
+                }
+
+            }
+        });
+    }
 
 
 
-    //Etapa de atacar
+
+
+
+
+
+    //Etapa de atacar//////////////////////////////////////////////////////////////
     if (tablero) {
         tablero.addEventListener('click', function (event) {
             const celda = event.target;
@@ -151,8 +258,14 @@
         });
     }
 
+    function gestionarTurnoDeAtaque() {
+        btnEnviar.classList.add("invisible");
+        divMovimientos.classList.add("invisible");
+    }
 
-    //Finalizar
+
+
+    //Finalizar ///////////////////////////////////////////////////////////////////
 
 
     //Hacer un clear de la tabla //

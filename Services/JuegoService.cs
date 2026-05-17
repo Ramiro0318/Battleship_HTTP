@@ -277,6 +277,35 @@ namespace Battleship_HTTP.Services
                         }
                     }
                 }
+                else if (request.HttpMethod == "POST" && url == "/battleship/enviar-naves")
+                {
+                    var buffer = new byte[request.ContentLength64];
+                    request.InputStream.ReadExactly(buffer, 0, buffer.Length);
+                    var json = Encoding.UTF8.GetString(buffer);
+
+                    var solicitud = JsonSerializer.Deserialize<SolicitudTableroDTO>(json);
+
+                    if (solicitud == null)
+                    {
+                        response.StatusCode = 400;
+                    }
+                    else
+                    {
+                        Sala? sala = salasService.BuscarSalaId(solicitud.IdSala);
+
+                        if (sala == null || sala.battleship == null)
+                        {
+                            EnviarInfo(response, "Sala o partida no encontrada", 404);
+                        }
+                        else
+                        {
+                            partidaService.RegistrarTableroJugador(sala, solicitud.IdUsuario, solicitud.NavesColocadas);
+                            response.StatusCode = 200;
+                            //Si es el segundo jugador regresar a ambos el contenido de las cuadricular
+                            //Tal vez es en otro metodo
+                        }
+                    }
+                }
 
 
 
@@ -334,11 +363,11 @@ namespace Battleship_HTTP.Services
         {
             var ext = Path.GetExtension(nombreArchivo).Replace(".", "");
             var mime = GetMime(ext);
-            
+
             string ruta = "";
-            if (ext == "png")   ruta = Path.Combine($"Web/Resources/Images", nombreArchivo);
-            else if (ext == "mp3")  ruta = Path.Combine($"Web/Resources/Music", nombreArchivo);
-            else    ruta = Path.Combine($"Web/{ext}", nombreArchivo);
+            if (ext == "png") ruta = Path.Combine($"Web/Resources/Images", nombreArchivo);
+            else if (ext == "mp3") ruta = Path.Combine($"Web/Resources/Music", nombreArchivo);
+            else ruta = Path.Combine($"Web/{ext}", nombreArchivo);
 
 
             if (File.Exists(ruta))

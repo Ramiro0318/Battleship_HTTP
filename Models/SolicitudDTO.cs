@@ -36,4 +36,17 @@ namespace Battleship_HTTP.Models
         public bool FinalizadoCliente { get; set; }
 
     }
+
+    public class SolicitudTableroDTO
+    {
+        public string IdSala { get; set; } = "";
+        public string IdUsuario { get; set; } = "";
+        public List<NaveColocadaDTO> NavesColocadas { get; set; } = new();
+    }
+
+    public class NaveColocadaDTO
+    {
+        public int IdNave { get; set; }
+        public List<Coordenada>? Coordenadas { get; set; }
+    }
 }

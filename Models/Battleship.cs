@@ -15,8 +15,8 @@ namespace Battleship_HTTP.Models
         public List<CuadriculaTablero> CuadriculaJ1 { get; set; } = new();
         public List<CuadriculaTablero> CuadriculaJ2 { get; set; } = new();
 
-        public List<Nave>? NavesRestantesJ1 { get; set; }
-        public List<Nave>? NavesRestantesJ2 { get; set; }
+        public List<Nave> NavesRestantesJ1 { get; set; } = new();
+        public List<Nave> NavesRestantesJ2 { get; set; } = new();
         public Etapa Etapa { get; set; } = Etapa.ColocarBarcos;
 
     }
