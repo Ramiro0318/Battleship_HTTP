@@ -78,6 +78,7 @@
 
 
     let tableroEnviado = false;
+    let defensaRenderizada = false;
     async function monitorearPartida() {
         let payload = {
             IdSala: idSala,
@@ -118,8 +119,19 @@
                 }
                 else if (battleship.Etapa === 1) {
                     tableroEnviado = false;
-                    if (!tableroEnviado) {
+                    if (!defensaRenderizada) {
+                        defensaRenderizada = true;
+
+
+
+                        let navesRecibidas = (battleship.NavesRestantesJ1 && battleship.NavesRestantesJ1.length > 0)
+                            ? battleship.NavesRestantesJ1 : battleship.NavesRestantesJ2;
                         gestionarTurnoDeAtaque();
+
+
+                        if (navesRecibidas) {
+                            cargarDefensaServidor(navesRecibidas);
+                        }
 
                     }
                 }
@@ -197,7 +209,9 @@
 
     //DRAG
     let naveMoviendo = null;
-    document.addEventListener("dragstart", function (e) {
+    document.addEventListener("dragstart", dragStart);
+
+    function dragStart(e) {
 
         if (e.target.tagName == "IMG") {
             naveMoviendo = e.target;
@@ -206,17 +220,19 @@
         else {
             e.preventDefault();
         }
-    });
+    }
 
     //DRAG SOBRE TABLERO
 
     const tbodyTablero = document.querySelector("#tablaJugador tbody");
     if (tbodyTablero) {
-        tbodyTablero.addEventListener("dragover", function (e) {
+        tbodyTablero.addEventListener("dragover", dragOver);
+        function dragOver(e) {
             e.preventDefault();
-        });
+        }
 
-        tbodyTablero.addEventListener("drop", function (e) {
+        tbodyTablero.addEventListener("drop", drop);
+        function drop(e) {
             e.preventDefault();
 
             const celdaDestino = e.target
@@ -232,7 +248,8 @@
                 }
 
             }
-        });
+        }
+
     }
 
 
@@ -264,11 +281,52 @@
         btnEnviar.classList.add("invisible");
         divMovimientos.classList.add("invisible");
         divContenedor.classList.add("invisible");
+        tableroDefensa.style.display = "table";
+
+        document.removeEventListener("dragStart", dragStart)
+        tbodyTablero.removeEventListener("dragover", dragOver);
+        tbodyTablero.removeEventListener("drop", drop);
     }
 
 
 
-    //Finalizar ///////////////////////////////////////////////////////////////////
+    function cargarDefensaServidor(navesList) {
+        const tbodyDefensa = document.querySelector("#tablaDefensa tbody");
+        const celdasDefensa = document.querySelectorAll("#tablaDefensa tbody td");
+        if (!tbodyDefensa) return;
+
+        const celdas = tbodyDefensa.querySelectorAll("td");
+        celdas.forEach(celda => {
+            celda.textContent = "";
+            celda.removeAttribute("data-id-nave");
+        });
+
+        navesList.forEach(nave => {
+            // Recorrer las coordenadas de la nave
+            nave.Coordenadas.forEach(coord => {
+                const fila = coord.Fila;
+                const columna = coord.Columna;
+
+                if (tbodyDefensa.rows[fila] && tbodyDefensa.rows[fila].cells[columna]) {
+                    const celda = tbodyDefensa.rows[fila].cells[columna];
+
+                    celda.textContent = "🚢";
+                    celda.style.textAlign = "center";
+                    celda.style.fontSize = "20px";
+
+                    // Opcional: Le puedes poner un atributo data o id para saber qué nave es
+                    celda.dataset.idNave = nave.IdNave;
+                }
+            });
+        });
+        console.log("Flota de defensa cargada e inicializada desde el servidor.");
+    }
+
+
+
+
+
+    //Etapa finalizar ///////////////////////////////////////////////////////////////////
 
 
     //Hacer un clear de la tabla //

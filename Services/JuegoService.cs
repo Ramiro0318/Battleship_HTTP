@@ -299,7 +299,7 @@ namespace Battleship_HTTP.Services
                                     Turno = partida.Turno,
                                     Finalizado = partida.Finalizado,
                                     Ganador = partida.Ganador,
-                                    NumeroDisparos = partida.NumeroDisparos
+                                    NumeroDisparos = partida.NumeroDisparos,
                                 };
 
 
@@ -314,6 +314,8 @@ namespace Battleship_HTTP.Services
                                             c.Posicion,
                                             c.Estado == EstadoCasilla.Nave ? EstadoCasilla.Agua : c.Estado
                                         )).ToList();
+
+                                    partidaSanitizada.NavesRestantesJ1 = partida.NavesRestantesJ1;
                                 }
                                 else
                                 {
@@ -323,6 +325,8 @@ namespace Battleship_HTTP.Services
                                             c.Posicion,
                                             c.Estado == EstadoCasilla.Nave ? EstadoCasilla.Agua : c.Estado
                                         )).ToList();
+                                    partidaSanitizada.NavesRestantesJ2 = partida.NavesRestantesJ2;
+
                                 }
 
                                 EnviarBattleship(response, partidaSanitizada);
