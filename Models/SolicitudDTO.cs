@@ -30,10 +30,12 @@ namespace Battleship_HTTP.Models
     public class SolicitudMonitoreoPartidaDTO
     {
         public string IdSala { get; set; } = "";
+        public string IdUsuario { get; set; } = "";
         public int TiempoCliente { get; set; }
         public int EtapaCliente { get; set; }
         public string TurnoCliente { get; set; } = "";
         public bool FinalizadoCliente { get; set; }
+        public int NumeroDisparos { get; set; } = 0;
 
     }
 

@@ -13,11 +13,12 @@ namespace Battleship_HTTP.Models
         public bool Finalizado { get; set; } // Posiblemente eliminado
         public int TiempoRestante { get; set; }
         public List<CuadriculaTablero> CuadriculaJ1 { get; set; } = new();
-        public List<CuadriculaTablero> CuadriculaJ2 { get; set; } = new();
+        public List<CuadriculaTablero> CuadriculaJ2 { get; set; } = new();  
 
         public List<Nave> NavesRestantesJ1 { get; set; } = new();
         public List<Nave> NavesRestantesJ2 { get; set; } = new();
         public Etapa Etapa { get; set; } = Etapa.ColocarBarcos;
+        public int NumeroDisparos { get; set; } = 0;
 
     }
 

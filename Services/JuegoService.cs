@@ -256,12 +256,24 @@ namespace Battleship_HTTP.Services
 
                             var partida = sala.battleship;
 
-                            if (partida.TiempoRestante != solicitud.TiempoCliente || (int)partida.Etapa != solicitud.EtapaCliente ||
-                            partida.Turno != solicitud.TurnoCliente || partida.Finalizado != solicitud.FinalizadoCliente)
+                            if (partida.Etapa == Etapa.ColocarBarcos)
                             {
-                                breakEspera = true;
+                                // En esta etapa solo monitoreamos cambios globales de preparación
+                                if (partida.TiempoRestante != solicitud.TiempoCliente || (int)partida.Etapa != solicitud.EtapaCliente ||
+                                    partida.Turno != solicitud.TurnoCliente || partida.Finalizado != solicitud.FinalizadoCliente)
+                                {
+                                    breakEspera = true;
+                                }
                             }
-                            else
+                            else if (partida.Etapa == Etapa.Batalla)
+                            {
+                                if (partida.TiempoRestante != solicitud.TiempoCliente || partida.Turno != solicitud.TurnoCliente ||
+                                    partida.Finalizado != solicitud.FinalizadoCliente || partida.NumeroDisparos != solicitud.NumeroDisparos)
+                                {
+                                    breakEspera = true;
+                                }
+                            }
+                            if (!breakEspera)
                             {
                                 Thread.Sleep(500);
                                 intentos++;
@@ -273,7 +285,54 @@ namespace Battleship_HTTP.Services
                         }
                         else
                         {
-                            EnviarBattleship(response, sala.battleship);
+
+
+                            var partida = sala.battleship;
+
+                            if (partida.Etapa == Etapa.Batalla)
+                            {
+                                //copia sanitizada
+                                var partidaSanitizada = new Battleship
+                                {
+                                    Etapa = partida.Etapa,
+                                    TiempoRestante = partida.TiempoRestante,
+                                    Turno = partida.Turno,
+                                    Finalizado = partida.Finalizado,
+                                    Ganador = partida.Ganador,
+                                    NumeroDisparos = partida.NumeroDisparos
+                                };
+
+
+                                if (sala.IdJugador1 == solicitud.IdUsuario)
+                                {
+                                    // El Jugador 1 ve sus barcos completos 
+                                    partidaSanitizada.CuadriculaJ1 = partida.CuadriculaJ1;
+
+                                    // Del Jugador 2 se ocultan las que están marcadas como nave
+                                    partidaSanitizada.CuadriculaJ2 = partida.CuadriculaJ2
+                                        .Select(c => new CuadriculaTablero(
+                                            c.Posicion,
+                                            c.Estado == EstadoCasilla.Nave ? EstadoCasilla.Agua : c.Estado
+                                        )).ToList();
+                                }
+                                else
+                                {
+                                    partidaSanitizada.CuadriculaJ2 = partida.CuadriculaJ2;
+                                    partidaSanitizada.CuadriculaJ1 = partida.CuadriculaJ1
+                                        .Select(c => new CuadriculaTablero(
+                                            c.Posicion,
+                                            c.Estado == EstadoCasilla.Nave ? EstadoCasilla.Agua : c.Estado
+                                        )).ToList();
+                                }
+
+                                EnviarBattleship(response, partidaSanitizada);
+                            }
+                            else   //Aqui sería el Etapa == Etapa.ColocandoBarcos
+                            {
+                                EnviarBattleship(response, partida);
+                            }
+
+
                         }
                     }
                 }
@@ -326,13 +385,6 @@ namespace Battleship_HTTP.Services
                 }
 
             }
-            //else if (request.RawUrl.StartsWith("/battleship/images/"))
-            //{
-            //    string archivo = request.RawUrl.Replace("/battleship/", "");
-            //    string ruta = Path.Combine("Web", archivo);
-
-            //    ServirArchivo(response, ruta, "image/png");
-            //}
             catch (Exception ex)
             {
                 response.StatusCode = 500;
@@ -354,7 +406,7 @@ namespace Battleship_HTTP.Services
             {
                 case "html": return "text/html";
                 case "css": return "text/css";
-                case "js": return "text/js";
+                case "js": return "text/javascript";
                 case "png": return "image/png";
             }
             return "";

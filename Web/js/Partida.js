@@ -10,12 +10,12 @@
     const bIdSala = document.querySelector("#bidSala");
     const spanTurno = document.querySelector("#turno");
     const spanTiempo = document.querySelector("#tiempoRestante");
-    const TableJugador = document.querySelector("#tablaJugador");
     const divMovimientos = document.querySelector("#movmimiento");
     const divContenedor = document.querySelector("#contenedor");
 
     //Tablero
-    const tablero = document.querySelector('#tablaJugador');
+    const TableJugador = document.querySelector("#tablaJugador");
+    const tableroDefensa = document.querySelector('#tablaDefensa');
     const btnEnviar = document.querySelector('#enviarNaves');
 
     //FinPartida
@@ -81,10 +81,12 @@
     async function monitorearPartida() {
         let payload = {
             IdSala: idSala,
+            IdUsuario: idUsuario,
             TiempoCliente: battleship ? battleship.TiempoRestante : -1,
             EtapaCliente: battleship ? battleship.Etapa : 0,
             TurnoCliente: battleship ? battleship.Turno : "",
-            FinalizadoCliente: battleship ? battleship.Finalizado : false
+            FinalizadoCliente: battleship ? battleship.Finalizado : false,
+            NumeroDisparos: battleship ? battleship.NumeroDisparos : 0
         };
 
         try {
@@ -155,7 +157,7 @@
 
         navesEnTablero.forEach(img => {
             const celdaPadre = img.parentElement;
-            const fila = celdaPadre.parentElement.rowIndex;
+            const fila = celdaPadre.parentElement.sectionRowIndex;
             const columna = celdaPadre.cellIndex;
 
             let naveDTO = {
@@ -241,8 +243,8 @@
 
 
     //Etapa de atacar//////////////////////////////////////////////////////////////
-    if (tablero) {
-        tablero.addEventListener('click', function (event) {
+    if (TableJugador) {
+        TableJugador.addEventListener('click', function (event) {
             const celda = event.target;
 
             if (celda.tagName === 'TD') {
@@ -261,6 +263,7 @@
     function gestionarTurnoDeAtaque() {
         btnEnviar.classList.add("invisible");
         divMovimientos.classList.add("invisible");
+        divContenedor.classList.add("invisible");
     }
 
 
@@ -270,16 +273,24 @@
 
     //Hacer un clear de la tabla //
     btnReiniciar.addEventListener('click', function (e) {
-        tablero.lastChild.remove();
+        // Buscamos el tbody real de la tabla y lo vaciamos de golpe
+        const tbodyAtaque = document.querySelector("#tablaJugador tbody");
+        const tbodyDefensa = document.querySelector("#tablaDefensa tbody");
 
-        let tbody = tablero.appendChild("TBODY");
+        if (tbodyAtaque) tbodyAtaque.innerHTML = "";
+        if (tbodyDefensa) tbodyDefensa.innerHTML = "";
 
-        for (var i = 0; i < 10; i++) {
-            let tr = tbody.appendChild("TR");
+        // Volvemos a regenerar las celdas vacías para el nuevo juego
+        for (let f = 0; f < 10; f++) {
+            let trA = document.createElement("tr");
+            let trD = document.createElement("tr");
 
-            for (var i = 0; i < 10; i++) {
-                tr.appendChild("TD");
+            for (let c = 0; c < 10; c++) {
+                trA.appendChild(document.createElement("td"));
+                trD.appendChild(document.createElement("td"));
             }
+            tbodyAtaque.appendChild(trA);
+            tbodyDefensa.appendChild(trD);
         }
     });
 });
