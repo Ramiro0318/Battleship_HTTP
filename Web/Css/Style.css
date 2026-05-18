@@ -274,21 +274,32 @@ table tr td {
     max-width: 280px;
 }
 
-main #instrucciones, main #resultados {
-    position: absolute;
-    width: 70%;
-    min-width: 300px;
-    top: 40%;
-    left: 50%;
-    right: auto;
-    background-color: var(--backgroundColorTable);
-    transform: translate(-50%, -50%);
-    z-index: 20;
-    display:  flex;
-    flex-direction: column;
-    padding: 20px;
-    gap: 5px;
-}
+    #contenedor div {
+        display: flex;
+        gap: 0;
+    }
+
+        #contenedor div img {
+            height: 32px;
+            width: 32px;
+            pointer-events: none;
+        }
+
+        main #instrucciones, main #resultados {
+            position: absolute;
+            width: 70%;
+            min-width: 300px;
+            top: 40%;
+            left: 50%;
+            right: auto;
+            background-color: var(--backgroundColorTable);
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 5px;
+        }
 
 main #instrucciones strong {
     font-size: 1.4em;
@@ -336,6 +347,40 @@ main #fondo {
 .invisible {
     visibility: hidden;
 }
+
+/* --- BARCO SELECCIONADO HORIZONTAL --- */
+.celda-seleccionada-h-inicio {
+    outline: 3px solid #ffcc00;
+    outline-offset: -3px;
+}
+
+.celda-seleccionada-h-medio {
+    border-top: 3px solid #ffcc00 !important;
+    border-bottom: 3px solid #ffcc00 !important;
+}
+
+.celda-seleccionada-h-fin {
+    outline: 3px solid #ffcc00;
+    outline-offset: -3px;
+}
+
+.celda-seleccionada-v-inicio {
+    outline: 3px solid #ffcc00;
+    outline-offset: -3px;
+}
+
+.celda-seleccionada-v-medio {
+    border-left: 3px solid #ffcc00 !important;
+    border-right: 3px solid #ffcc00 !important;
+}
+
+.celda-seleccionada-v-fin {
+    outline: 3px solid #ffcc00;
+    outline-offset: -3px;
+}
+
+
+
 
 @media (min-width : 420px) {
     header h1 {

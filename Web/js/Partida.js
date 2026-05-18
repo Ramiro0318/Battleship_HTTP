@@ -10,8 +10,17 @@
     const bIdSala = document.querySelector("#bidSala");
     const spanTurno = document.querySelector("#turno");
     const spanTiempo = document.querySelector("#tiempoRestante");
-    const divMovimientos = document.querySelector("#movmimiento");
     const divContenedor = document.querySelector("#contenedor");
+
+    //Movimiento
+    const divMovimientos = document.querySelector("#movimiento");
+    const btnArriba = document.querySelector("#arriba").addEventListener("click", () => moverNave("arriba"));
+    const btnAbajo = document.querySelector("#abajo").addEventListener("click", () => moverNave("abajo"));
+    const btnIzquierda = document.querySelector("#izquierda").addEventListener("click", () => moverNave("izquierda"));
+    const btnDerecha = document.querySelector("#derecha").addEventListener("click", () => moverNave("derecha"));
+
+    const btnRotarDerecha = document.querySelector("#rotarDerecha").addEventListener("click", () => RotarNave("derecha"));
+    const btnRotarIzquierda = document.querySelector("#rotarIzquierda").addEventListener("click", () => RotarNave("izquierda"));
 
     //Tablero
     const TableJugador = document.querySelector("#tablaJugador");
@@ -33,6 +42,10 @@
 
 
     let battleship;
+    let naveSeleccionadaId = null;  
+    let naveSeleccionadaFila = null;
+    let naveSeleccionadaCol = null;
+    let naveDireccion = "derecha";
 
     if (!numSala || !idUsuario) {
         window.location.href = "/battleship/";
@@ -40,11 +53,9 @@
     }
 
 
-    //Inicializar
+    //Inicializar /////////////////////////////////////////////////////////////////////////////////
     bIdSala.textContent = numSala;
     spanTiempo.textContent = "60";
-
-
 
 
     btnOk.addEventListener('click', function () {
@@ -52,7 +63,10 @@
         fondo.classList.add("invisible");
     });
 
-    //Etapa de Colocar barcos
+
+
+
+    //Etapa de Colocar barcos /////////////////////////////////////////////////////////////////////
     verificarEtapaColocacion(idSala);
 
     async function verificarEtapaColocacion(idSala) {
@@ -67,9 +81,6 @@
                 console.log(battleship);
                 monitorearPartida();
             }
-            // spanTurno.textContent = battleship.Turno;
-            // spanTiempo.textContent = battleship.TiempoRestante;
-
         } else {
             window.location.href = "/battleship/";
         }
@@ -156,7 +167,10 @@
 
 
 
-    // Etapa de colocacion///////////////////////////////////////////////////////////
+
+
+
+    //Colocacion/////////////////////////////////////////////////////////////////////////////////
 
     btnEnviar.addEventListener("click", enviarNavesPosicionadas);
     async function enviarNavesPosicionadas() {
@@ -213,8 +227,9 @@
 
     function dragStart(e) {
 
-        if (e.target.tagName == "IMG") {
+        if (e.target.tagName == "DIV") {
             naveMoviendo = e.target;
+            e.dataTransfer.setData("text/plain", e.target.id);
             console.log("arrastrando:", e.target.id);
         }
         else {
@@ -222,60 +237,314 @@
         }
     }
 
-    //DRAG SOBRE TABLERO
 
     const tbodyTablero = document.querySelector("#tablaJugador tbody");
     if (tbodyTablero) {
+        //DRAG OVER
         tbodyTablero.addEventListener("dragover", dragOver);
         function dragOver(e) {
             e.preventDefault();
         }
 
+
+        //DROP
         tbodyTablero.addEventListener("drop", drop);
         function drop(e) {
             e.preventDefault();
 
-            const celdaDestino = e.target
-
-            if (e.target.tagName == "TD") {
-                if (celdaDestino.children.length === 0) {
-                    celdaDestino.appendChild(naveMoviendo);
-
-
-                }
-                else {
-                    console.log("Casilla ocupada");
-                }
-
+            let celdaDestino = e.target;
+            if (celdaDestino.tagName === "IMG") {
+                celdaDestino = celdaDestino.parentElement;
             }
+
+            if (celdaDestino.tagName !== "TD") return;
+
+            const filaInicial = celdaDestino.parentElement.sectionRowIndex;
+            const columnaInicial = celdaDestino.cellIndex;
+
+            const idNave = e.dataTransfer.getData("text/plain");
+
+            if (!naveMoviendo) return;
+
+
+            const cuadritosBarco = naveMoviendo.querySelectorAll("img");
+            const longitudBarco = cuadritosBarco.length;
+
+            if (columnaInicial + longitudBarco > 10) return;
+
+            const filaActual = tbodyTablero.rows[filaInicial];
+
+            cuadritosBarco.forEach((imgOriginal, indice) => {
+                const columnaDestino = columnaInicial + indice;
+                const celdaObjetivo = filaActual.cells[columnaDestino];
+
+                const nuevoCuadrito = imgOriginal.cloneNode(true);
+
+                nuevoCuadrito.id = idNave;
+
+                nuevoCuadrito.style.width = "100%";
+                nuevoCuadrito.style.height = "100%";
+                nuevoCuadrito.style.display = "block";
+
+                celdaObjetivo.innerHTML = "";
+                celdaObjetivo.appendChild(nuevoCuadrito);
+            });
+
+            naveMoviendo.setAttribute("draggable", "false");
+
+            console.log(`Nave ${idNave} colocada exitosamente desde la columna ${columnaInicial} hasta la ${columnaInicial + longitudBarco - 1}`);
+
+            // Limpiamos la variable global
+            naveMoviendo = null;
+
+
         }
 
     }
 
 
+    //MOVIMIENTO TRAS COLOCAR
+    tbodyTablero.addEventListener("click", seleccionarBarcoEnTablero);
+    function seleccionarBarcoEnTablero(e) {
+        if (e.target.tagName !== "IMG") return;
 
+        const idNave = e.target.id;
 
+        //quitarBordesDeSeleccion();
 
+        let celdasNave = [];
 
+        for (let f = 0; f < tbodyTablero.rows.length; f++) {
+            for (let c = 0; c < tbodyTablero.rows[f].cells.length; c++) {
+                const celda = tbodyTablero.rows[f].cells[c];
+                const img = celda.querySelector("img");
 
-
-    //Etapa de atacar//////////////////////////////////////////////////////////////
-    if (TableJugador) {
-        TableJugador.addEventListener('click', function (event) {
-            const celda = event.target;
-
-            if (celda.tagName === 'TD') {
-                if (celda.textContent === "") {
-                    celda.textContent = "💥";
-                    celda.style.fontSize = "20px";
-                    celda.style.textAlign = "center";
-                    celda.style.color = "blue";
-                } else {
-                    console.log("Esta celda ya fue atacada.");
+                // Si la celda tiene una imagen y coincide con el ID del barco tocado
+                if (img && img.id === idNave) {
+                    celdasNave.push({ celda, fila: f, col: c });
                 }
             }
+        }
+
+        if (celdasNave.length === 0) return;
+
+        // la punta columna más alta.
+        celdasNave.sort((a, b) => b.col - a.col);
+
+        const puntaDetectada = celdasNave[0];
+
+        naveSeleccionadaId = idNave;
+        naveSeleccionadaFila = puntaDetectada.fila;
+        naveSeleccionadaCol = puntaDetectada.col;
+        naveDireccion = "derecha";
+
+        celdasNave.forEach((item, indice) => {
+            if (indice === 0) {
+                item.celda.classList.add("celda-seleccionada-h-inicio");
+            } else if (indice === celdasNave.length - 1) {
+                item.celda.classList.add("celda-seleccionada-h-fin");
+            } else {
+                item.celda.classList.add("celda-seleccionada-h-medio");
+            }
         });
+
+        console.log(`[Selección] Nave ${idNave} fija. Punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}) apuntando a la ${naveDireccion}.`);
     }
+
+    //MOVER
+    function moverNave(direccionBoton) {
+        if (!naveSeleccionadaId) return;
+        if (direccionBoton !== "arriba" && direccionBoton !== "abajo" &&
+            direccionBoton !== "izquierda" && direccionBoton !== "derecha") return;
+
+        const fragmentosEnTablero = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
+        const longitud = fragmentosEnTablero.length;
+
+        let nuevaFilaPunta = naveSeleccionadaFila;
+        let nuevaColPunta = naveSeleccionadaCol;
+
+        if (direccionBoton === "arriba") nuevaFilaPunta--;
+        if (direccionBoton === "abajo") nuevaFilaPunta++;
+        if (direccionBoton === "izquierda") nuevaColPunta--;
+        if (direccionBoton === "derecha") nuevaColPunta++;
+
+        let nuevasPosiciones = [];
+        for (let i = 0; i < longitud; i++) {
+            let f = nuevaFilaPunta;
+            let c = nuevaColPunta;
+
+            if (naveDireccion === "derecha") c = nuevaColPunta - i;
+            if (naveDireccion === "izquierda") c = nuevaColPunta + i;
+            if (naveDireccion === "abajo") f = nuevaFilaPunta - i;
+            if (naveDireccion === "arriba") f = nuevaFilaPunta + i;
+
+            nuevasPosiciones.push({ fila: f, col: c, indiceCuerpo: i });
+        }
+
+        const esPosible = comprobarOcupadas(nuevasPosiciones, naveSeleccionadaId);
+
+        if (!esPosible) {
+            console.warn(`[Movimiento] Bloqueado hacia la ${direccionBoton}.`);
+            return;
+        }
+
+        const imgsParaClonar = Array.from(fragmentosEnTablero);
+
+        fragmentosEnTablero.forEach(img => {
+            const celdaVieja = img.parentElement;
+            if (celdaVieja) celdaVieja.innerHTML = "";
+        });
+
+        // const clonesViejos = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
+        // clonesViejos.forEach(img => {
+        //     const celdaVieja = img.parentElement;
+        //     if (celdaVieja) celdaVieja.innerHTML = "";
+        // });
+
+        // const imgsOriginales = fragmentosEnTablero.querySelectorAll("img");
+
+
+
+        nuevasPosiciones.forEach(pos => {
+            const celdaObjetivo = tbodyTablero.rows[pos.fila].cells[pos.col];
+            const nuevoCuadrito = imgsParaClonar[pos.indiceCuerpo].cloneNode(true);
+
+            nuevoCuadrito.id = naveSeleccionadaId;
+            nuevoCuadrito.style.width = "100%";
+            nuevoCuadrito.style.height = "100%";
+            nuevoCuadrito.style.display = "block";
+
+            celdaObjetivo.appendChild(nuevoCuadrito);
+        });
+
+        naveSeleccionadaFila = nuevaFilaPunta;
+        naveSeleccionadaCol = nuevaColPunta;
+
+        console.log(`[Movimiento] Éxito. Nueva punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}).`);
+    }
+
+    //ROTAR
+    function rotarNave(sentidoRotacion) {
+        if (!naveSeleccionadaId) return;
+        if (sentidoRotacion !== "derecha" && sentidoRotacion !== "izquierda") return;
+
+        const divOriginal = document.getElementById(naveSeleccionadaId);
+        const longitud = divOriginal.querySelectorAll("img").length;
+
+        const direcciones = ["arriba", "derecha", "abajo", "izquierda"];
+        let indiceActual = direcciones.indexOf(naveDireccion);
+
+        let nuevaDireccion = naveDireccion;
+        if (sentidoRotacion === "derecha") {
+            // Giro horario: avanzar un espacio en la lista
+            nuevaDireccion = direcciones[(indiceActual + 1) % 4];
+        } else if (sentidoRotacion === "izquierda") {
+            // Giro antihorario: retroceder un espacio (sumamos 4 para evitar números negativos)
+            nuevaDireccion = direcciones[(indiceActual - 1 + 4) % 4];
+        }
+
+        let posicionesTransformadas = [];
+        for (let i = 0; i < longitud; i++) {
+            let f = naveSeleccionadaFila;
+            let c = naveSeleccionadaCol;
+
+            if (nuevaDireccion === "derecha") c = naveSeleccionadaCol - i;
+            if (nuevaDireccion === "izquierda") c = naveSeleccionadaCol + i;
+            if (nuevaDireccion === "abajo") f = naveSeleccionadaFila - i;
+            if (nuevaDireccion === "arriba") f = naveSeleccionadaFila + i;
+
+            posicionesTransformadas.push({ fila: f, col: c, indiceCuerpo: i });
+        }
+
+        const esPosible = comprobarOcupadas(posicionesTransformadas, naveSeleccionadaId);
+
+        if (!esPosible) {
+            console.warn(`[Rotación] Bloqueada hacia la ${sentidoRotacion}. No hay espacio o hay colisión.`);
+            return;
+        }
+
+        const clonesViejos = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
+        clonesViejos.forEach(img => {
+            const celdaVieja = img.parentElement;
+            if (celdaVieja) celdaVieja.innerHTML = "";
+        });
+
+        const imgsOriginales = divOriginal.querySelectorAll("img");
+
+        let gradosCss = 0;
+        if (nuevaDireccion === "derecha") gradosCss = 0;
+        if (nuevaDireccion === "abajo") gradosCss = 90;
+        if (nuevaDireccion === "izquierda") gradosCss = 180;
+        if (nuevaDireccion === "arriba") gradosCss = 270;
+
+        posicionesTransformadas.forEach(pos => {
+            const celdaObjetivo = tbodyTablero.rows[pos.fila].cells[pos.col];
+            const nuevoCuadrito = imgsOriginales[pos.indiceCuerpo].cloneNode(true);
+
+            nuevoCuadrito.id = naveSeleccionadaId;
+            nuevoCuadrito.style.width = "100%";
+            nuevoCuadrito.style.height = "100%";
+            nuevoCuadrito.style.display = "block";
+
+            // Aplicamos los grados correspondientes para que la imagen tenga sentido visual
+            nuevoCuadrito.style.transform = `rotate(${gradosCss}deg)`;
+
+            celdaObjetivo.appendChild(nuevoCuadrito);
+        });
+
+        naveDireccion = nuevaDireccion;
+
+        console.log(`[Rotación] Éxito. Nave ${naveSeleccionadaId} ahora apunta hacia: ${naveDireccion}`);
+    }
+
+
+    function comprobarOcupadas(posicionesDeseadas, idNave) {
+        for (let coord of posicionesDeseadas) {
+
+            if (coord.fila < 0 || coord.fila > 9 || coord.col < 0 || coord.col > 9) {
+                console.warn(`[Aduana] Posición inválida: (${coord.fila}, ${coord.col}) está fuera del tablero.`);
+                return false;
+            }
+
+            const celdaDestino = tbodyTablero.rows[coord.fila].cells[coord.col];
+            const imgExistente = celdaDestino.querySelector("img");
+
+            if (imgExistente && imgExistente.id !== idNave) {
+                console.warn(`[Aduana] Colisión detectada en la celda (${coord.fila}, ${coord.col}) con la nave ID: ${imgExistente.id}`);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    //Etapa de atacar/////////////////////////////////////////////////////////////////////////////
+    // if (TableJugador) {
+    //     TableJugador.addEventListener('click', function (event) {
+    //         const celda = event.target;
+
+    //         if (celda.tagName === 'TD') {
+    //             if (celda.textContent === "") {
+    //                 celda.textContent = "💥";
+    //                 celda.style.fontSize = "20px";
+    //                 celda.style.textAlign = "center";
+    //                 celda.style.color = "blue";
+    //             } else {
+    //                 console.log("Esta celda ya fue atacada.");
+    //             }
+    //         }
+    //     });
+    // }
 
     function gestionarTurnoDeAtaque() {
         btnEnviar.classList.add("invisible");
@@ -292,7 +561,6 @@
 
     function cargarDefensaServidor(navesList) {
         const tbodyDefensa = document.querySelector("#tablaDefensa tbody");
-        const celdasDefensa = document.querySelectorAll("#tablaDefensa tbody td");
         if (!tbodyDefensa) return;
 
         const celdas = tbodyDefensa.querySelectorAll("td");
@@ -301,19 +569,10 @@
             celda.removeAttribute("data-id-nave");
         });
 
-        const mapaImagenes = {
-            1: "destroyer-0.png",
-            2: "submarine-0.png",
-            3: "cruiser-0.png",
-            4: "battleship-0.png",
-            5: "carrier-0.png"
-        };
-
 
         navesList.forEach(nave => {
 
             const imgOriginal = document.getElementById(nave.IdNave.toString());
-            const nombreArchivo = mapaImagenes[nave.IdNave];
 
             // Recorrer las coordenadas de la nave
             nave.Coordenadas.forEach(coord => {
@@ -328,16 +587,6 @@
 
                     if (imgOriginal && imgOriginal.src) {
                         imgBarco.src = imgOriginal.src;
-                    }
-                    else {
-                        const backupRutas = {
-                            1: "destroyer-0.png",
-                            2: "submarine-0.png",
-                            3: "cruiser-0.png",
-                            4: "battleship-0.png",
-                            5: "carrier-0.png"
-                        };
-                        imgBarco.src = `/Resources/Images/${backupRutas[nave.IdNave]}`;
                     }
 
                     imgBarco.style.width = "100%";
@@ -354,14 +603,14 @@
             const barcosArrastrados = tbodyTablero.querySelectorAll("img");
             barcosArrastrados.forEach(img => img.remove());
         }
-        console.log("Flota de defensa cargada e inicializada desde el servidor.");
+        console.log("Flota renderizada.");
     }
 
 
 
 
 
-    //Etapa finalizar ///////////////////////////////////////////////////////////////////
+    //Etapa finalizar ///////////////////////////////////////////////////////////////////////////
 
 
     //Hacer un clear de la tabla //

@@ -302,16 +302,49 @@
 
         <button id="enviarNaves">Listo</button>
 
-        <div id="movmimiento">
-            <img src="/battleship/Resources/Images/flair_arrow_center_1.png" />
-            <img src="/battleship/Resources/Images/flair_arrow_center_2.png" />
+        <div id="movimiento">
+            <button id="arriba">arriba</button>
+            <button id="derecha">derecha</button>
+            <button id="abajo">abajo</button>
+            <button id="izquierda">izquierda</button>
+
+            <img id="rotarDerecha" src="/battleship/Resources/Images/flair_arrow_1.png" />
+            <img id="rotarIzquierda" src="/battleship/Resources/Images/flair_arrow_2.png" />
         </div>
+
         <div id="contenedor">
-            <img id="1" src="/battleship/Resources/Images/destroyer-0.png" style="height:32px; width: 60px;"/>
-            <img id="2" src="/battleship/Resources/Images/submarine-0.png" style="height:32px; width: 60px;" />
-            <img id="3" src="/battleship/Resources/Images/cruiser-0.png" style="height:32px; width: 60px;" />
-            <img id="4" src="/battleship/Resources/Images/battleship-0.png" style="height:32px; width: 60px;" />
-            <img id="5" src="/battleship/Resources/Images/carrier-0.png" style="height:32px; width: 60px;" />
+            <div id="1" class="contenedor-nave" draggable="true">
+                <img src="/battleship/Resources/Images/destroyer-0.png" />
+                <img src="/battleship/Resources/Images/destroyer-1.png" />
+            </div>
+
+            <div id="2" class="contenedor-nave" draggable="true">
+                <img src="/battleship/Resources/Images/submarine-0.png" />
+                <img src="/battleship/Resources/Images/submarine-1.png" />
+                <img src="/battleship/Resources/Images/submarine-2.png" />
+            </div>
+
+            <div id="3" class="contenedor-nave" draggable="true">
+                <img src="/battleship/Resources/Images/cruiser-0.png" />
+                <img src="/battleship/Resources/Images/cruiser-1.png" />
+                <img src="/battleship/Resources/Images/cruiser-2.png" />
+            </div>
+
+            <div id="4" class="contenedor-nave" draggable="true">
+                <img src="/battleship/Resources/Images/battleship-0.png" />
+                <img src="/battleship/Resources/Images/battleship-1.png" />
+                <img src="/battleship/Resources/Images/battleship-2.png" />
+                <img src="/battleship/Resources/Images/battleship-3.png" />
+            </div>
+
+            <div id="5" class="contenedor-nave" draggable="true">
+                <img src="/battleship/Resources/Images/carrier-0.png" />
+                <img src="/battleship/Resources/Images/carrier-1.png" />
+                <img src="/battleship/Resources/Images/carrier-2.png" />
+                <img src="/battleship/Resources/Images/carrier-3.png" />
+                <img src="/battleship/Resources/Images/carrier-4.png" />
+            </div>
+
         </div>
 
         <div id="instrucciones">
