@@ -297,24 +297,53 @@
 
         const celdas = tbodyDefensa.querySelectorAll("td");
         celdas.forEach(celda => {
-            celda.textContent = "";
+            celda.innerHTML = "";
             celda.removeAttribute("data-id-nave");
         });
 
+        const mapaImagenes = {
+            1: "destroyer-0.png",
+            2: "submarine-0.png",
+            3: "cruiser-0.png",
+            4: "battleship-0.png",
+            5: "carrier-0.png"
+        };
+
+
         navesList.forEach(nave => {
+            const imgOriginal = document.getElementById(nave.IdNave.toString());
+            const nombreArchivo = mapaImagenes[nave.IdNave];
             // Recorrer las coordenadas de la nave
             nave.Coordenadas.forEach(coord => {
+
                 const fila = coord.Fila;
                 const columna = coord.Columna;
 
                 if (tbodyDefensa.rows[fila] && tbodyDefensa.rows[fila].cells[columna]) {
                     const celda = tbodyDefensa.rows[fila].cells[columna];
 
-                    celda.textContent = "🚢";
-                    celda.style.textAlign = "center";
-                    celda.style.fontSize = "20px";
+                    const imgBarco = document.createElement("img");
 
-                    // Opcional: Le puedes poner un atributo data o id para saber qué nave es
+                    if (imgOriginal) {
+                        imgBarco.src = imgOriginal.src;
+                    } else {
+                        // Respaldo seguro por si acaso
+                        const backupRutas = {
+                            1: "destroyer-0.png",
+                            2: "submarine-0.png",
+                            3: "cruiser-0.png",
+                            4: "battleship-0.png",
+                            5: "carrier-0.png"
+                        };
+                        imgBarco.src = `/Resources/Images/${backupRutas[nave.IdNave]}`;
+                    }
+
+                    imgBarco.style.width = "100%";
+                    imgBarco.style.height = "100%";
+                    imgBarco.style.display = "block";
+                    imgBarco.style.objectFit = "cover";
+
+                    celda.appendChild(imgBarco);
                     celda.dataset.idNave = nave.IdNave;
                 }
             });

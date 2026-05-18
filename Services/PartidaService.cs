@@ -17,11 +17,11 @@ namespace Battleship_HTTP.Services
         Random r = new();
 
         public List<Nave> NavesElegir = new List<Nave>(){
-            new Nave {IdNave = 1, Longitud = 1, SectoresRestantes = 1, Coordenadas = new List<Coordenada>()},   //PATRULLERO 
-            new Nave {IdNave = 2, Longitud = 1, SectoresRestantes = 1, Coordenadas = new List<Coordenada>()},   //SUBMARINO  
-            new Nave {IdNave = 3, Longitud = 1, SectoresRestantes = 1, Coordenadas = new List<Coordenada>()},   //DESTRUCTOR
-            new Nave {IdNave = 4, Longitud = 1, SectoresRestantes = 1, Coordenadas = new List<Coordenada>()},   //ACORAZADO
-            new Nave {IdNave = 5, Longitud = 1, SectoresRestantes = 1, Coordenadas = new List<Coordenada>()},   //PORTAAVIONES
+            new Nave {IdNave = 1, Longitud = 1, SectoresRestantes = 1, Coordenadas = new List<Coordenada>()},   //PATRULLERO    //destroyer
+            new Nave {IdNave = 2, Longitud = 1, SectoresRestantes = 1, Coordenadas = new List<Coordenada>()},   //SUBMARINO     //submarine
+            new Nave {IdNave = 3, Longitud = 1, SectoresRestantes = 1, Coordenadas = new List<Coordenada>()},   //DESTRUCTOR    //cruiser
+            new Nave {IdNave = 4, Longitud = 1, SectoresRestantes = 1, Coordenadas = new List<Coordenada>()},   //ACORAZADO     //battleship
+            new Nave {IdNave = 5, Longitud = 1, SectoresRestantes = 1, Coordenadas = new List<Coordenada>()},   //PORTAAVIONES  //carrier
         };
         public void InicializarNuevaPartida(Sala sala)
         {
