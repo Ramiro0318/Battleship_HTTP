@@ -126,12 +126,12 @@
 
                         let navesRecibidas = (battleship.NavesRestantesJ1 && battleship.NavesRestantesJ1.length > 0)
                             ? battleship.NavesRestantesJ1 : battleship.NavesRestantesJ2;
-                        gestionarTurnoDeAtaque();
 
 
                         if (navesRecibidas) {
                             cargarDefensaServidor(navesRecibidas);
                         }
+                        gestionarTurnoDeAtaque();
 
                     }
                 }
@@ -283,9 +283,9 @@
         divContenedor.classList.add("invisible");
         tableroDefensa.style.display = "table";
 
-        document.removeEventListener("dragStart", dragStart)
-        tbodyTablero.removeEventListener("dragover", dragOver);
-        tbodyTablero.removeEventListener("drop", drop);
+        document.removeEventListener("dragstart", dragStart)
+            tbodyTablero.removeEventListener("dragover", dragOver);
+            tbodyTablero.removeEventListener("drop", drop);
     }
 
 
@@ -311,8 +311,10 @@
 
 
         navesList.forEach(nave => {
+
             const imgOriginal = document.getElementById(nave.IdNave.toString());
             const nombreArchivo = mapaImagenes[nave.IdNave];
+
             // Recorrer las coordenadas de la nave
             nave.Coordenadas.forEach(coord => {
 
@@ -324,10 +326,10 @@
 
                     const imgBarco = document.createElement("img");
 
-                    if (imgOriginal) {
+                    if (imgOriginal && imgOriginal.src) {
                         imgBarco.src = imgOriginal.src;
-                    } else {
-                        // Respaldo seguro por si acaso
+                    }
+                    else {
                         const backupRutas = {
                             1: "destroyer-0.png",
                             2: "submarine-0.png",
@@ -348,6 +350,10 @@
                 }
             });
         });
+        if (tbodyTablero) {
+            const barcosArrastrados = tbodyTablero.querySelectorAll("img");
+            barcosArrastrados.forEach(img => img.remove());
+        }
         console.log("Flota de defensa cargada e inicializada desde el servidor.");
     }
 
