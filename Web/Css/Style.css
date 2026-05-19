@@ -379,7 +379,10 @@ main #fondo {
     outline-offset: -3px;
 }
 
-
+.celda-seleccionada {
+    background-color: #79eff9b5 !important
+    /* background-color: rgba(0, 150, 255, 0.2) !important; */
+}
 
 
 @media (min-width : 420px) {

@@ -42,7 +42,7 @@
 
 
     let battleship;
-    let naveSeleccionadaId = null;  
+    let naveSeleccionadaId = null;
     let naveSeleccionadaFila = null;
     let naveSeleccionadaCol = null;
     let naveDireccion = "derecha";
@@ -253,24 +253,38 @@
             e.preventDefault();
 
             let celdaDestino = e.target;
+
             if (celdaDestino.tagName === "IMG") {
                 celdaDestino = celdaDestino.parentElement;
             }
 
             if (celdaDestino.tagName !== "TD") return;
 
-            const filaInicial = celdaDestino.parentElement.sectionRowIndex;
-            const columnaInicial = celdaDestino.cellIndex;
-
             const idNave = e.dataTransfer.getData("text/plain");
 
             if (!naveMoviendo) return;
 
-
             const cuadritosBarco = naveMoviendo.querySelectorAll("img");
             const longitudBarco = cuadritosBarco.length;
 
-            if (columnaInicial + longitudBarco > 10) return;
+            const filaInicial = celdaDestino.parentElement.sectionRowIndex;
+            const columnaInicial = celdaDestino.cellIndex;
+
+            let posicionesProyectadas = [];
+            for (let i = 0; i < longitudBarco; i++) {
+                posicionesProyectadas.push({
+                    fila: filaInicial,
+                    col: columnaInicial + i,
+                    indiceCuerpo: i
+                });
+            }
+
+            const dropPermitido = comprobarOcupadas(posicionesProyectadas, idNave);
+
+            if (!dropPermitido) {
+                console.warn(`[Drop Bloqueado] Fuera de límites o colisión en (${filaInicial}, ${columnaInicial}).`);
+                return;
+            }
 
             const filaActual = tbodyTablero.rows[filaInicial];
 
@@ -279,7 +293,6 @@
                 const celdaObjetivo = filaActual.cells[columnaDestino];
 
                 const nuevoCuadrito = imgOriginal.cloneNode(true);
-
                 nuevoCuadrito.id = idNave;
 
                 nuevoCuadrito.style.width = "100%";
@@ -292,12 +305,9 @@
 
             naveMoviendo.setAttribute("draggable", "false");
 
-            console.log(`Nave ${idNave} colocada exitosamente desde la columna ${columnaInicial} hasta la ${columnaInicial + longitudBarco - 1}`);
+            console.log(`Nave ${idNave} colocada exitosamente desde la columna ${columnaInicial} hacia la izquierda.`);
 
-            // Limpiamos la variable global
             naveMoviendo = null;
-
-
         }
 
     }
@@ -310,7 +320,9 @@
 
         const idNave = e.target.id;
 
-        //quitarBordesDeSeleccion();
+        tbodyTablero.querySelectorAll(".celda-seleccionada").forEach(celda => {
+            celda.classList.remove("celda-seleccionada");
+        });
 
         let celdasNave = [];
 
@@ -328,8 +340,8 @@
 
         if (celdasNave.length === 0) return;
 
-        // la punta columna más alta.
-        celdasNave.sort((a, b) => b.col - a.col);
+        // la punta columna más alta. //de menor a mayor
+        celdasNave.sort((a, b) => a.col - b.col);
 
         const puntaDetectada = celdasNave[0];
 
@@ -338,15 +350,7 @@
         naveSeleccionadaCol = puntaDetectada.col;
         naveDireccion = "derecha";
 
-        celdasNave.forEach((item, indice) => {
-            if (indice === 0) {
-                item.celda.classList.add("celda-seleccionada-h-inicio");
-            } else if (indice === celdasNave.length - 1) {
-                item.celda.classList.add("celda-seleccionada-h-fin");
-            } else {
-                item.celda.classList.add("celda-seleccionada-h-medio");
-            }
-        });
+        celdasNave.forEach((item, indice) => { item.celda.classList.add("celda-seleccionada");});
 
         console.log(`[Selección] Nave ${idNave} fija. Punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}) apuntando a la ${naveDireccion}.`);
     }
@@ -359,6 +363,10 @@
 
         const fragmentosEnTablero = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
         const longitud = fragmentosEnTablero.length;
+
+        if (longitud === 0) return;
+
+        let imgsParaClonar = Array.from(fragmentosEnTablero);
 
         let nuevaFilaPunta = naveSeleccionadaFila;
         let nuevaColPunta = naveSeleccionadaCol;
@@ -373,10 +381,10 @@
             let f = nuevaFilaPunta;
             let c = nuevaColPunta;
 
-            if (naveDireccion === "derecha") c = nuevaColPunta - i;
-            if (naveDireccion === "izquierda") c = nuevaColPunta + i;
-            if (naveDireccion === "abajo") f = nuevaFilaPunta - i;
-            if (naveDireccion === "arriba") f = nuevaFilaPunta + i;
+            if (naveDireccion === "derecha") c = nuevaColPunta + i;
+            if (naveDireccion === "izquierda") c = nuevaColPunta - i;
+            if (naveDireccion === "abajo") f = nuevaFilaPunta + i;
+            if (naveDireccion === "arriba") f = nuevaFilaPunta - i;
 
             nuevasPosiciones.push({ fila: f, col: c, indiceCuerpo: i });
         }
@@ -388,22 +396,13 @@
             return;
         }
 
-        const imgsParaClonar = Array.from(fragmentosEnTablero);
-
         fragmentosEnTablero.forEach(img => {
             const celdaVieja = img.parentElement;
-            if (celdaVieja) celdaVieja.innerHTML = "";
+            if (celdaVieja) {
+                celdaVieja.innerHTML = "";
+                celdaVieja.classList.remove("celda-seleccionada");
+            }
         });
-
-        // const clonesViejos = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
-        // clonesViejos.forEach(img => {
-        //     const celdaVieja = img.parentElement;
-        //     if (celdaVieja) celdaVieja.innerHTML = "";
-        // });
-
-        // const imgsOriginales = fragmentosEnTablero.querySelectorAll("img");
-
-
 
         nuevasPosiciones.forEach(pos => {
             const celdaObjetivo = tbodyTablero.rows[pos.fila].cells[pos.col];
@@ -413,6 +412,7 @@
             nuevoCuadrito.style.width = "100%";
             nuevoCuadrito.style.height = "100%";
             nuevoCuadrito.style.display = "block";
+            celdaObjetivo.classList.add("celda-seleccionada");
 
             celdaObjetivo.appendChild(nuevoCuadrito);
         });
@@ -553,8 +553,8 @@
         tableroDefensa.style.display = "table";
 
         document.removeEventListener("dragstart", dragStart)
-            tbodyTablero.removeEventListener("dragover", dragOver);
-            tbodyTablero.removeEventListener("drop", drop);
+        tbodyTablero.removeEventListener("dragover", dragOver);
+        tbodyTablero.removeEventListener("drop", drop);
     }
 
 
