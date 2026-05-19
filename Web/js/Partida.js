@@ -19,8 +19,8 @@
     const btnIzquierda = document.querySelector("#izquierda").addEventListener("click", () => moverNave("izquierda"));
     const btnDerecha = document.querySelector("#derecha").addEventListener("click", () => moverNave("derecha"));
 
-    const btnRotarDerecha = document.querySelector("#rotarDerecha").addEventListener("click", () => RotarNave("derecha"));
-    const btnRotarIzquierda = document.querySelector("#rotarIzquierda").addEventListener("click", () => RotarNave("izquierda"));
+    const btnRotarDerecha = document.querySelector("#rotarDerecha").addEventListener("click", () => rotarNave("derecha"));
+    const btnRotarIzquierda = document.querySelector("#rotarIzquierda").addEventListener("click", () => rotarNave("izquierda"));
 
     //Tablero
     const TableJugador = document.querySelector("#tablaJugador");
@@ -355,6 +355,7 @@
         console.log(`[Selección] Nave ${idNave} fija. Punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}) apuntando a la ${naveDireccion}.`);
     }
 
+
     //MOVER
     function moverNave(direccionBoton) {
         if (!naveSeleccionadaId) return;
@@ -428,48 +429,56 @@
         if (!naveSeleccionadaId) return;
         if (sentidoRotacion !== "derecha" && sentidoRotacion !== "izquierda") return;
 
-        const divOriginal = document.getElementById(naveSeleccionadaId);
-        const longitud = divOriginal.querySelectorAll("img").length;
+        const fragmentosEnTablero = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
+        const longitud = fragmentosEnTablero.length;
+
+        if (longitud === 0) return;
+
+        let imgsParaClonar = Array.from(fragmentosEnTablero);
+
+        if (naveDireccion === "izquierda" || naveDireccion === "arriba") {
+            imgsParaClonar.reverse();
+        }
 
         const direcciones = ["arriba", "derecha", "abajo", "izquierda"];
         let indiceActual = direcciones.indexOf(naveDireccion);
 
         let nuevaDireccion = naveDireccion;
         if (sentidoRotacion === "derecha") {
-            // Giro horario: avanzar un espacio en la lista
-            nuevaDireccion = direcciones[(indiceActual + 1) % 4];
+            nuevaDireccion = direcciones[(indiceActual + 1) % 4];   //Sentido de las manecillas
         } else if (sentidoRotacion === "izquierda") {
-            // Giro antihorario: retroceder un espacio (sumamos 4 para evitar números negativos)
             nuevaDireccion = direcciones[(indiceActual - 1 + 4) % 4];
         }
 
-        let posicionesTransformadas = [];
+        let nuevasPosiciones = [];
         for (let i = 0; i < longitud; i++) {
-            let f = naveSeleccionadaFila;
+            let f = naveSeleccionadaFila; // La punta se queda en su misma fila y columna
             let c = naveSeleccionadaCol;
 
-            if (nuevaDireccion === "derecha") c = naveSeleccionadaCol - i;
-            if (nuevaDireccion === "izquierda") c = naveSeleccionadaCol + i;
-            if (nuevaDireccion === "abajo") f = naveSeleccionadaFila - i;
-            if (nuevaDireccion === "arriba") f = naveSeleccionadaFila + i;
+            // ¡Alineado con moverNave!: El cuerpo se expande con los signos unificados
+            if (nuevaDireccion === "derecha") c = naveSeleccionadaCol + i;
+            if (nuevaDireccion === "izquierda") c = naveSeleccionadaCol - i;
+            if (nuevaDireccion === "abajo") f = naveSeleccionadaFila + i;
+            if (nuevaDireccion === "arriba") f = naveSeleccionadaFila - i;
 
-            posicionesTransformadas.push({ fila: f, col: c, indiceCuerpo: i });
+            nuevasPosiciones.push({ fila: f, col: c, indiceCuerpo: i });
         }
 
-        const esPosible = comprobarOcupadas(posicionesTransformadas, naveSeleccionadaId);
+        const esPosible = comprobarOcupadas(nuevasPosiciones, naveSeleccionadaId);
 
         if (!esPosible) {
-            console.warn(`[Rotación] Bloqueada hacia la ${sentidoRotacion}. No hay espacio o hay colisión.`);
+            console.warn(`[Rotación] Bloqueada hacia la ${sentidoRotacion}. Fuera de límites o colisión.`);
             return;
         }
 
-        const clonesViejos = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
-        clonesViejos.forEach(img => {
+        fragmentosEnTablero.forEach(img => {
             const celdaVieja = img.parentElement;
-            if (celdaVieja) celdaVieja.innerHTML = "";
+            if (celdaVieja) {
+                celdaVieja.innerHTML = "";
+                celdaVieja.classList.remove("celda-seleccionada");
+            }
         });
 
-        const imgsOriginales = divOriginal.querySelectorAll("img");
 
         let gradosCss = 0;
         if (nuevaDireccion === "derecha") gradosCss = 0;
@@ -477,24 +486,25 @@
         if (nuevaDireccion === "izquierda") gradosCss = 180;
         if (nuevaDireccion === "arriba") gradosCss = 270;
 
-        posicionesTransformadas.forEach(pos => {
+        nuevasPosiciones.forEach(pos => {
             const celdaObjetivo = tbodyTablero.rows[pos.fila].cells[pos.col];
-            const nuevoCuadrito = imgsOriginales[pos.indiceCuerpo].cloneNode(true);
+            const nuevoCuadrito = imgsParaClonar[pos.indiceCuerpo].cloneNode(true);
 
             nuevoCuadrito.id = naveSeleccionadaId;
             nuevoCuadrito.style.width = "100%";
             nuevoCuadrito.style.height = "100%";
             nuevoCuadrito.style.display = "block";
 
-            // Aplicamos los grados correspondientes para que la imagen tenga sentido visual
+            // Aplicar la rotación
             nuevoCuadrito.style.transform = `rotate(${gradosCss}deg)`;
 
             celdaObjetivo.appendChild(nuevoCuadrito);
+            celdaObjetivo.classList.add("celda-seleccionada");
         });
 
         naveDireccion = nuevaDireccion;
 
-        console.log(`[Rotación] Éxito. Nave ${naveSeleccionadaId} ahora apunta hacia: ${naveDireccion}`);
+        console.log(`[Rotación] Éxito. Nave ${naveSeleccionadaId} ahora apunta hacia la ${naveDireccion}.`);
     }
 
 
