@@ -11,6 +11,7 @@ namespace Battleship_HTTP.Models
         public int SectoresRestantes { get; set; }
 
         public List<Coordenada>? Coordenadas { get; set; }
+        //public string Direccion { get; set; } = "izquierda";
     }
 
 }

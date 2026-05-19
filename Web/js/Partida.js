@@ -350,7 +350,7 @@
         naveSeleccionadaCol = puntaDetectada.col;
         naveDireccion = "derecha";
 
-        celdasNave.forEach((item, indice) => { item.celda.classList.add("celda-seleccionada");});
+        celdasNave.forEach((item, indice) => { item.celda.classList.add("celda-seleccionada"); });
 
         console.log(`[Selección] Nave ${idNave} fija. Punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}) apuntando a la ${naveDireccion}.`);
     }
@@ -565,6 +565,10 @@
         document.removeEventListener("dragstart", dragStart)
         tbodyTablero.removeEventListener("dragover", dragOver);
         tbodyTablero.removeEventListener("drop", drop);
+
+        tbodyTablero.querySelectorAll(".celda-seleccionada").forEach(celda => {
+            celda.classList.remove("celda-seleccionada");
+        });
     }
 
 
@@ -579,24 +583,32 @@
             celda.removeAttribute("data-id-nave");
         });
 
+        //No entiendo por qué no se puede usar in indice regular, se reinicia en cada ciclo
+        //:c
+        let contadoresPorNave = {};
 
         navesList.forEach(nave => {
+            const idActual = nave.IdNave;
+            const fragmentosOrigen = tbodyTablero.querySelectorAll(`img[id="${idActual}"]`);
 
-            const imgOriginal = document.getElementById(nave.IdNave.toString());
+            if (contadoresPorNave[idActual] === undefined) {
+                contadoresPorNave[idActual] = 0;
+            }
 
-            // Recorrer las coordenadas de la nave
-            nave.Coordenadas.forEach(coord => {
-
+            nave.Coordenadas.forEach((coord) => {
                 const fila = coord.Fila;
                 const columna = coord.Columna;
 
                 if (tbodyDefensa.rows[fila] && tbodyDefensa.rows[fila].cells[columna]) {
                     const celda = tbodyDefensa.rows[fila].cells[columna];
-
                     const imgBarco = document.createElement("img");
 
-                    if (imgOriginal && imgOriginal.src) {
-                        imgBarco.src = imgOriginal.src;
+                    // Sacar el índice acumulado real para esta nave
+                    let iReal = contadoresPorNave[idActual];
+
+                    if (fragmentosOrigen[iReal]) {
+                        imgBarco.src = fragmentosOrigen[iReal].src;
+                        imgBarco.style.transform = fragmentosOrigen[iReal].style.transform;
                     }
 
                     imgBarco.style.width = "100%";
@@ -605,7 +617,9 @@
                     imgBarco.style.objectFit = "cover";
 
                     celda.appendChild(imgBarco);
-                    celda.dataset.idNave = nave.IdNave;
+                    celda.dataset.idNave = idActual;
+
+                    contadoresPorNave[idActual]++;
                 }
             });
         });
