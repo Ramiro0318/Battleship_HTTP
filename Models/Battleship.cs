@@ -8,6 +8,7 @@ namespace Battleship_HTTP.Models
     public enum EstadoCasilla { Agua, Nave, AtaqueFallido, AtaqueAcertado, NaveHundida }
     public class Battleship
     {
+        public string? TurnoId { get; set; }
         public string? Turno { get; set; }
         public string? Ganador { get; set; }
         public bool Finalizado { get; set; } // Posiblemente eliminado

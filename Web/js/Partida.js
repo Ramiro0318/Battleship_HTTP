@@ -145,6 +145,10 @@
                         gestionarTurnoDeAtaque();
 
                     }
+                    if (defensaRenderizada) {
+                        recibirAtaque(battleship);
+                    }
+
                 }
                 else if (battleship.Etapa === 2) {
                     console.log("El juego ha terminado.");
@@ -185,16 +189,25 @@
             const celdaPadre = img.parentElement;
             const fila = celdaPadre.parentElement.sectionRowIndex;
             const columna = celdaPadre.cellIndex;
+            const idNave = parseInt(img.id);
 
-            let naveDTO = {
-                IdNave: parseInt(img.id),
-                Coordenadas: [
-                    { "Fila": fila, "Columna": columna }
-                ]
-            };
+            let naveEncontrada = navesList.find(nave => nave.IdNave === idNave);
 
-            navesList.push(naveDTO);
+
+            if (naveEncontrada) {
+                naveEncontrada.Coordenadas.push({ "Fila": fila, "Columna": columna });
+            } else {
+                let naveDTO = {
+                    IdNave: idNave,
+                    Coordenadas: [
+                        { "Fila": fila, "Columna": columna }
+                    ]
+                };
+                navesList.push(naveDTO);
+            }
         });
+
+
         let json = {
             IdSala: idSala,
             IdUsuario: idUsuario,
@@ -539,22 +552,7 @@
 
 
     //Etapa de atacar/////////////////////////////////////////////////////////////////////////////
-    // if (TableJugador) {
-    //     TableJugador.addEventListener('click', function (event) {
-    //         const celda = event.target;
 
-    //         if (celda.tagName === 'TD') {
-    //             if (celda.textContent === "") {
-    //                 celda.textContent = "💥";
-    //                 celda.style.fontSize = "20px";
-    //                 celda.style.textAlign = "center";
-    //                 celda.style.color = "blue";
-    //             } else {
-    //                 console.log("Esta celda ya fue atacada.");
-    //             }
-    //         }
-    //     });
-    // }
 
     function gestionarTurnoDeAtaque() {
         btnEnviar.classList.add("invisible");
@@ -569,6 +567,30 @@
         tbodyTablero.querySelectorAll(".celda-seleccionada").forEach(celda => {
             celda.classList.remove("celda-seleccionada");
         });
+
+
+        if (TableJugador) {
+            TableJugador.addEventListener('click', function (event) {
+                const celda = event.target;
+
+                if (celda.tagName === 'TD') {
+                    if (battleship.TurnoId !== idUsuario) {
+                        console.warn("No es tu turno de atacar.");
+                        return;
+                    }
+
+                    const fila = celda.parentElement.sectionRowIndex;
+                    const columna = celda.cellIndex;
+
+                    if (celda.dataset.marcado === "true") {
+                        console.log("Esta casilla ya fue atacada.");
+                        return;
+                    }
+
+                    enviarAtaqueAlServidor(fila, columna, celda);
+                }
+            });
+        }
     }
 
 
@@ -631,6 +653,78 @@
     }
 
 
+    async function enviarAtaqueAlServidor(fila, columna, celda) {
+        // Marcamos la celda localmente para evitar doble clic rápido antes de recibir la respuesta
+        celda.dataset.marcado = "true";
+
+        let ataqueDTO = {
+            IdSala: idSala,
+            IdJugador: idUsuario,
+            Posicion: { Fila: fila, Columna: columna }
+        };
+
+        try {
+            let response = await fetch("/battleship/procesar-ataque", {
+                method: "POST",
+                body: JSON.stringify(ataqueDTO),
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (response.ok) {
+                console.log("Disparo enviado con éxito. Esperando sincronización...");
+            } else {
+                console.error("El servidor rechazó el disparo.");
+                celda.removeAttribute("data-marcado");
+            }
+        } catch (error) {
+            console.error("Error de red al enviar el ataque:", error);
+            celda.removeAttribute("data-marcado");
+        }
+    }
+
+
+
+
+    async function recibirAtaque(bship) {        
+        spanTurno.textContent = bship.Turno;
+        const soyJugador1 = (bship.NavesRestantesJ1 && bship.NavesRestantesJ1.length > 0);
+
+        // El resto del mapeo se mantiene impecable y automático
+        const CuadriculaDefensa = soyJugador1 ? bship.CuadriculaJ1 : bship.CuadriculaJ2;
+        const cuadrículaAtaque = soyJugador1 ? bship.CuadriculaJ2 : bship.CuadriculaJ1;
+
+        // 1. Actualizar mi tablero de ATAQUE (donde yo disparo al rival)
+        if (cuadrículaAtaque) {
+            cuadrículaAtaque.forEach(casilla => {
+                const f = casilla.Posicion.Fila;
+                const c = casilla.Posicion.Columna;
+                const td = TableJugador.querySelector(`tbody tr:nth-child(${f + 1}) td:nth-child(${c + 1})`);
+
+                if (td) {
+                    if (casilla.Estado === 2) { td.textContent = "💧"; td.dataset.marcado = "true"; } // AtaqueFallido
+                    if (casilla.Estado === 3) { td.textContent = "💥"; td.dataset.marcado = "true"; } // AtaqueAcertado
+                    if (casilla.Estado === 4) { td.textContent = "💀"; td.dataset.marcado = "true"; } // NaveHundida
+                }
+            });
+        }
+
+        // 2. Actualizar mi tablero de DEFENSA (donde veo los tiros que me hace el rival)
+        if (CuadriculaDefensa) {
+            CuadriculaDefensa.forEach(casilla => {
+                const f = casilla.Posicion.Fila;
+                const c = casilla.Posicion.Columna;
+                const td = tableroDefensa.querySelector(`tbody tr:nth-child(${f + 1}) td:nth-child(${c + 1})`);
+
+                if (td) {
+                    if (casilla.Estado === 3) { td.textContent = "💥"; } // AtaqueAcertado en mi barco
+                    if (casilla.Estado === 4) { td.textContent = "💀"; } // Mi barco se hundió por completo
+                    if (casilla.Estado === 2) { td.textContent = "💧"; } // El rival disparó a mi agua limpia
+                }
+            });
+        }
+
+        battleship = bship;
+    }
 
 
 

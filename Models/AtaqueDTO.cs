@@ -6,8 +6,9 @@ namespace Battleship_HTTP.Models
 {
     public class AtaqueDTO
     {
-        public string Id { get; set; } = null!;
+        public string IdSala { get; set; } = null!;
+        public string IdJugador { get; set; } = null!;
 
-        public Coordenada[]? Posicion { get; set; }
+        public Coordenada Posicion { get; set; }
     }
 }

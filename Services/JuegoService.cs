@@ -296,6 +296,7 @@ namespace Battleship_HTTP.Services
                                 {
                                     Etapa = partida.Etapa,
                                     TiempoRestante = partida.TiempoRestante,
+                                    TurnoId = partida.TurnoId,
                                     Turno = partida.Turno,
                                     Finalizado = partida.Finalizado,
                                     Ganador = partida.Ganador,
@@ -366,6 +367,44 @@ namespace Battleship_HTTP.Services
                             response.StatusCode = 200;
                             //Si es el segundo jugador regresar a ambos el contenido de las cuadricular
                             //Tal vez es en otro metodo
+                        }
+                    }
+                }
+                else if (request.HttpMethod == "POST" && url == "/battleship/procesar-ataque")
+                {
+                    var buffer = new byte[request.ContentLength64];
+                    request.InputStream.ReadExactly(buffer, 0, buffer.Length);
+                    var json = Encoding.UTF8.GetString(buffer);
+
+                    var ataque = JsonSerializer.Deserialize<AtaqueDTO>(json);
+
+                    if (ataque == null)
+                    {
+                        response.StatusCode = 400;
+                        EnviarInfo(response, "Ataque inválido", 400);
+                    }
+                    else
+                    {
+                        Sala? sala = salasService.BuscarSalaId(ataque.IdSala);
+
+                        if (sala == null || sala.battleship == null)
+                        {
+                            EnviarInfo(response, "Sala no encontrada", 404);
+                        }
+                        else
+                        {
+
+                            // Validación de seguridad básica: ¿Es el turno de este jugador?
+                            bool esJ1 = sala.IdJugador1 == ataque.IdJugador;
+                            if (sala.battleship.TurnoId != ataque.IdJugador)
+                            {
+                                EnviarInfo(response, "No es tu turno de disparar.", 400);
+                            }
+                            else
+                            {
+                                partidaService.ProcesarAtaque(sala, ataque);
+                                EnviarInfo(response, "Disparo procesado correctamente.", 200);
+                            }
                         }
                     }
                 }

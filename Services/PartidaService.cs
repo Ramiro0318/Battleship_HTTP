@@ -27,7 +27,6 @@ namespace Battleship_HTTP.Services
         {
             sala.battleship = new Battleship
             {
-                Turno = sala.NombreJugador1,
                 Etapa = Etapa.ColocarBarcos,
                 TiempoRestante = 60
             };
@@ -104,7 +103,8 @@ namespace Battleship_HTTP.Services
 
                 bship.Etapa = Etapa.Batalla;
                 bship.TiempoRestante = 30;
-                bship.Turno = r.Next(0, 2) == 0 ? sala.NombreJugador1 : sala.NombreJugador2;
+                bship.TurnoId = r.Next(0, 2) == 0 ? sala.IdJugador1 : sala.IdJugador2;
+                bship.Turno = bship.TurnoId == sala.IdJugador1 ? sala.NombreJugador1 : sala.NombreJugador2;
             }
         }
 
@@ -236,6 +236,88 @@ namespace Battleship_HTTP.Services
                     }
                 }
             }
+        }
+
+
+        public Sala? ProcesarAtaque(Sala sala, AtaqueDTO ataqueDto)
+        {
+            var bship = sala.battleship;
+
+            if (bship == null || ataqueDto == null || bship.Etapa != Etapa.Batalla)
+            {
+                return null;
+            }
+
+            // Tomamr la coordenada del disparo
+            var coordenadaDisparo = ataqueDto.Posicion;
+
+            bool J1Atacando = sala.IdJugador1 == ataqueDto.IdJugador ? true : false;
+            string? nombreAtacante = J1Atacando ? sala.NombreJugador1 : sala.NombreJugador2;
+
+            if (bship.Turno != nombreAtacante) { return null; }
+
+            //Elegir si atacar al jugador 1 o 2
+            //tablero y lista de naves
+            var cuadriculaDefensor = J1Atacando ? bship.CuadriculaJ2 : bship.CuadriculaJ1;
+            var navesDefensor = J1Atacando ? bship.NavesRestantesJ2 : bship.NavesRestantesJ1;
+            var casillaImpactada = cuadriculaDefensor.FirstOrDefault(x => x.Posicion.Fila == coordenadaDisparo.Fila && x.Posicion.Columna == coordenadaDisparo.Columna);
+
+            if (casillaImpactada == null || (casillaImpactada.Estado != EstadoCasilla.Agua && casillaImpactada.Estado != EstadoCasilla.Nave)) return null;
+
+
+
+            if (casillaImpactada.Estado == EstadoCasilla.Agua)
+            {
+                casillaImpactada.Estado = EstadoCasilla.AtaqueFallido;
+                bship.TurnoId = J1Atacando ? sala.IdJugador2 : sala.IdJugador1;
+                bship.Turno = J1Atacando ? sala.NombreJugador2 : sala.NombreJugador1;
+            }
+            else if (casillaImpactada.Estado == EstadoCasilla.Nave)
+            {
+                casillaImpactada.Estado = EstadoCasilla.AtaqueAcertado;
+                bship.TurnoId = J1Atacando ? sala.IdJugador1 : sala.IdJugador2;
+                bship.Turno = J1Atacando ? sala.NombreJugador1 : sala.NombreJugador2;
+
+
+                // Buscar qué nave específica del defensor ocupaba esa coordenada para restarle un sector
+                var naveGolpeada = navesDefensor.FirstOrDefault(x => x.Coordenadas != null && x.Coordenadas
+                    .Any(c => c.Fila == coordenadaDisparo.Fila && c.Columna == coordenadaDisparo.Columna));
+
+                if (naveGolpeada != null)
+                {
+                    naveGolpeada.SectoresRestantes--;
+
+                    // actualizar todo a Hundida
+                    if (naveGolpeada.SectoresRestantes == 0)
+                    {
+                        foreach (var coord in naveGolpeada.Coordenadas ?? new())
+                        {
+                            var casillaHundida = cuadriculaDefensor.FirstOrDefault(x => x.Posicion.Fila == coord.Fila && x.Posicion.Columna == coord.Columna);
+
+                            if (casillaHundida != null)
+                            {
+                                casillaHundida.Estado = EstadoCasilla.NaveHundida;
+                            }
+                        }
+                    }
+                }
+            }
+
+            bship.NumeroDisparos++;
+
+            // Verificar si todas las naves han sido destruidas
+            if (navesDefensor.All(nave => nave.SectoresRestantes <= 0))
+            {
+                bship.Etapa = Etapa.Terminado;
+                bship.Ganador = nombreAtacante;
+                bship.Turno = null;
+            }
+            else
+            {
+                bship.TiempoRestante = 30;
+            }
+
+            return sala;
         }
     }
 }
