@@ -19,6 +19,7 @@
     const txtNumSala = document.querySelector("#numeroSala");
     const errorNumSala = document.querySelector("#errorNumSala");
     const btnBuscar = document.querySelector("#buscar");
+    const btnCancelarBuscar = document.querySelector(".cancelar_buscar");
 
     //Esperar jugador e iniciar partida
     const lblNumSala = document.querySelector("#lblNum");
@@ -30,7 +31,7 @@
 
 
 
-    
+
 
 
     //variables
@@ -42,7 +43,7 @@
     id = localStorage.getItem("IdUsuario") ?? "";
     num = localStorage.getItem("numeroSala") ?? "";
 
-    if (nombre !== "" && id !== null) {
+    if (nombre !== "" && id !== "") {
         btnCerrarSesion.classList.remove("invisible");
         divIngreso.classList.add("invisible");
         divSeleccion.classList.remove("invisible");
@@ -85,19 +86,13 @@
     //Botones de seleccion de metodo
     btnMatchmaking.addEventListener('click', () => {
         buscarSala();
-        divSeleccion.classList.add("invisible");
-        divEspera.classList.remove("invisible");
-        ultimaPagina = divSeleccion;
-        paginaActual = divEspera;
     });
+
 
     btnCrear.addEventListener('click', () => {
         crearSala();
-        divSeleccion.classList.add("invisible");
-        divEspera.classList.remove("invisible");
-        ultimaPagina = divSeleccion;
-        paginaActual = divEspera;
     });
+
 
     btnUnirse.addEventListener('click', () => {
         divSeleccion.classList.add("invisible");
@@ -121,12 +116,6 @@
         }
     });
 
-    document.querySelectorAll(".cancelar").forEach(btn => {
-        btn.addEventListener("click", () => {
-            ultimaPagina.classList.remove("invisible");
-            paginaActual.classList.add("invisible");
-        });
-    });
 
     let listo = false;
     btnListo.addEventListener('click', () => {
@@ -147,9 +136,9 @@
         }
         if (!num) num = "";
 
-        let public = num == "" ? true : false;
+        let publica = num == "" ? true : false;
 
-        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false, Publica: public };
+        let json = { Nombre: nombre, Id: id, NumSala: num, Listo: false, Publica: publica };
 
         let response = await fetch("/battleship/sala", {
             method: "POST",
@@ -163,7 +152,16 @@
             let salaCreada = await response.json();
             actualizarMenu(salaCreada);
             escucharCambios(salaCreada.IdHash, salaCreada.JugadoresListos);
-            divSala.classList.add("invisible");
+
+            if (num === "") {
+                ultimaPagina = divSeleccion;
+                divSeleccion.classList.add("invisible");
+            } else {
+                ultimaPagina = divSala;
+                divSala.classList.add("invisible");
+            }
+
+            paginaActual = divEspera;
             divEspera.classList.remove("invisible");
         }
         else {
@@ -194,6 +192,12 @@
 
         if (response.ok) {
             let salaCreada = await response.json();
+
+            divSeleccion.classList.add("invisible");
+            divEspera.classList.remove("invisible");
+            ultimaPagina = divSeleccion;
+            paginaActual = divEspera;
+
             actualizarMenu(salaCreada);
             escucharCambios(salaCreada.IdHash, salaCreada.JugadoresListos);
         }
@@ -216,6 +220,51 @@
             let salaActualizada = await response.json();
             actualizarMenu(salaActualizada);
         }
+        else {
+            alert("No se pudo crear la sala.")
+        }
+    }
+
+
+    const btnsCancelar = document.querySelectorAll(".cancelar");
+
+    btnsCancelar.forEach(btn => {
+        btn.addEventListener("click", cancelar);
+    });
+
+    btnCancelarBuscar.addEventListener("click", () => {
+        ultimaPagina.classList.remove("invisible");
+        paginaActual.classList.add("invisible");
+    });
+
+    async function cancelar() {
+
+        let json = { NumSala: num, Id: id };
+
+        let response = await fetch("/battleship/cancelar", {
+            method: "POST",
+            body: JSON.stringify(json),
+            headers: {
+                "content-type": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            listo = false;
+            btnListo.textContent = "Listo";
+
+            ultimaPagina.classList.remove("invisible");
+            paginaActual.classList.add("invisible");
+
+            if (ultimaPagina === divSala) {
+                paginaActual = divSala;
+                ultimaPagina = divSeleccion;
+            }
+            else if (ultimaPagina === divSeleccion) {
+                paginaActual = divSeleccion;
+                ultimaPagina = divIngreso;
+            }
+        }
     }
 
 
@@ -231,8 +280,13 @@
 
         if (sala.JugadoresListos === 2) {
             btnListo.disabled = true;
+            btnsCancelar.forEach(btn => btn.disabled = true);
             btnListo.textContent = "Iniciando...";
             smlCountJugadores.textContent = "Iniciando en 3 segundos...";
+        }
+        else {
+            btnListo.disabled = false;
+            btnsCancelar.forEach(btn => btn.disabled = false);
         }
     }
 
@@ -259,6 +313,13 @@
 
             } else {
                 escucharCambios(numSala, salaActualizada.JugadoresListos);
+            }
+        }
+        else {
+            if (response.status === 404) {
+                console.warn("La sala dejó de existir o fue eliminada.");
+            } else {
+                console.error("Ocurrió un error inesperado en el servidor:", response.status);
             }
         }
     }

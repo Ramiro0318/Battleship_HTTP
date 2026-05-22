@@ -20,6 +20,13 @@ namespace Battleship_HTTP.Models
 
     }
 
+    public class SolicitudCancelacionDTO
+    {
+        public string NumSala { set; get; } = null!;
+        public string Id { set; get; } = null!;
+
+    }
+
     public class SolicitudCambioDTO
     {
         public string NumSala { set; get; } = null!;

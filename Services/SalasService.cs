@@ -130,6 +130,50 @@ namespace Battleship_HTTP.Services
             return sala;
         }
 
+
+        public bool CancelarSala(Sala sala, string idJugador)
+        {
+            lock (SalasList)
+            {
+                if (sala == null) return false;
+
+                if (idJugador == sala.IdJugador1)
+                {
+                    if (sala.IdJugador2 != null)
+                    {
+                        // 🔄 PROMOVER: Pasamos al Jugador 2 al puesto del Jugador 1
+                        sala.IdJugador1 = sala.IdJugador2;
+                        sala.NombreJugador1 = sala.NombreJugador2;
+                        sala.ListoJugador1 = sala.ListoJugador2;
+
+                        // Vaciamos el espacio del Jugador 2 para que quede libre para futuros emparejamientos
+                        sala.IdJugador2 = null;
+                        sala.NombreJugador2 = null;
+                        sala.ListoJugador2 = false;
+                    }
+                    else
+                    {
+                        // Si no había Jugador 2, la sala se quedó totalmente vacía. La eliminamos.
+                        SalasList.Remove(sala);
+                        return true;
+                    }
+                }
+                // CASO 2: El jugador que se sale es el Jugador 2
+                else if (idJugador == sala.IdJugador2)
+                {
+                    // Vaciamos su espacio. Al quedar en null, 'SolicitarSala' la detectará de nuevo como disponible
+                    sala.IdJugador2 = null;
+                    sala.NombreJugador2 = null;
+                    sala.ListoJugador2 = false;
+                }
+
+                sala.JugadoresListos = (sala.ListoJugador1 ? 1 : 0) + (sala.ListoJugador2 ? 1 : 0);
+
+                return true;
+            }
+        }
+
+
         public Sala? BuscarSala(string numSala)
         {
             Sala? sala = null;
