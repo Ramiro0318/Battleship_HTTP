@@ -141,27 +141,22 @@ namespace Battleship_HTTP.Services
                 {
                     if (sala.IdJugador2 != null)
                     {
-                        // 🔄 PROMOVER: Pasamos al Jugador 2 al puesto del Jugador 1
                         sala.IdJugador1 = sala.IdJugador2;
                         sala.NombreJugador1 = sala.NombreJugador2;
                         sala.ListoJugador1 = sala.ListoJugador2;
 
-                        // Vaciamos el espacio del Jugador 2 para que quede libre para futuros emparejamientos
                         sala.IdJugador2 = null;
                         sala.NombreJugador2 = null;
                         sala.ListoJugador2 = false;
                     }
                     else
                     {
-                        // Si no había Jugador 2, la sala se quedó totalmente vacía. La eliminamos.
                         SalasList.Remove(sala);
                         return true;
                     }
                 }
-                // CASO 2: El jugador que se sale es el Jugador 2
                 else if (idJugador == sala.IdJugador2)
                 {
-                    // Vaciamos su espacio. Al quedar en null, 'SolicitarSala' la detectará de nuevo como disponible
                     sala.IdJugador2 = null;
                     sala.NombreJugador2 = null;
                     sala.ListoJugador2 = false;

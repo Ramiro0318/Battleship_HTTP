@@ -86,6 +86,9 @@
     <None Update="Web\Resources\Images\flair_arrow_2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Web\Resources\Images\hitstar1.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Web\Resources\Images\submarine-0.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -326,7 +326,7 @@
             });
 
             naveMoviendo.setAttribute("draggable", "false");
-
+            naveMoviendo.style.display = "none";
             console.log(`Nave ${idNave} colocada exitosamente desde la columna ${columnaInicial} hacia la izquierda.`);
 
             naveMoviendo = null;
@@ -698,11 +698,10 @@
         spanTurno.textContent = bship.Turno;
         const soyJugador1 = (bship.NavesRestantesJ1 && bship.NavesRestantesJ1.length > 0);
 
-        // El resto del mapeo se mantiene impecable y automático
         const CuadriculaDefensa = soyJugador1 ? bship.CuadriculaJ1 : bship.CuadriculaJ2;
         const cuadrículaAtaque = soyJugador1 ? bship.CuadriculaJ2 : bship.CuadriculaJ1;
 
-        // 1. Actualizar mi tablero de ATAQUE (donde yo disparo al rival)
+        // 1. Actualizar el tablero de ATAQUE
         if (cuadrículaAtaque) {
             cuadrículaAtaque.forEach(casilla => {
                 const f = casilla.Posicion.Fila;
@@ -710,24 +709,40 @@
                 const td = TableJugador.querySelector(`tbody tr:nth-child(${f + 1}) td:nth-child(${c + 1})`);
 
                 if (td) {
-                    if (casilla.Estado === 2) { td.textContent = "💧"; td.dataset.marcado = "true"; } // AtaqueFallido
-                    if (casilla.Estado === 3) { td.textContent = "💥"; td.dataset.marcado = "true"; } // AtaqueAcertado
-                    if (casilla.Estado === 4) { td.textContent = "💀"; td.dataset.marcado = "true"; } // NaveHundida
+                    const img = document.createElement("img");
+                    img.classList.add("efecto-ataque");
+
+
+                    if (casilla.Estado === 2) { img.src = "/battleship/Resources/Images/hitstar1.gif"; td.dataset.marcado = "true"; } // AtaqueFallido
+                    if (casilla.Estado === 3) { img.src = "/battleship/Resources/Images/hitstar1.gif"; td.dataset.marcado = "true"; } // AtaqueAcertado
+                    if (casilla.Estado === 4) { img.src = "/battleship/Resources/Images/hitstar1.gif"; td.dataset.marcado = "true"; } // NaveHundida
+
+                    if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
+                        td.innerHTML = "";
+                        td.appendChild(img);
+                    }
                 }
             });
         }
 
-        // 2. Actualizar mi tablero de DEFENSA (donde veo los tiros que me hace el rival)
         if (CuadriculaDefensa) {
             CuadriculaDefensa.forEach(casilla => {
+
                 const f = casilla.Posicion.Fila;
                 const c = casilla.Posicion.Columna;
                 const td = tableroDefensa.querySelector(`tbody tr:nth-child(${f + 1}) td:nth-child(${c + 1})`);
 
                 if (td) {
-                    if (casilla.Estado === 3) { td.textContent = "💥"; } // AtaqueAcertado en mi barco
-                    if (casilla.Estado === 4) { td.textContent = "💀"; } // Mi barco se hundió por completo
-                    if (casilla.Estado === 2) { td.textContent = "💧"; } // El rival disparó a mi agua limpia
+                    const efectoViejo = td.querySelector(".efecto-ataque");
+                    const img = document.createElement("img");
+                    img.classList.add("efecto-ataque");
+                    if (casilla.Estado === 2) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/hitstar1.gif"; }
+                    if (casilla.Estado === 3) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/hitstar1.gif"; }
+                    if (casilla.Estado === 4) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/hitstar1.gif"; }
+
+                    if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
+                        td.appendChild(img);
+                    }
                 }
             });
         }
@@ -834,6 +849,7 @@
         }
 
         document.querySelectorAll(".contenedor-nave").forEach(barco => {
+            barco.style.display = "flex";
             barco.setAttribute("draggable", "true");
         });
     }
@@ -841,14 +857,12 @@
 
     //Hacer un clear de la tabla //
     function reiniciarTablero() {
-        // Buscamos el tbody real de la tabla y lo vaciamos de golpe
         const tbodyAtaque = document.querySelector("#tablaJugador tbody");
         const tbodyDefensa = document.querySelector("#tablaDefensa tbody");
 
         if (tbodyAtaque) tbodyAtaque.innerHTML = "";
         if (tbodyDefensa) tbodyDefensa.innerHTML = "";
 
-        // Volvemos a regenerar las celdas vacías para el nuevo juego
         for (let f = 0; f < 10; f++) {
             let trA = document.createElement("tr");
             let trD = document.createElement("tr");

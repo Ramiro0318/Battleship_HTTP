@@ -565,6 +565,7 @@ namespace Battleship_HTTP.Services
                 case "css": return "text/css";
                 case "js": return "text/javascript";
                 case "png": return "image/png";
+                case "gif": return "image/gif";
             }
             return "";
         }
@@ -575,6 +576,7 @@ namespace Battleship_HTTP.Services
 
             string ruta = "";
             if (ext == "png") ruta = Path.Combine($"Web/Resources/Images", nombreArchivo);
+            else if (ext == "gif") ruta = Path.Combine($"Web/Resources/Images", nombreArchivo);
             else if (ext == "mp3") ruta = Path.Combine($"Web/Resources/Music", nombreArchivo);
             else ruta = Path.Combine($"Web/{ext}", nombreArchivo);
 
