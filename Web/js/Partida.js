@@ -30,7 +30,8 @@
     //FinPartida
     const divResultados = document.querySelector("#resultados");
     const txtNumSalaResultados = document.querySelector("#numSalaResultados");
-    const txtGanador = document.querySelector("#Ganador");
+    const txtGanador = document.querySelector("#ganador");
+    const txtRevancha = document.querySelector("#revancha");
     const btnReiniciar = document.querySelector("#reiniciar");
     const btnSalir = document.querySelector("#salir");
 
@@ -90,6 +91,8 @@
 
     let tableroEnviado = false;
     let defensaRenderizada = false;
+    let resultadoMostrado = false;
+
     async function monitorearPartida() {
         let payload = {
             IdSala: idSala,
@@ -98,7 +101,8 @@
             EtapaCliente: battleship ? battleship.Etapa : 0,
             TurnoCliente: battleship ? battleship.Turno : "",
             FinalizadoCliente: battleship ? battleship.Finalizado : false,
-            NumeroDisparos: battleship ? battleship.NumeroDisparos : 0
+            NumeroDisparos: battleship ? battleship.NumeroDisparos : 0,
+            Revancha: battleship ? battleship.Revancha : 0
         };
 
         try {
@@ -118,11 +122,14 @@
                 spanTurno.textContent = battleship.Turno;
                 spanTiempo.textContent = battleship.TiempoRestante;
 
-
                 if (battleship.Etapa === 0) {
+                    if (resultadoMostrado) {
+                        prepararNuevoJuego();
+                    }
+                    resultadoMostrado = false;
                     if (!tableroEnviado && battleship.TiempoRestante > 0) {
                         console.log("etapa de colocacion")
-                        btnEnviar.disabled = false;
+                        //btnEnviar.disabled = false;
                     }
                     if (battleship.TiempoRestante == 0 && !tableroEnviado) {
                         enviarNavesPosicionadas();
@@ -151,9 +158,13 @@
 
                 }
                 else if (battleship.Etapa === 2) {
-                    console.log("El juego ha terminado.");
-                    mostrarPantallaResultados(battleship.Ganador);
-                    return;
+                    defensaRenderizada = false;
+                    if (!resultadoMostrado) {
+                        resultadoMostrado = true;
+                        console.log("El juego ha terminado.");
+                        mostrarPantallaResultados(battleship);
+                    }
+                    actualizarRechancha(battleship);
                 }
 
                 setTimeout(monitorearPartida, 200);
@@ -166,8 +177,6 @@
             setTimeout(monitorearPartida, 2000);
         }
     }
-
-
 
 
 
@@ -685,7 +694,7 @@
 
 
 
-    async function recibirAtaque(bship) {        
+    async function recibirAtaque(bship) {
         spanTurno.textContent = bship.Turno;
         const soyJugador1 = (bship.NavesRestantesJ1 && bship.NavesRestantesJ1.length > 0);
 
@@ -730,9 +739,108 @@
 
     //Etapa finalizar ///////////////////////////////////////////////////////////////////////////
 
+    function mostrarPantallaResultados(bship) {
+        divResultados.classList.remove("invisible");
+        fondo.classList.remove("invisible");
+        txtGanador.textContent = bship.Ganador;
+        txtNumSalaResultados.textContent = "sala # " + numSala;
+        txtRevancha.textContent = "";
+
+    }
+
+    function actualizarRechancha(bship) {
+        if (bship.Revancha == 0) {
+            txtRevancha.textContent = "";
+        }
+        if (bship.Revancha == 1) {
+            txtRevancha.textContent = "Esperando revancha";
+        }
+        if (bship.Revancha == 2) {
+            txtRevancha.textContent = "Reiniciando partida.";
+            btnReiniciar.disabled = true;
+        }
+    }
+
+
+
+
+    let votoRevancha = false;
+
+    btnReiniciar.addEventListener('click', MandarRevancha);
+    async function MandarRevancha() {
+        votoRevancha = !votoRevancha;
+
+        if (votoRevancha) {
+            btnReiniciar.textContent = "Cancelar";
+        } else {
+            btnReiniciar.textContent = "Volver a jugar";
+        }
+        try {
+            await fetch("/battleship/votar-revancha", {
+                method: "POST",
+                body: JSON.stringify({
+                    IdSala: idSala,
+                    IdUsuario: idUsuario,
+                    Revancha: votoRevancha
+                }),
+                headers: { "Content-Type": "application/json" }
+            });
+
+        } catch (error) {
+            console.error("Error al procesar revancha:", error);
+        }
+    };
+
+
+    btnSalir.addEventListener('click', function () {
+        window.location.href = "/battleship/";
+        return;
+    });
+
+
+
+
+
+
+
+    function prepararNuevoJuego() {
+        tableroEnviado = false;
+        defensaRenderizada = false;
+        resultadoMostrado = false;
+        votoRevancha = false;
+        naveSeleccionadaId = null;
+        naveSeleccionadaFila = null;
+        naveSeleccionadaCol = null;
+        naveDireccion = "derecha";
+        btnReiniciar.textContent = "Volver a jugar";
+        btnReiniciar.disabled = false;
+
+        divResultados.classList.add("invisible");
+        fondo.classList.add("invisible");
+
+        divMovimientos.classList.remove("invisible");
+        divContenedor.classList.remove("invisible");
+        btnEnviar.classList.remove("invisible");
+        btnEnviar.disabled = false;
+
+        tableroDefensa.style.display = "none";
+
+        reiniciarTablero();
+
+        document.addEventListener("dragstart", dragStart);
+        if (tbodyTablero) {
+            tbodyTablero.addEventListener("dragover", dragOver);
+            tbodyTablero.addEventListener("drop", drop);
+        }
+
+        document.querySelectorAll(".contenedor-nave").forEach(barco => {
+            barco.setAttribute("draggable", "true");
+        });
+    }
+
 
     //Hacer un clear de la tabla //
-    btnReiniciar.addEventListener('click', function (e) {
+    function reiniciarTablero() {
         // Buscamos el tbody real de la tabla y lo vaciamos de golpe
         const tbodyAtaque = document.querySelector("#tablaJugador tbody");
         const tbodyDefensa = document.querySelector("#tablaDefensa tbody");
@@ -752,5 +860,9 @@
             tbodyAtaque.appendChild(trA);
             tbodyDefensa.appendChild(trD);
         }
-    });
+    }
+
+
+
+
 });

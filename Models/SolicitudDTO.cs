@@ -36,6 +36,7 @@ namespace Battleship_HTTP.Models
         public string TurnoCliente { get; set; } = "";
         public bool FinalizadoCliente { get; set; }
         public int NumeroDisparos { get; set; } = 0;
+        public int Revancha { get; set; }
 
     }
 
@@ -50,5 +51,12 @@ namespace Battleship_HTTP.Models
     {
         public int IdNave { get; set; }
         public List<Coordenada>? Coordenadas { get; set; }
+    }
+
+    public class SolicitudRevancha
+    {
+        public string IdSala { get; set; } = "";
+        public string IdUsuario { get; set; } = "";
+        public bool Revancha { get; set; }
     }
 }

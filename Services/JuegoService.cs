@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Security.Policy;
 using System.Text;
 using System.Text.Json;
@@ -43,12 +44,25 @@ namespace Battleship_HTTP.Services
             ToogleServidor?.Invoke(encendido, "");
         }
 
-        public void Detener()
+        public async Task Detener()
         {
-            encendido = false;
-            servidor.Stop();
-            ToogleServidor?.Invoke(encendido, "ServidorDetenido");
+            if (!encendido) return;
 
+            encendido = false;
+
+            try
+            {
+                string url = servidor.Prefixes.First();
+                using (HttpClient client = new HttpClient())
+                {
+                    await client.GetAsync(url);
+                }
+            }
+            catch { }
+
+            servidor.Stop();
+
+            ToogleServidor?.Invoke(encendido, "ServidorDetenido");
         }
 
         public void Escuchar()
@@ -58,19 +72,24 @@ namespace Battleship_HTTP.Services
                 try
                 {
                     var context = servidor.GetContext();
+                    if (!encendido)
+                    {
+                        context.Response.Close();
+                        break;
+                    }
+
                     Thread solicitud = new(() => ProcesarSolicitud(context))
                     {
                         IsBackground = true
                     };
                     solicitud.Start();
                 }
-                catch (HttpListenerException hhtpex)
-                {
-                    MensajeError?.Invoke($"{hhtpex}");
-                }
                 catch (Exception ex)
                 {
-                    MensajeError?.Invoke($"{ex}");
+                    if (encendido)
+                    {
+                        MensajeError?.Invoke($"{ex}");
+                    }
                 }
             }
         }
@@ -255,12 +274,16 @@ namespace Battleship_HTTP.Services
                             if (sala == null || sala.battleship == null) { break; }
 
                             var partida = sala.battleship;
-
+                            if ((int)partida.Etapa != solicitud.EtapaCliente)
+                            {
+                                breakEspera = true;
+                                break;
+                            }
                             if (partida.Etapa == Etapa.ColocarBarcos)
                             {
                                 // En esta etapa solo monitoreamos cambios globales de preparación
                                 if (partida.TiempoRestante != solicitud.TiempoCliente || (int)partida.Etapa != solicitud.EtapaCliente ||
-                                    partida.Turno != solicitud.TurnoCliente || partida.Finalizado != solicitud.FinalizadoCliente)
+                                    partida.Turno != solicitud.TurnoCliente)
                                 {
                                     breakEspera = true;
                                 }
@@ -268,7 +291,14 @@ namespace Battleship_HTTP.Services
                             else if (partida.Etapa == Etapa.Batalla)
                             {
                                 if (partida.TiempoRestante != solicitud.TiempoCliente || partida.Turno != solicitud.TurnoCliente ||
-                                    partida.Finalizado != solicitud.FinalizadoCliente || partida.NumeroDisparos != solicitud.NumeroDisparos)
+                                    partida.NumeroDisparos != solicitud.NumeroDisparos)
+                                {
+                                    breakEspera = true;
+                                }
+                            }
+                            else if (partida.Etapa == Etapa.Terminado)
+                            {
+                                if (partida.Revancha != solicitud.Revancha)
                                 {
                                     breakEspera = true;
                                 }
@@ -298,9 +328,10 @@ namespace Battleship_HTTP.Services
                                     TiempoRestante = partida.TiempoRestante,
                                     TurnoId = partida.TurnoId,
                                     Turno = partida.Turno,
-                                    Finalizado = partida.Finalizado,
                                     Ganador = partida.Ganador,
                                     NumeroDisparos = partida.NumeroDisparos,
+                                    RevanchaJ1 = partida.RevanchaJ1,
+                                    RevanchaJ2 = partida.RevanchaJ2
                                 };
 
 
@@ -408,6 +439,35 @@ namespace Battleship_HTTP.Services
                         }
                     }
                 }
+                else if (request.HttpMethod == "POST" && url == "/battleship/votar-revancha")
+                {
+                    var buffer = new byte[request.ContentLength64];
+                    request.InputStream.ReadExactly(buffer, 0, buffer.Length);
+                    var json = Encoding.UTF8.GetString(buffer);
+
+                    var solicitud = JsonSerializer.Deserialize<SolicitudRevancha>(json);
+
+                    if (solicitud == null)
+                    {
+                        response.StatusCode = 400;
+                    }
+                    else
+                    {
+                        Sala? sala = salasService.BuscarSalaId(solicitud.IdSala);
+
+                        if (sala == null || sala.battleship == null)
+                        {
+                            EnviarInfo(response, "Sala o partida no encontrada", 404);
+                        }
+                        else
+                        {
+                            salasService.RegistrarVotoRevancha(sala, solicitud.IdUsuario, solicitud.Revancha);
+                            response.StatusCode = 200;
+
+                        }
+                    }
+                }
+
 
 
 

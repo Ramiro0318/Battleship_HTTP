@@ -11,7 +11,6 @@ namespace Battleship_HTTP.Models
         public string? TurnoId { get; set; }
         public string? Turno { get; set; }
         public string? Ganador { get; set; }
-        public bool Finalizado { get; set; } // Posiblemente eliminado
         public int TiempoRestante { get; set; }
         public List<CuadriculaTablero> CuadriculaJ1 { get; set; } = new();
         public List<CuadriculaTablero> CuadriculaJ2 { get; set; } = new();  
@@ -20,6 +19,9 @@ namespace Battleship_HTTP.Models
         public List<Nave> NavesRestantesJ2 { get; set; } = new();
         public Etapa Etapa { get; set; } = Etapa.ColocarBarcos;
         public int NumeroDisparos { get; set; } = 0;
+        public bool RevanchaJ1 { get; set; } = false;
+        public bool RevanchaJ2 { get; set; } = false;
+        public int Revancha => (RevanchaJ1 ? 1 : 0) + (RevanchaJ2 ? 1 : 0);
 
     }
 

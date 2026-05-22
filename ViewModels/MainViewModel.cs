@@ -25,26 +25,39 @@ namespace Battleship_HTTP.ViewModels
 
         private void Service_MensajeError(string error)
         {
-            Error = error;
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                Error = error;
+            });
         }
 
         [RelayCommand]
-        public void ToogleServidor()
+        public async Task ToogleServidor()
         {
             if (!Encendido)
             {
-                //Error = "";
                 service.Iniciar();
             }
             else
             {
-                service.Detener();
+                await service.Detener();
             }
         }
         private void Service_ToogleServidor(bool encendido, string? mensaje)
         {
-            Encendido = encendido;
-            Error = mensaje;
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                Encendido = encendido;
+
+                if (mensaje == "ServidorDetenido")
+                {
+                    Error = "";
+                }
+                else
+                {
+                    Error = mensaje;
+                }
+            });
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Text;
+using System.Windows.Documents;
 
 namespace Battleship_HTTP.Services
 {
@@ -28,8 +29,8 @@ namespace Battleship_HTTP.Services
 
             if (salaDisponible == null)
             {
-                string idhash = ""; 
-                
+                string idhash = "";
+
                 do { idhash = r.Next(10000, 100000).ToString(); }
                 while (SalasList.Any(x => x.IdHash == idhash));
 
@@ -107,7 +108,7 @@ namespace Battleship_HTTP.Services
             else return null;
 
             var listos = (sala.ListoJugador1 ? 1 : 0) + (sala.ListoJugador2 ? 1 : 0);
-            sala.JugadoresListos = (byte)listos;
+            sala.JugadoresListos = listos;
 
             if (listos == 2)
             {
@@ -118,8 +119,10 @@ namespace Battleship_HTTP.Services
                     lock (SalasList)
                     {
                         partidaService.InicializarNuevaPartida(sala);
-
                         sala.Activa = true;
+                        sala.ListoJugador1 = false;
+                        sala.ListoJugador2 = false;
+                        sala.JugadoresListos = 0;
                     }
                 });
             }
@@ -148,6 +151,42 @@ namespace Battleship_HTTP.Services
         }
 
 
+        public Sala? RegistrarVotoRevancha(Sala sala, string idUsuario, bool revancha)
+        {
+            if (sala == null || sala.battleship == null) return null;
+
+            lock (sala.battleship)
+            {
+                if (idUsuario == sala.IdJugador1)
+                {
+                    sala.battleship.RevanchaJ1 = revancha;
+                }
+                else if (idUsuario == sala.IdJugador2)
+                {
+                    sala.battleship.RevanchaJ2 = revancha;
+                }
+
+                if (sala.battleship.RevanchaJ1 && sala.battleship.RevanchaJ2)
+                {
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(3000);
+
+                        lock (SalasList)
+                        {
+                            if (sala.battleship.RevanchaJ1 && sala.battleship.RevanchaJ2)
+                            {
+                                partidaService.InicializarNuevaPartida(sala);
+                                sala.battleship.RevanchaJ1 = false;
+                                sala.battleship.RevanchaJ2 = false;
+                                sala.Activa = true;
+                            }
+                        }
+                    });
+                }
+            }
+            return sala;
+        }
 
     }
 }
