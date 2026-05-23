@@ -17,11 +17,11 @@ namespace Battleship_HTTP.Services
         Random r = new();
 
         public List<Nave> NavesElegir = new List<Nave>(){
-            new Nave {IdNave = 1, Longitud = 2, SectoresRestantes = 2, Coordenadas = new List<Coordenada>()},   //PATRULLERO    //destroyer
-            new Nave {IdNave = 2, Longitud = 3, SectoresRestantes = 3, Coordenadas = new List<Coordenada>()},   //SUBMARINO     //submarine
-            new Nave {IdNave = 3, Longitud = 3, SectoresRestantes = 3, Coordenadas = new List<Coordenada>()},   //DESTRUCTOR    //cruiser
-            new Nave {IdNave = 4, Longitud = 4, SectoresRestantes = 4, Coordenadas = new List<Coordenada>()},   //ACORAZADO     //battleship
-            new Nave {IdNave = 5, Longitud = 5, SectoresRestantes = 5, Coordenadas = new List<Coordenada>()},   //PORTAAVIONES  //carrier
+            new Nave {IdNave = 1, Longitud = 2, SectoresRestantes = 2, Coordenadas = new List<Coordenada>(), Direccion = ""},   //PATRULLERO    //destroyer
+            new Nave {IdNave = 2, Longitud = 3, SectoresRestantes = 3, Coordenadas = new List<Coordenada>(), Direccion = ""},   //SUBMARINO     //submarine
+            new Nave {IdNave = 3, Longitud = 3, SectoresRestantes = 3, Coordenadas = new List<Coordenada>(), Direccion = ""},   //DESTRUCTOR    //cruiser
+            new Nave {IdNave = 4, Longitud = 4, SectoresRestantes = 4, Coordenadas = new List<Coordenada>(), Direccion = ""},   //ACORAZADO     //battleship
+            new Nave {IdNave = 5, Longitud = 5, SectoresRestantes = 5, Coordenadas = new List<Coordenada>(), Direccion = ""},   //PORTAAVIONES  //carrier
         };
         public void InicializarNuevaPartida(Sala sala)
         {
@@ -75,7 +75,8 @@ namespace Battleship_HTTP.Services
                     IdNave = seleccionada.IdNave,
                     Longitud = seleccionada.Longitud,
                     SectoresRestantes = seleccionada.SectoresRestantes,
-                    Coordenadas = new List<Coordenada>()
+                    Coordenadas = new List<Coordenada>(),
+                    Direccion = seleccionada.Direccion
                 };
 
                 foreach (var coordenada in naveDto.Coordenadas ?? new())
@@ -131,13 +132,13 @@ namespace Battleship_HTTP.Services
 
                     int cambioFila = 0;
                     int cambioColumna = 0;
-
+                    var direccion = "";
                     switch (direccionActual)
                     {
-                        case 0: cambioFila = -1; break;
-                        case 1: cambioColumna = 1; break;
-                        case 2: cambioFila = 1; break;
-                        case 3: cambioColumna = -1; break;
+                        case 0: cambioFila = -1; direccion = "arriba"; break;
+                        case 1: cambioColumna = 1; direccion = "derecha"; break;
+                        case 2: cambioFila = 1; direccion = "abajo"; break;
+                        case 3: cambioColumna = -1; direccion = "izquierda";  break;
                     }
 
                     int filaFinal = inicioFila + (cambioFila * (seleccionada.Longitud - 1));
@@ -175,7 +176,8 @@ namespace Battleship_HTTP.Services
                             IdNave = seleccionada.IdNave,
                             Longitud = seleccionada.Longitud,
                             SectoresRestantes = seleccionada.SectoresRestantes,
-                            Coordenadas = trayectoTentativo
+                            Coordenadas = trayectoTentativo,
+                            Direccion = direccion
                         };
 
                         ListaNaves.Add(nuevaNave);

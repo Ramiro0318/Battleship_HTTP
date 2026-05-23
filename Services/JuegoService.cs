@@ -450,8 +450,6 @@ namespace Battleship_HTTP.Services
                         {
                             partidaService.RegistrarTableroJugador(sala, solicitud.IdUsuario, solicitud.NavesColocadas);
                             response.StatusCode = 200;
-                            //Si es el segundo jugador regresar a ambos el contenido de las cuadricular
-                            //Tal vez es en otro metodo
                         }
                     }
                 }

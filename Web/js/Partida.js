@@ -79,7 +79,7 @@
             battleship = await response.json();
 
             if (battleship.Etapa === 0) {
-                console.log(battleship);
+                //console.log(battleship);
                 monitorearPartida();
             }
         } else {
@@ -117,7 +117,7 @@
             if (response.ok) {
                 battleship = await response.json();
 
-                console.log(battleship);
+                //console.log(battleship);
 
                 spanTurno.textContent = battleship.Turno;
                 spanTiempo.textContent = battleship.TiempoRestante;
@@ -136,11 +136,14 @@
                     }
                 }
                 else if (battleship.Etapa === 1) {
+
+
                     tableroEnviado = false;
                     if (!defensaRenderizada) {
                         defensaRenderizada = true;
 
-
+                        console.log(battleship.NavesRestantesJ1);
+                        console.log(battleship.NavesRestantesJ2);
 
                         let navesRecibidas = (battleship.NavesRestantesJ1 && battleship.NavesRestantesJ1.length > 0)
                             ? battleship.NavesRestantesJ1 : battleship.NavesRestantesJ2;
@@ -617,14 +620,28 @@
         //No entiendo por qué no se puede usar in indice regular, se reinicia en cada ciclo
         //:c
         let contadoresPorNave = {};
+        console.log(navesList);
 
         navesList.forEach(nave => {
             const idActual = nave.IdNave;
-            const fragmentosOrigen = tbodyTablero.querySelectorAll(`img[id="${idActual}"]`);
+            let fragmentosOrigen = tbodyTablero.querySelectorAll(`img[id="${idActual}"]`);
+
+            if (fragmentosOrigen.length === 0) {
+                const contenedorOriginal = document.querySelector(`#contenedor > div[id="${idActual}"]`);
+                fragmentosOrigen = contenedorOriginal.querySelectorAll("img");
+            }
 
             if (contadoresPorNave[idActual] === undefined) {
                 contadoresPorNave[idActual] = 0;
             }
+
+            let fragmentos = Array.from(fragmentosOrigen).reverse();
+
+            let grados = 0;
+            if (nave.Direccion === "izquierda") grados = 0;
+            if (nave.Direccion === "arriba") grados = 90;
+            if (nave.Direccion === "derecha") grados = 180;
+            if (nave.Direccion === "abajo") grados = 270;
 
             nave.Coordenadas.forEach((coord) => {
                 const fila = coord.Fila;
@@ -637,9 +654,9 @@
                     // Sacar el índice acumulado real para esta nave
                     let iReal = contadoresPorNave[idActual];
 
-                    if (fragmentosOrigen[iReal]) {
-                        imgBarco.src = fragmentosOrigen[iReal].src;
-                        imgBarco.style.transform = fragmentosOrigen[iReal].style.transform;
+                    if (fragmentos[iReal]) {
+                        imgBarco.src = fragmentos[iReal].src;
+                        imgBarco.style.transform = `rotate(${grados}deg)`;
                     }
 
                     imgBarco.style.width = "100%";
