@@ -117,7 +117,6 @@
             if (response.ok) {
                 battleship = await response.json();
 
-                //console.log(battleship);
 
                 // spanTurno.textContent = `Turno de ${battleship.Turno}`;
                 spanTiempo.textContent = battleship.TiempoRestante;
@@ -307,7 +306,7 @@
             const dropPermitido = comprobarOcupadas(posicionesProyectadas, idNave);
 
             if (!dropPermitido) {
-                console.warn(`[Drop Bloqueado] Fuera de límites o colisión en (${filaInicial}, ${columnaInicial}).`);
+                console.warn(`Colocado fuera de límites o colisión en (${filaInicial}, ${columnaInicial}).`);
                 return;
             }
 
@@ -330,7 +329,7 @@
 
             naveMoviendo.setAttribute("draggable", "false");
             naveMoviendo.style.display = "none";
-            console.log(`Nave ${idNave} colocada exitosamente desde la columna ${columnaInicial} hacia la izquierda.`);
+            console.log(`Nave ${idNave} colocada exitosamente desde la columna ${columnaInicial}`);
 
             naveMoviendo = null;
         }
@@ -377,7 +376,7 @@
 
         celdasNave.forEach((item, indice) => { item.celda.classList.add("celda-seleccionada"); });
 
-        console.log(`[Selección] Nave ${idNave} fija. Punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}) apuntando a la ${naveDireccion}.`);
+        console.log(`Nave ${idNave} con punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}) apuntando a la ${naveDireccion}.`);
     }
 
 
@@ -418,7 +417,7 @@
         const esPosible = comprobarOcupadas(nuevasPosiciones, naveSeleccionadaId);
 
         if (!esPosible) {
-            console.warn(`[Movimiento] Bloqueado hacia la ${direccionBoton}.`);
+            console.warn(`Bloqueado hacia la ${direccionBoton}.`);
             return;
         }
 
@@ -446,7 +445,7 @@
         naveSeleccionadaFila = nuevaFilaPunta;
         naveSeleccionadaCol = nuevaColPunta;
 
-        console.log(`[Movimiento] Éxito. Nueva punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}).`);
+        console.log(`Éxito. Nueva punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}).`);
     }
 
     //ROTAR
@@ -480,7 +479,6 @@
             let f = naveSeleccionadaFila; // La punta se queda en su misma fila y columna
             let c = naveSeleccionadaCol;
 
-            // ¡Alineado con moverNave!: El cuerpo se expande con los signos unificados
             if (nuevaDireccion === "derecha") c = naveSeleccionadaCol + i;
             if (nuevaDireccion === "izquierda") c = naveSeleccionadaCol - i;
             if (nuevaDireccion === "abajo") f = naveSeleccionadaFila + i;
@@ -492,7 +490,7 @@
         const esPosible = comprobarOcupadas(nuevasPosiciones, naveSeleccionadaId);
 
         if (!esPosible) {
-            console.warn(`[Rotación] Bloqueada hacia la ${sentidoRotacion}. Fuera de límites o colisión.`);
+            console.warn(`Bloqueada hacia la ${sentidoRotacion}. Fuera de límites o colisión.`);
             return;
         }
 
@@ -529,7 +527,7 @@
 
         naveDireccion = nuevaDireccion;
 
-        console.log(`[Rotación] Éxito. Nave ${naveSeleccionadaId} ahora apunta hacia la ${naveDireccion}.`);
+        console.log(`Éxito. Nave ${naveSeleccionadaId} ahora apunta hacia la ${naveDireccion}.`);
     }
 
 
@@ -537,7 +535,7 @@
         for (let coord of posicionesDeseadas) {
 
             if (coord.fila < 0 || coord.fila > 9 || coord.col < 0 || coord.col > 9) {
-                console.warn(`[Aduana] Posición inválida: (${coord.fila}, ${coord.col}) está fuera del tablero.`);
+                console.warn(`Posición inválida: (${coord.fila}, ${coord.col}) está fuera del tablero.`);
                 return false;
             }
 
@@ -545,7 +543,7 @@
             const imgExistente = celdaDestino.querySelector("img");
 
             if (imgExistente && imgExistente.id !== idNave) {
-                console.warn(`[Aduana] Colisión detectada en la celda (${coord.fila}, ${coord.col}) con la nave ID: ${imgExistente.id}`);
+                console.warn(`Colisión detectada en la celda (${coord.fila}, ${coord.col}) con la nave ID: ${imgExistente.id}`);
                 return false;
             }
         }
@@ -680,7 +678,6 @@
 
 
     async function enviarAtaqueAlServidor(fila, columna, celda) {
-        // Marcamos la celda localmente para evitar doble clic rápido antes de recibir la respuesta
         celda.dataset.marcado = "true";
 
         let ataqueDTO = {

@@ -31,7 +31,9 @@
     const btnListo = document.querySelector(".listo");
 
 
-
+    const btnSound = new Audio("/battleship/Resources/Sounds/btn-sound.mp3");
+    btnSound.volume = 0.9;
+    const backSound = new Audio("/battleship/Resources/Sounds/warning.mp3");
 
 
 
@@ -58,11 +60,14 @@
 
     btnCerrarSesion.addEventListener('click', () => {
         //Enviar el cerrar sesion
+        backSound.currentTime = 0;
+        backSound.play();
         errorUsuario.textContent = "";
         localStorage.removeItem("nombre");
         menus.forEach(m => m.classList.add("invisible"));
         divIngreso.classList.remove("invisible");
         btnCerrarSesion.classList.add("invisible");
+
     });
 
     btnRegistrarNombre.addEventListener('click', (e) => {
@@ -70,10 +75,16 @@
         nombre = txtnombre.value;
         if (nombre === "") {
             errorUsuario.textContent = "Ingresa un nombre";
+            backSound.currentTime = 0;
+            backSound.play();
         } else if (nombre.length >= 24) {
             errorUsuario.textContent = "El nombre excede la longitud permitida.";
+            backSound.currentTime = 0;
+            backSound.play();
         }
         else {
+            btnSound.currentTime = 0;
+            btnSound.play();
             localStorage.setItem("nombre", nombre);
             btnCerrarSesion.classList.remove("invisible");
             divIngreso.classList.add("invisible");
@@ -86,16 +97,22 @@
 
     //Botones de seleccion de metodo
     btnMatchmaking.addEventListener('click', () => {
+        btnSound.currentTime = 0;
+        btnSound.play();
         buscarSala();
     });
 
 
     btnCrear.addEventListener('click', () => {
+        btnSound.currentTime = 0;
+        btnSound.play();
         crearSala();
     });
 
 
     btnUnirse.addEventListener('click', () => {
+        btnSound.currentTime = 0;
+        btnSound.play();
         divSeleccion.classList.add("invisible");
         divSala.classList.remove("invisible");
         errorNumSala.textContent = "";
@@ -108,18 +125,22 @@
         e.preventDefault();
         num = txtNumSala.value;
         errorNumSala.textContent = "";
-        if (num === "" || num.length > 5) {
+        if (num === "" || num.length != 5) {
             errorNumSala.textContent = "Ingresa un numero de sala válido";
+            backSound.currentTime = 0;
+            backSound.play();
         }
         else {
-
             buscarSala(num); //tal vez necesito una flag
+
         }
     });
 
 
     let listo = false;
     btnListo.addEventListener('click', () => {
+        btnSound.currentTime = 0;
+        btnSound.play();
         listo = !listo;
         btnListo.textContent = listo ? "Cancelar" : "Listo";
         enviarListo();
@@ -151,9 +172,10 @@
 
         if (response.ok) {
             let salaCreada = await response.json();
+            btnSound.currentTime = 0;
+            btnSound.play();
             actualizarMenu(salaCreada);
             escucharCambios(salaCreada.IdHash, salaCreada.JugadoresListos);
-
             if (num === "") {
                 ultimaPagina = divSeleccion;
                 divSeleccion.classList.add("invisible");
@@ -168,6 +190,8 @@
         else {
             let errorObj = await response.json();
             errorNumSala.textContent = errorObj.Info;
+            btnSound.currentTime = 0;
+            btnSound.play();
         }
     }
 
@@ -230,16 +254,21 @@
     const btnsCancelar = document.querySelectorAll(".cancelar");
 
     btnsCancelar.forEach(btn => {
+        backSound.currentTime = 0;
+        backSound.play();
         btn.addEventListener("click", cancelar);
     });
 
     btnCancelarBuscar.addEventListener("click", () => {
+        backSound.currentTime = 0;
+        backSound.play();
         ultimaPagina.classList.remove("invisible");
         paginaActual.classList.add("invisible");
     });
 
     async function cancelar() {
-
+        backSound.currentTime = 0;
+        backSound.play();
         let json = { NumSala: num, Id: id };
 
         let response = await fetch("/battleship/cancelar", {

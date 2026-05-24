@@ -48,7 +48,6 @@ namespace Battleship_HTTP.Services
                 }
                 else if (Sala.battleship.TiempoRestante == 0)
                 {
-                    //Sala.battleship.Etapa = Etapa.Batalla;
                     timer.Stop();
                 }
             }
@@ -89,8 +88,6 @@ namespace Battleship_HTTP.Services
                 }
 
                 ListaNaves.Add(nuevaNave);
-                // Guardamos la nave en el tablero del servidor
-                //tablero.Naves.Add(nuevaNave);
             }
 
             //Si se le acabó el tiempo
