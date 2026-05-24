@@ -13,14 +13,14 @@
     </header>
     <main>
 
-        <button id="cerrarSesion" class="invisible">Cerrar sesión</button>
+        <!--<button id="cerrarSesion" class="invisible">Cerrar sesión</button>-->
 
          <div id="ingreso" class="menu">
              <form>
                  <label for="nombreUsuario">Ingresa tu nombre</label>
-                 <input id="nombreUsuario" type="text" required />
+                 <input id="nombreUsuario" type="text" placeholder="jugador" required />
 
-                 <span id="errorIngreso"></span>
+                 <span class="error" id="errorIngreso"></span>
 
                  <button id="ingresarNombre" >Siguiente</button>
              </form>
@@ -30,13 +30,14 @@
              <button id="matchmaking">Emparejamiento libre</button>
              <button id="crearSala">Crear sala</button>
              <button id="unirseSala">Unirse a sala</button>
+             <button id="cerrarSesion" class="invisible">Cerrar sesión</button>
          </div> 
 
          <div id="sala" class="menu invisible">
             <form>
                 <input id="numeroSala" type="text" placeholder="Ingresa el número de sala" required />
 
-                <span id="errorNumSala"></span>
+                <span class="error" id="errorNumSala"></span>
 
                 <button id="buscar">Buscar</button>
                 <button type="button" class="cancelar_buscar">Regresar</button>
@@ -47,13 +48,42 @@
             <span>No. de sala <b id="lblNum"></b></span>
 
             <dl title="Jugadores">
-                <dt>Jugador 1</dt>
+                <dt>Jugador 1:</dt>
                 <dd id="Jugador1"></dd>
-                <dt>Jugador 2</dt>
+                <dt>Jugador 2:</dt>
                 <dd id="Jugador2"></dd>
             </dl>
 
-            <small id="countJugadores">  de 2 jugadores listos...</small>
+            <!--a ver que tal sale mi animacion-->
+            <div class="contenedor_char">
+                <small class="char" id="countJugadores"></small>
+                <small class="char">&nbsp;</small>
+                <small class="char">d</small>
+                <small class="char">e</small>
+                <small class="char">&nbsp;</small>
+                <small class="char">2</small>
+                <small class="char">&nbsp;</small>
+                <small class="char">j</small>
+                <small class="char">u</small>
+                <small class="char">g</small>
+                <small class="char">a</small>
+                <small class="char">d</small>
+                <small class="char">o</small>
+                <small class="char">r</small>
+                <small class="char">e</small>
+                <small class="char">s</small>
+                <small class="char">&nbsp;</small>
+                <small class="char">l</small>
+                <small class="char">i</small>
+                <small class="char">s</small>
+                <small class="char">t</small>
+                <small class="char">o</small>
+                <small class="char">s</small>
+                <small class="char">.</small>
+                <small class="char">.</small>
+                <small class="char">.</small>
+            </div>
+            <!--<small >  de 2 jugadores listos...</small>-->
             <button class="listo">Listo</button>
             <button type="button" class="cancelar">Regresar</button>
         </div>

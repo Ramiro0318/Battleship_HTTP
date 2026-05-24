@@ -9,7 +9,7 @@
 </head>
 <body>
     <main>
-        <h1 class="tituloJuego">Batalla Naval</h1>
+        <h1 class="tituloJuego">Battleship online</h1>
         <div id="tarjeta">
             <span>Id de sala #<b id="bidSala">123</b></span>
             <span id="turno">Turno de Jugador 1</span>
@@ -303,13 +303,14 @@
         <button id="enviarNaves">Listo</button>
 
         <div id="movimiento">
-            <button id="arriba">arriba</button>
-            <button id="derecha">derecha</button>
-            <button id="abajo">abajo</button>
-            <button id="izquierda">izquierda</button>
+            <button id="arriba"    style="grid-column: 3; grid-row: 1;"><img src="/battleship/Resources/Images/Arrow_Up.png"/></button>
+            <button id="derecha"   style="grid-column: 4; grid-row: 2;"><img src="/battleship/Resources/Images/Arrow_Right.png"/></button>
+            <button id="abajo"     style="grid-column: 3; grid-row: 3;"><img src="/battleship/Resources/Images/Arrow_Down.png"/></button>
+            <button id="izquierda" style="grid-column: 2; grid-row: 2;"><img src="/battleship/Resources/Images/Arrow_Left.png"/></button>
             
-            <img id="rotarIzquierda" src="/battleship/Resources/Images/flair_arrow_1.png" />
-            <img id="rotarDerecha" src="/battleship/Resources/Images/flair_arrow_2.png" />
+            <!--mix-blend-mode-->
+            <button id="rotarIzquierda" style="grid-column: 7; grid-row: 2;"><img src="/battleship/Resources/Images/Arrow_Flip.png"/></button>
+            <button id="rotarDerecha"   style="grid-column: 8; grid-row: 2; transform: scaleX(-1);"><img src="/battleship/Resources/Images/Arrow_Flip.png"/></button>
         </div>
 
         <div id="contenedor">
@@ -349,17 +350,15 @@
 
         <div id="instrucciones">
             <strong>Objetivo:</strong>
-            <span>Hunde la flota de 5 naves que tiene tu adversario antes de que él hunda la tuya</span>
+            <span>Hunde la flota de 5 naves que tiene tu adversario antes de que él hunda la tuya.</span>
 
             <strong>Instrucciones:</strong>
             <p>
-                Arrastra las 5 naves del recuadro inferior al lugar de la cuadricula donde creas que serán más dificil de adivinar. <br />
-                <small>Puedes a acomodarlas todo lo que quieras durante la fase de despliegue</small>
-                Durante la fase de ataque tendrás que intentar adivinar la posición del enemigo,
+                Arrastra las naves del recuadro inferior al sector de la cuadricula donde quieras colocarlas. <br />
+                Después tendrás que intentar adivinar la posición del enemigo,
                 Seleccionarla y analizar las posibles ubicaciones en base a la información que te de el tablero.
             </p>
             <p>
-                La fase de despliegue dura 40 segundos y durante el ataque, cada jugador tendrá 15 segundos por jugada. <br />
                 En caso de que una bomba haya tocado a la flota enemiga, el jugador atacante podrá repetir turno.
             </p>
             <button id="ok" type="button">Ok!</button>

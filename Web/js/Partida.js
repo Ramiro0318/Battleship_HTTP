@@ -505,11 +505,11 @@
         });
 
 
-        let gradosCss = 0;
-        if (nuevaDireccion === "derecha") gradosCss = 0;
-        if (nuevaDireccion === "abajo") gradosCss = 90;
-        if (nuevaDireccion === "izquierda") gradosCss = 180;
-        if (nuevaDireccion === "arriba") gradosCss = 270;
+        let grados = 0;
+        if (nuevaDireccion === "derecha") grados = 0;
+        if (nuevaDireccion === "abajo") grados = 90;
+        if (nuevaDireccion === "izquierda") grados = 180;
+        if (nuevaDireccion === "arriba") grados = 270;
 
         nuevasPosiciones.forEach(pos => {
             const celdaObjetivo = tbodyTablero.rows[pos.fila].cells[pos.col];

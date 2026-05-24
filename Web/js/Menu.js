@@ -25,6 +25,7 @@
     const lblNumSala = document.querySelector("#lblNum");
     const ddJugador1 = document.querySelector("#Jugador1")
     const ddJugador2 = document.querySelector("#Jugador2")
+    const divCountJugadores = document.querySelector(".contenedor_char")
     const smlCountJugadores = document.querySelector("#countJugadores")
     const divEspera = document.querySelector("#espera");
     const btnListo = document.querySelector(".listo");
@@ -276,13 +277,27 @@
         lblNumSala.textContent = `#${sala.IdHash}`;
         ddJugador1.textContent = sala.NombreJugador1;
         ddJugador2.textContent = sala.NombreJugador2;
-        smlCountJugadores.textContent = `${sala.JugadoresListos} de 2 jugadores listos...`;
+        smlCountJugadores.textContent = `${sala.JugadoresListos}`;
 
         if (sala.JugadoresListos === 2) {
             btnListo.disabled = true;
             btnsCancelar.forEach(btn => btn.disabled = true);
             btnListo.textContent = "Iniciando...";
-            smlCountJugadores.textContent = "Iniciando en 3 segundos...";
+
+            while (divCountJugadores.firstChild) {
+                divCountJugadores.removeChild(divCountJugadores.firstChild);
+            }
+
+            texto = "Iniciando...";
+            [...texto].forEach((char, index) => {
+
+                const small = document.createElement("small");
+                small.classList.add("char");
+                small.innerHTML = char === " " ? "&nbsp;" : char;
+                small.style.animationDelay = `${index * 0.05}s`;
+
+                divCountJugadores.appendChild(small);
+            });
         }
         else {
             btnListo.disabled = false;

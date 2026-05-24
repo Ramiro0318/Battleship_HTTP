@@ -1,13 +1,6 @@
 ﻿
 :root {
     --primaryColor: #1f3c88;
-    /*
-    --accentColor: #365dc1;
-    --cancelColor: #878787;
-    
-    --accentColorHover: #406fe7;
-    --cancelColorHover: #adadad; */
-
     --backgroundColorTable: #bed2f3;
     --backgroundl: #b4d6f7;
     --borderColorTable: #0505a3;
@@ -42,45 +35,45 @@ main {
     flex-direction: column;
 }
 
-    header h1 {
-        display: block;
-        justify-content: center;
-        text-align: center;
-        background-color: #163252;
-        color: white;
-        padding: 25px 10px;
-        font-size: 2.6em;
-        margin: 0em 0 0.8em 0;
-    }
+header h1 {
+    display: block;
+    justify-content: center;
+    text-align: center;
+    background-color: #163252;
+    color: white;
+    padding: 25px 10px;
+    font-size: 2.6em;
+    margin: 0em 0 0.8em 0;
+}
 
-    main .menu {
-        justify-self:center;
-        background-color: var(--backgroundColorTable);
-        border: 4px outset var(--borderColorTd);
-        border-radius: 50px;
-        position: absolute;
-        justify-self: center;
-        width: 80%;
-        max-width: 600px;
-        min-height: 150px;
-        left: 50%;
-        right: 50%;
-        top: 25%;
-        font-size: 22px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 20px 10px;
-        min-height: 210px;
-        overflow: hidden;
-    }
+main .menu {
+    justify-self: center;
+    background-color: var(--backgroundColorTable);
+    border: 4px outset var(--borderColorTd);
+    border-radius: 12px;
+    position: absolute;
+    justify-self: center;
+    width: 80%;
+    max-width: 950px;
+    min-height: 150px;
+    left: 50%;
+    right: 50%;
+    top: 25%;
+    font-size: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px 10px;
+    min-height: 210px;
+    overflow: hidden;
+    box-shadow: 0 15px 15px #7068a678;
+}
 
     main .menu form {
         width: 100%;
         height: 100%;
-        font-size: 22px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -89,124 +82,273 @@ main {
         min-height: 100%;
     }
 
-    main #ingreso form label {
-        text-align: center;
-        font-size: 1.5em;
-        font-weight: bold;
-        margin-bottom: 25px;
+main #ingreso form label {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+main menu .error {
+    font-size: 1.3em;
+}
+
+main div span {
+    font-size: 1.3em;
+}
+
+main div .contenedor_char {
+    display: flex;
+}
+
+    main div .contenedor_char small {
+        display: flex;
+        font-size: 1.2em;
+        animation: saltito 2.1s ease-in-out infinite;
     }
 
-    main .menu small {
-        text-align: center;
+        main div .contenedor_char small:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        main div .contenedor_char small:nth-child(2) {
+            animation-delay: 0.05s;
+        }
+
+        main div .contenedor_char small:nth-child(3) {
+            animation-delay: 0.1s;
+        }
+
+        main div .contenedor_char small:nth-child(4) {
+            animation-delay: 0.15s;
+        }
+
+        main div .contenedor_char small:nth-child(5) {
+            animation-delay: 0.20s;
+        }
+
+        main div .contenedor_char small:nth-child(6) {
+            animation-delay: 0.25s;
+        }
+
+        main div .contenedor_char small:nth-child(7) {
+            animation-delay: 0.30s;
+        }
+
+        main div .contenedor_char small:nth-child(8) {
+            animation-delay: 0.35s;
+        }
+
+        main div .contenedor_char small:nth-child(9) {
+            animation-delay: 0.40s;
+        }
+
+        main div .contenedor_char small:nth-child(10) {
+            animation-delay: 0.45s;
+        }
+
+        main div .contenedor_char small:nth-child(11) {
+            animation-delay: 0.50s;
+        }
+
+        main div .contenedor_char small:nth-child(12) {
+            animation-delay: 0.55s;
+        }
+
+        main div .contenedor_char small:nth-child(13) {
+            animation-delay: 0.60s;
+        }
+
+        main div .contenedor_char small:nth-child(14) {
+            animation-delay: 0.65s;
+        }
+
+        main div .contenedor_char small:nth-child(15) {
+            animation-delay: 0.70s;
+        }
+
+        main div .contenedor_char small:nth-child(16) {
+            animation-delay: 0.75s;
+        }
+
+        main div .contenedor_char small:nth-child(17) {
+            animation-delay: 0.80s;
+        }
+
+        main div .contenedor_char small:nth-child(18) {
+            animation-delay: 0.85s;
+        }
+
+        main div .contenedor_char small:nth-child(19) {
+            animation-delay: 0.90s;
+        }
+
+        main div .contenedor_char small:nth-child(20) {
+            animation-delay: 0.95s;
+        }
+
+        main div .contenedor_char small:nth-child(21) {
+            animation-delay: 1s;
+        }
+
+        main div .contenedor_char small:nth-child(22) {
+            animation-delay: 1.05s;
+        }
+
+        main div .contenedor_char small:nth-child(23) {
+            animation-delay: 1.10s;
+        }
+
+        main div .contenedor_char small:nth-child(24) {
+            animation-delay: 1.15s;
+        }
+
+        main div .contenedor_char small:nth-child(25) {
+            animation-delay: 1.20s;
+        }
+
+        main div .contenedor_char small:nth-child(26) {
+            animation-delay: 1.25s;
+        }
+
+@keyframes saltito {
+    0%, 16%, 100% {
+        transform: translateY(0);
     }
 
-    main .menu button, .menu#sala form button, #instrucciones button, #resultados button {
-        min-width: 230px;
-        width: 80%;
-        height: 40px;
-        background: var(--mainBackground);
-        /*border: 40%;*/
-        padding: 0;
+    8% {
+        transform: translateY(-8px);
+    }
+}
+
+main .menu button, #instrucciones button, #resultados button {
+    min-width: 230px;
+    width: 80%;
+    background: var(--mainBackground);
+    box-shadow: 4px 5px 4px var(--borderColorTable);
+    color: var(--borderColorTd);
+    font-weight: bold;
+    font-size: 1.1em;
+    overflow: hidden;
+}
+
+main .menu button {
+    align-self: center;
+    padding: 0.3em;
+    overflow: hidden;
+    text-wrap-mode: nowrap;
+    transition: all 0.3s ease-out;
+    border-radius: 12px;
+}
+
+    main .menu button:hover {
+        background: #d0e0f6;
         box-shadow: 4px 5px 4px var(--borderColorTable);
         color: var(--borderColorTd);
-        font-weight: bold;
-        font-size: 1em;
-        overflow: hidden;
+        transform: translateY(-7px);
     }
 
-    main .menu form button {
-        width: fit-content;
-        align-self: center;
-        padding: 0.2em 0.8em;
+    main .menu button#cerrarSesion {
+        margin-top: 4px;
+        background-color: #ffe4e5;
+        box-shadow: 4px 5px 4px #980011;
+        color: #913d31;
     }
 
-    main .menu form input {
-        padding: 0.3em 0.3em;
-    }
-    
-    main .menu form input[type="text"] {
-        font-size: 16px;
-    }
-
-    main .menu#sala form input[type="text"] {
-        text-align: center;
-        font-size: 0.9em;
-    }
-
-    main .menu dl {
-        align-self: flex-start;
-        margin: 20px 10%;
-        width: calc(100% - 20%);
-        font-size: 1em;
-        background-color: var(--backgroundl);
-    }
-
-    main .menu dd {
-        margin: 0 0 10px 50px;
-        font-size: 1.15em;
-    }
-
-
-
-
-    main .tituloJuego {
-        display: block;
-        justify-content: center;
-        text-align: center;
-        background-color: #163252;
-        color: white;
-        padding: 10px;
-        font-size: 2.4em;
-        margin: 0 0 0.8em 0;
-
-    }
-
-    main #tarjeta {
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-        align-self: center;
-        width: calc(100% - 40px);
-        margin: 10px;
-        padding: 10px;
-        background-color: var(--backgroundColorTable);
-        border: 4px solid var(--fondoOscuro);
-    }
-
-        main #tarjeta span {
-            justify-self: center;
-            text-align: center;
-            color: var(--primaryColor);
-            font-size: 1.5em;
+        main .menu button#cerrarSesion:hover {
+            background: #ffaba3;
+            transform: translateY(-7px);
         }
+
+main .menu input[type="text"] {
+    text-align: center;
+    font-size: 1.1em;
+    padding: 0.3em;
+}
+
+main .menu dl {
+    align-self: flex-start;
+    margin: 20px 10%;
+    width: calc(100% - 20%);
+    min-height: 250px;
+    font-size: 1em;
+    background-color: var(--backgroundl);
+    align-self: center;
+    border: 6px solid #1c3c91;
+    border-radius: 24px;
+    box-shadow: 1px 5px 6px var(--borderColorTable);
+}
+
+
+main .menu dt {
+    font-size: 1em;
+}
+
+main .menu dd {
+    margin: 0 0 10px 50px;
+    font-size: 1.18em;
+}
+
+
+
+
+main .tituloJuego {
+    display: block;
+    justify-content: center;
+    text-align: center;
+    background-color: #163252;
+    color: white;
+    padding: 10px;
+    font-size: 2.5em;
+    margin: 0 0 0.8em 0;
+}
+
+main #tarjeta {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: calc(100% - 40px);
+    margin: 10px;
+    padding: 10px;
+    background-color: var(--backgroundColorTable);
+    border: 4px solid var(--fondoOscuro);
+}
+
+    main #tarjeta span {
+        justify-self: center;
+        text-align: center;
+        color: var(--primaryColor);
+        font-size: 1.5em;
+    }
 
         main #tarjeta span:first-of-type {
             font-size: 1.3em;
         }
 
-    main .reloj {
-        width: 120px;
-        display: flex;
-        flex-direction: column;
-        align-self: flex-end;
-        align-items: center;
-        font-size: 1.3em;
-        background-color: var(--fondoOscuro);
-        color: var(--colorRecuadro);
-        margin: 1em 0.5em;
+main .reloj {
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    align-items: center;
+    font-size: 1.3em;
+    background-color: var(--fondoOscuro);
+    color: var(--colorRecuadro);
+    margin: 0.3em;
+}
+
+    main .reloj span:last-child {
+        font-weight: bold;
     }
 
-        main .reloj span:last-child {
-            font-weight: bold;
-        }
 
-
-    main table {
-        border-collapse: collapse;
-        margin-left: 10px; /* Espacio para que los números no se corten */
-        table-layout: fixed;
-        align-self: center;
-    }
+main table {
+    border-collapse: collapse;
+    margin-left: 10px; /* Espacio para que los números no se corten */
+    table-layout: fixed;
+    align-self: center;
+}
 
 
 table tbody {
@@ -272,6 +414,35 @@ table tr td {
     position: relative;
 }
 
+#enviarNaves {
+    background: #1c8f4f;
+    color: white;
+    border-radius: 12px;
+    padding: 12px 28px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#movimiento {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    margin: 0 20%;
+    /*background-color: var(--backgroundl);*/
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+}
+
+    #movimiento button {
+        background-color: #1f3c883b;
+    }
+
+        #movimiento button img {
+            height: 50px;
+            /*width: 50px;*/
+        }
+
 #contenedor {
     margin: 20px;
     padding: 20px;
@@ -282,7 +453,7 @@ table tr td {
     border: 10px solid var(--borderColorTable);
     border-radius: 10px;
     width: 70%;
-    max-width: 280px;
+    /*max-width: 280px;*/
 }
 
     #contenedor div {
@@ -296,34 +467,36 @@ table tr td {
             pointer-events: none;
         }
 
-        main #instrucciones, main #resultados {
-            position: absolute;
-            width: 70%;
-            min-width: 300px;
-            top: 40%;
-            left: 50%;
-            right: auto;
-            background-color: var(--backgroundColorTable);
-            transform: translate(-50%, -50%);
-            z-index: 20;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            gap: 5px;
-        }
-
-main #instrucciones strong {
-    font-size: 1.4em;
+main #instrucciones, main #resultados {
+    position: absolute;
+    width: 70%;
+    min-width: 300px;
+    top: 40%;
+    left: 50%;
+    right: auto;
+    background-color: var(--backgroundColorTable);
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin-top: 50px;
+    gap: 5px;
+    max-width: 950px;
 }
 
-main #instrucciones span {
-    margin: 0 0 12px;
-    font-size: 1.3em;
-}
+    main #instrucciones strong {
+        font-size: 1.4em;
+    }
 
-main #instrucciones p {
-    font-size: 1.1em;
-}
+    main #instrucciones span {
+        margin: 0 0 12px;
+        font-size: 1.3em;
+    }
+
+    main #instrucciones p {
+        font-size: 1.1em;
+    }
 
 #instrucciones button, #resultados button {
     align-self: center;
@@ -357,7 +530,12 @@ main #fondo {
 
 .invisible {
     visibility: hidden;
+    animation-play-state: paused !important;
 }
+
+    .invisible * {
+        display: none;
+    }
 
 /* --- BARCO SELECCIONADO HORIZONTAL --- */
 .celda-seleccionada-h-inicio {
@@ -401,29 +579,32 @@ main #fondo {
         font-size: 2.7em;
     }
 
-    main .menu button, .menu#sala form button, #instrucciones button, #resultados button {
+    main .menu button, #instrucciones button, #resultados button {
         font-size: 1.25em;
-        height: 43px;
-        min-width: 260px;
+        min-width: 300px;
     }
 
-    main .menu#sala form input[type="text"] {
-        font-size: 1em;
+    main .menu form input[type="text"] {
         min-width: 240px;
     }
 
-    main .menu small {
-        font-size: 1em;
+    main div span {
+        font-size: 1.4em;
+    }
+
+    main div .contenedor_char small {
+        font-size: 1.4em;
+        text-align: center;
     }
 
     main .menu dl {
-        font-size: 1.1em;
+        font-size: 1.2em;
         margin: 20px 50px;
         width: calc(100% - 20%);
     }
 
     main .menu dd {
-        font-size: 1.2em;
+        font-size: 1.3em;
         margin: 0 0 10px 50px;
     }
 
@@ -431,11 +612,11 @@ main #fondo {
         line-height: 30px;
         font-size: 18px;
     }
+
     table tr::before {
         left: -30px;
         font-size: 18px;
     }
-
 }
 
 @media (min-width : 540px) {
@@ -444,8 +625,15 @@ main #fondo {
     }
 
     main .menu {
-        width: 500px;
         gap: 13px
+    }
+
+    main div span {
+        font-size: 1.5em;
+    }
+
+    main div .contenedor_char small {
+        font-size: 1.5em;
     }
 
     main #ingreso form label {
@@ -453,42 +641,31 @@ main #fondo {
     }
 
     main .menu form input[type="text"] {
-        font-size: 0.8em;
-        width: 200px;
-    }
-    
-    main .menu#sala form input[type="text"] {
-        font-size: 1.1em;
-        width: 300px;
-    }
-
-    main #resultados span {
-        font-size: 1.8em;
-    }
-
-
-    main .menu small {
-        font-size: 1.2em;
+        font-size: 1.3em;
+        width: 80%;
     }
 
     main .menu dl {
-        font-size: 1.28em;
+        font-size: 1.4em;
+        padding: 10px 30px
+    }
+
+    main .menu dt {
+        font-size: 1.1em;
     }
 
     main .menu dd {
         font-size: 1.35em;
     }
 
-    main .menu button, .menu#sala form button, #instrucciones button, #resultados button {
+    main .menu button, #instrucciones button, #resultados button {
         font-size: 1.3em;
-        height: 46px;
-        min-width: 300px;
         width: 80%;
+        max-width: 500px;
     }
 
     main #tarjeta {
         width: 500px;
-        
     }
 
     main .reloj {
@@ -499,7 +676,11 @@ main #fondo {
         font-size: 1.6em;
         margin: 1em 0.5em;
     }
-        
+
+    main #resultados span {
+        font-size: 1.8em;
+    }
+
     #resultados span {
         font-size: 1.8em;
     }
@@ -517,6 +698,7 @@ main #fondo {
         line-height: 40px;
         font-size: 18px;
     }
+
     table tr::before {
         left: -30px;
         font-size: 18px;
@@ -531,29 +713,37 @@ main #fondo {
     }
 
     main .menu {
-        width: 500px;
-        gap: 17px
+        /*width: 500px;*/
+        gap: 17px;
+        padding: 1.4em 0.6em;
     }
+
+    main #ingreso form label {
+        font-size: 1.9em;
+    }
+
 
     main .menu form input[type="text"] {
-        font-size: 1em;
+        font-size: 1.4em;
+        width: 80%;
+        max-width: 500px;
     }
 
-    main .menu#sala form input[type="text"] {
-        font-size: 1.25em;
-        width: 320px;
+    main div span {
+        font-size: 1.8em;
     }
 
-    main .menu small {
-        font-size: 1.2em;
+    main div .contenedor_char small {
+        font-size: 1.6em;
     }
 
     main .menu dl {
-        font-size: 1.3em;
+        font-size: 1.6em;
     }
 
     main .menu dd {
         font-size: 1.35em;
+        margin: 0 0 15px 50px;
     }
 
     main #resultados {
@@ -581,13 +771,31 @@ main #fondo {
         line-height: 48px;
         font-size: 21px;
     }
+
     table tr::before {
         left: -48px;
         font-size: 21px;
     }
-
 }
+
 @media (min-width : 1120px) {
+
+    main .menu {
+        gap: 24px;
+        padding: 2em 1em;
+    }
+
+
+        main .menu form input[type="text"] {
+            font-size: 1.6em;
+            width: 500px;
+        }
+
+        main .menu button {
+            font-size: 1.6em;
+            width: 550px;
+            padding: 0.4em 0.3em;
+        }
 
     table tr td {
         width: 52px;
@@ -598,6 +806,7 @@ main #fondo {
         line-height: 52px;
         font-size: 24px;
     }
+
     table tr::before {
         left: -35px;
         font-size: 24px;
