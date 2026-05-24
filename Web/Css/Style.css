@@ -50,6 +50,7 @@ main .menu {
     justify-self: center;
     background-color: var(--backgroundColorTable);
     border: 4px outset var(--borderColorTd);
+    box-shadow: 0 15px 15px #7068a678;
     border-radius: 12px;
     position: absolute;
     justify-self: center;
@@ -68,7 +69,6 @@ main .menu {
     padding: 20px 10px;
     min-height: 210px;
     overflow: hidden;
-    box-shadow: 0 15px 15px #7068a678;
 }
 
     main .menu form {
@@ -232,7 +232,12 @@ main .menu button, #instrucciones button, #resultados button {
     overflow: hidden;
 }
 
-main .menu button {
+
+#instrucciones button {
+    margin-top: 10px;
+}
+
+main .menu button, #instrucciones button, #resultados button {
     align-self: center;
     padding: 0.3em;
     overflow: hidden;
@@ -241,7 +246,7 @@ main .menu button {
     border-radius: 12px;
 }
 
-    main .menu button:hover {
+    main .menu button:hover, #instrucciones button:hover {
         background: #d0e0f6;
         box-shadow: 4px 5px 4px var(--borderColorTable);
         color: var(--borderColorTd);
@@ -289,7 +294,10 @@ main .menu dd {
     font-size: 1.18em;
 }
 
-
+main #instrucciones p {
+    font-size: 1.3em;
+    margin: 0.8em 0;
+}
 
 
 main .tituloJuego {
@@ -342,12 +350,20 @@ main .reloj {
         font-weight: bold;
     }
 
+main #contenedor_tablas {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
 
 main table {
     border-collapse: collapse;
     margin-left: 10px; /* Espacio para que los números no se corten */
     table-layout: fixed;
     align-self: center;
+    margin: 10px;
 }
 
 
@@ -415,12 +431,15 @@ table tr td {
 }
 
 #enviarNaves {
-    background: #1c8f4f;
+    background: #bed2f3;
     color: white;
     border-radius: 12px;
     padding: 12px 28px;
     font-weight: bold;
     font-size: 18px;
+    margin: 10px 25px 10px 10px;
+    align-self: center;
+    min-width: 370px;
 }
 
 #movimiento {
@@ -452,7 +471,7 @@ table tr td {
     background-color: blue;
     border: 10px solid var(--borderColorTable);
     border-radius: 10px;
-    width: 70%;
+    width: 60%;
     /*max-width: 280px;*/
 }
 
@@ -474,7 +493,6 @@ main #instrucciones, main #resultados {
     top: 40%;
     left: 50%;
     right: auto;
-    background-color: var(--backgroundColorTable);
     transform: translate(-50%, -50%);
     z-index: 20;
     display: flex;
@@ -483,24 +501,20 @@ main #instrucciones, main #resultados {
     margin-top: 50px;
     gap: 5px;
     max-width: 950px;
+    background-color: var(--backgroundColorTable);
+    border: 6px outset var(--borderColorTd);
+    box-shadow: 0 15px 15px #7068a678;
+    border-radius: 12px;
 }
 
     main #instrucciones strong {
-        font-size: 1.4em;
+        font-size: 1.5em;
     }
 
     main #instrucciones span {
         margin: 0 0 12px;
         font-size: 1.3em;
     }
-
-    main #instrucciones p {
-        font-size: 1.1em;
-    }
-
-#instrucciones button, #resultados button {
-    align-self: center;
-}
 
 main #resultados {
     gap: 15px;
@@ -580,7 +594,7 @@ main #fondo {
     }
 
     main .menu button, #instrucciones button, #resultados button {
-        font-size: 1.25em;
+        font-size: 1.3em;
         min-width: 300px;
     }
 
@@ -595,6 +609,14 @@ main #fondo {
     main div .contenedor_char small {
         font-size: 1.4em;
         text-align: center;
+    }
+
+    main #instrucciones strong {
+        font-size: 1.6em;
+    }
+
+    main #instrucciones p {
+        font-size: 1.4em;
     }
 
     main .menu dl {
@@ -659,9 +681,21 @@ main #fondo {
     }
 
     main .menu button, #instrucciones button, #resultados button {
-        font-size: 1.3em;
+        font-size: 1.5em;
         width: 80%;
         max-width: 500px;
+    }
+
+    main #instrucciones strong {
+        font-size: 1.7em;
+    }
+
+    main #instrucciones p {
+        font-size: 1.5em;
+    }
+
+    #enviarNaves {
+        min-width: 470px;
     }
 
     main #tarjeta {
@@ -758,13 +792,26 @@ main #fondo {
         font-size: 2.1em;
     }
 
-    #resultados button {
-        font-size: 1.4em;
-    }
 
     table tr td {
         width: 48px;
         height: 48px;
+    }
+
+    #enviarNaves {
+        width: 550px;
+    }
+
+    main #instrucciones strong {
+        font-size: 2.2em;
+    }
+    
+    #instrucciones button {
+        margin-top: 15px;
+    }
+
+    main #instrucciones p {
+        font-size: 1.6em;
     }
 
     table thead tr th {
@@ -791,11 +838,34 @@ main #fondo {
             width: 500px;
         }
 
-        main .menu button {
-            font-size: 1.6em;
-            width: 550px;
-            padding: 0.4em 0.3em;
-        }
+    #instrucciones button {
+        margin-top: 20px;
+        font-size: 2.1em;
+    }
+
+    main .menu button, #instrucciones button, #resultados button {
+        font-size: 1.8em;
+        width: 550px;
+        padding: 0.4em 0.3em;
+    }
+
+    #enviarNaves {
+        width: 600px;
+        margin: 25px;
+    }
+
+    main #instrucciones strong {
+        font-size: 2.4em;
+    }
+
+    main #instrucciones p {
+        font-size: 1.8em;
+    }
+
+    main #contenedor_tablas {
+        flex-direction: row;
+        gap: 30px;
+    }
 
     table tr td {
         width: 52px;
