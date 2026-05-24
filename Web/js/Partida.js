@@ -119,7 +119,7 @@
 
                 //console.log(battleship);
 
-                spanTurno.textContent = battleship.Turno;
+                // spanTurno.textContent = `Turno de ${battleship.Turno}`;
                 spanTiempo.textContent = battleship.TiempoRestante;
 
                 if (battleship.Etapa === 0) {
@@ -712,7 +712,7 @@
 
 
     async function recibirAtaque(bship) {
-        spanTurno.textContent = bship.Turno;
+        spanTurno.textContent = `Turno de ${bship.Turno}`;
         const soyJugador1 = (bship.NavesRestantesJ1 && bship.NavesRestantesJ1.length > 0);
 
         const CuadriculaDefensa = soyJugador1 ? bship.CuadriculaJ1 : bship.CuadriculaJ2;
