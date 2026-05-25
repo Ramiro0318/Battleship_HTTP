@@ -113,6 +113,12 @@
     <None Update="Web\Resources\Sounds\explosion.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Web\Resources\Sounds\MusicaJuego.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Web\Resources\Sounds\resolution.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Web\Resources\Sounds\success.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

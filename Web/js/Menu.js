@@ -30,7 +30,7 @@
     const divEspera = document.querySelector("#espera");
     const btnListo = document.querySelector(".listo");
 
-
+    //SONIDO
     const btnSound = new Audio("/battleship/Resources/Sounds/btn-sound.mp3");
     btnSound.volume = 0.9;
     const backSound = new Audio("/battleship/Resources/Sounds/warning.mp3");

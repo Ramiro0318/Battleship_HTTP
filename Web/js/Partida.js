@@ -41,6 +41,17 @@
     const numSala = localStorage.getItem("numeroSala") ?? "";
     const idSala = localStorage.getItem("idSala") ?? "";
 
+    //SONIDO
+    const explosionSound = new Audio("/battleship/Resources/Sounds/explosion.mp3");
+    const waterSound = new Audio("/battleship/Resources/Sounds/water.mp3");
+    const resolutionSound = new Audio("/battleship/Resources/Sounds/resolution.mp3");
+    const btnSound = new Audio("/battleship/Resources/Sounds/btn-sound.mp3");
+    btnSound.volume = 0.9;
+    const backSound = new Audio("/battleship/Resources/Sounds/warning.mp3");
+    const musicaJuego = new Audio("/battleship/Resources/Sounds/MusicaJuego.mp3");
+    musicaJuego.volume = 0.3;
+    musicaJuego.loop = true;
+    musicaJuego.play();
 
     let battleship;
     let naveSeleccionadaId = null;
@@ -60,6 +71,8 @@
 
 
     btnOk.addEventListener('click', function () {
+        btnSound.currentTime = 0;
+        btnSound.play();
         divInstrucciones.classList.add("invisible");
         fondo.classList.add("invisible");
     });
@@ -191,6 +204,8 @@
     async function enviarNavesPosicionadas() {
         tableroEnviado = true;
         btnEnviar.disabled = true;
+        btnSound.currentTime = 0;
+        btnSound.play();
 
         const navesEnTablero = document.querySelectorAll("#tablaJugador tbody td img");
         let navesList = [];
@@ -201,15 +216,18 @@
             const fila = celdaPadre.parentElement.sectionRowIndex;
             const columna = celdaPadre.cellIndex;
             const idNave = parseInt(img.id);
+            const direccion = img.dataset.direccion
 
             let naveEncontrada = navesList.find(nave => nave.IdNave === idNave);
 
 
             if (naveEncontrada) {
                 naveEncontrada.Coordenadas.push({ "Fila": fila, "Columna": columna });
+                naveEncontrada.Direccion = direccion;
             } else {
                 let naveDTO = {
                     IdNave: idNave,
+                    Direccion: direccion,
                     Coordenadas: [
                         { "Fila": fila, "Columna": columna }
                     ]
@@ -318,6 +336,8 @@
 
                 const nuevoCuadrito = imgOriginal.cloneNode(true);
                 nuevoCuadrito.id = idNave;
+                nuevoCuadrito.dataset.direccion = "izquierda";
+                nuevoCuadrito.dataset.parte = indice;
 
                 nuevoCuadrito.style.width = "100%";
                 nuevoCuadrito.style.height = "100%";
@@ -365,14 +385,17 @@
         if (celdasNave.length === 0) return;
 
         // la punta columna más alta. //de menor a mayor
-        celdasNave.sort((a, b) => a.col - b.col);
+        const puntaDetectada = celdasNave.find(item => {
+            const img = item.celda.querySelector("img");
+            return img && img.dataset.parte === "0";
+        });
 
-        const puntaDetectada = celdasNave[0];
+        if (!puntaDetectada) return;
 
         naveSeleccionadaId = idNave;
         naveSeleccionadaFila = puntaDetectada.fila;
         naveSeleccionadaCol = puntaDetectada.col;
-        naveDireccion = "derecha";
+        naveDireccion = e.target.dataset.direccion;
 
         celdasNave.forEach((item, indice) => { item.celda.classList.add("celda-seleccionada"); });
 
@@ -391,7 +414,7 @@
 
         if (longitud === 0) return;
 
-        let imgsParaClonar = Array.from(fragmentosEnTablero);
+        let imgsParaClonar = Array.from(fragmentosEnTablero).sort((a, b) => parseInt(a.dataset.parte) - parseInt(b.dataset.parte));
 
         let nuevaFilaPunta = naveSeleccionadaFila;
         let nuevaColPunta = naveSeleccionadaCol;
@@ -406,8 +429,8 @@
             let f = nuevaFilaPunta;
             let c = nuevaColPunta;
 
-            if (naveDireccion === "derecha") c = nuevaColPunta + i;
-            if (naveDireccion === "izquierda") c = nuevaColPunta - i;
+            if (naveDireccion === "derecha") c = nuevaColPunta - i;
+            if (naveDireccion === "izquierda") c = nuevaColPunta + i;
             if (naveDireccion === "abajo") f = nuevaFilaPunta + i;
             if (naveDireccion === "arriba") f = nuevaFilaPunta - i;
 
@@ -434,6 +457,9 @@
             const nuevoCuadrito = imgsParaClonar[pos.indiceCuerpo].cloneNode(true);
 
             nuevoCuadrito.id = naveSeleccionadaId;
+            nuevoCuadrito.dataset.direccion = naveDireccion;
+            nuevoCuadrito.dataset.parte = imgsParaClonar[pos.indiceCuerpo].dataset.parte;
+
             nuevoCuadrito.style.width = "100%";
             nuevoCuadrito.style.height = "100%";
             nuevoCuadrito.style.display = "block";
@@ -458,13 +484,10 @@
 
         if (longitud === 0) return;
 
-        let imgsParaClonar = Array.from(fragmentosEnTablero);
+        let imgsParaClonar = Array.from(fragmentosEnTablero).sort((a, b) => parseInt(a.dataset.parte) - parseInt(b.dataset.parte));
 
-        if (naveDireccion === "izquierda" || naveDireccion === "arriba") {
-            imgsParaClonar.reverse();
-        }
 
-        const direcciones = ["arriba", "derecha", "abajo", "izquierda"];
+        const direcciones = ["izquierda", "abajo", "derecha", "arriba"];
         let indiceActual = direcciones.indexOf(naveDireccion);
 
         let nuevaDireccion = naveDireccion;
@@ -479,8 +502,8 @@
             let f = naveSeleccionadaFila; // La punta se queda en su misma fila y columna
             let c = naveSeleccionadaCol;
 
-            if (nuevaDireccion === "derecha") c = naveSeleccionadaCol + i;
-            if (nuevaDireccion === "izquierda") c = naveSeleccionadaCol - i;
+            if (nuevaDireccion === "derecha") c = naveSeleccionadaCol - i;
+            if (nuevaDireccion === "izquierda") c = naveSeleccionadaCol + i;
             if (nuevaDireccion === "abajo") f = naveSeleccionadaFila + i;
             if (nuevaDireccion === "arriba") f = naveSeleccionadaFila - i;
 
@@ -503,10 +526,10 @@
         });
 
 
-        let grados = 0;
-        if (nuevaDireccion === "derecha") grados = 0;
+        let grados = 0; 
+        if (nuevaDireccion === "izquierda") grados = 0;
         if (nuevaDireccion === "abajo") grados = 90;
-        if (nuevaDireccion === "izquierda") grados = 180;
+        if (nuevaDireccion === "derecha") grados = 180;
         if (nuevaDireccion === "arriba") grados = 270;
 
         nuevasPosiciones.forEach(pos => {
@@ -514,12 +537,15 @@
             const nuevoCuadrito = imgsParaClonar[pos.indiceCuerpo].cloneNode(true);
 
             nuevoCuadrito.id = naveSeleccionadaId;
+            nuevoCuadrito.dataset.direccion = nuevaDireccion;
+            nuevoCuadrito.dataset.parte = imgsParaClonar[pos.indiceCuerpo].dataset.parte;
+
             nuevoCuadrito.style.width = "100%";
             nuevoCuadrito.style.height = "100%";
             nuevoCuadrito.style.display = "block";
 
             // Aplicar la rotación
-            nuevoCuadrito.style.transform = `rotate(${gradosCss}deg)`;
+            nuevoCuadrito.style.transform = `rotate(${grados}deg)`;
 
             celdaObjetivo.appendChild(nuevoCuadrito);
             celdaObjetivo.classList.add("celda-seleccionada");
@@ -622,10 +648,14 @@
 
         navesList.forEach(nave => {
             const idActual = nave.IdNave;
-            let fragmentosOrigen = tbodyTablero.querySelectorAll(`img[id="${idActual}"]`);
 
-            if (fragmentosOrigen.length === 0) {
+            let fragmentosOrigen = tbodyTablero.querySelectorAll(`img[id="${idActual}"]`);
+            const vieneDelTablero = fragmentosOrigen.length > 0;
+
+            if (!vieneDelTablero) {
                 const contenedorOriginal = document.querySelector(`#contenedor > div[id="${idActual}"]`);
+                if (!contenedorOriginal) return;
+
                 fragmentosOrigen = contenedorOriginal.querySelectorAll("img");
             }
 
@@ -633,13 +663,21 @@
                 contadoresPorNave[idActual] = 0;
             }
 
-            let fragmentos = Array.from(fragmentosOrigen).reverse();
+            let fragmentos = Array.from(fragmentosOrigen);
 
             let grados = 0;
-            if (nave.Direccion === "izquierda") grados = 0;
-            if (nave.Direccion === "arriba") grados = 90;
-            if (nave.Direccion === "derecha") grados = 180;
-            if (nave.Direccion === "abajo") grados = 270;
+            //:c
+            if (vieneDelTablero) {
+                if (nave.Direccion === "izquierda") grados = 0;
+                if (nave.Direccion === "abajo") grados = 90;
+                if (nave.Direccion === "derecha") grados = 180;
+                if (nave.Direccion === "arriba") grados = 270;
+            } else {
+                if (nave.Direccion === "izquierda") grados = 0;
+                if (nave.Direccion === "arriba") grados = 90;
+                if (nave.Direccion === "derecha") grados = 180;
+                if (nave.Direccion === "abajo") grados = 270;
+            }
 
             nave.Coordenadas.forEach((coord) => {
                 const fila = coord.Fila;
@@ -678,7 +716,6 @@
 
 
     async function enviarAtaqueAlServidor(fila, columna, celda) {
-        celda.dataset.marcado = "true";
 
         let ataqueDTO = {
             IdSala: idSala,
@@ -701,7 +738,7 @@
             }
         } catch (error) {
             console.error("Error de red al enviar el ataque:", error);
-            celda.removeAttribute("data-marcado");
+            // celda.removeAttribute("data-marcado");
         }
     }
 
@@ -723,13 +760,35 @@
                 const td = TableJugador.querySelector(`tbody tr:nth-child(${f + 1}) td:nth-child(${c + 1})`);
 
                 if (td) {
+                    const marcado = td.dataset.marcado === "true";
                     const img = document.createElement("img");
                     img.classList.add("efecto-ataque");
 
 
-                    if (casilla.Estado === 2) { img.src = "/battleship/Resources/Images/hitstar1.gif"; td.dataset.marcado = "true"; } // AtaqueFallido
-                    if (casilla.Estado === 3) { img.src = "/battleship/Resources/Images/hitstar1.gif"; td.dataset.marcado = "true"; } // AtaqueAcertado
-                    if (casilla.Estado === 4) { img.src = "/battleship/Resources/Images/hitstar1.gif"; td.dataset.marcado = "true"; } // NaveHundida
+                    if (casilla.Estado === 2) {
+                        img.src = "/battleship/Resources/Images/hitstar1.gif";
+                        if (!marcado) {
+                            waterSound.currentTime = 0;
+                            waterSound.play();
+                        }
+                        td.dataset.marcado = "true";
+                    } // AtaqueFallido
+                    if (casilla.Estado === 3) {
+                        img.src = "/battleship/Resources/Images/hitstar1.gif";
+                        if (!marcado) {
+                            explosionSound.currentTime = 0;
+                            explosionSound.play();
+                        }
+                        td.dataset.marcado = "true";
+                    } // AtaqueAcertado
+                    if (casilla.Estado === 4) {
+                        img.src = "/battleship/Resources/Images/hitstar1.gif";
+                        if (!marcado) {
+                            explosionSound.currentTime = 0;
+                            explosionSound.play();
+                        }
+                        td.dataset.marcado = "true";
+                    } // NaveHundida
 
                     if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
                         td.innerHTML = "";
@@ -769,6 +828,8 @@
     //Etapa finalizar ///////////////////////////////////////////////////////////////////////////
 
     function mostrarPantallaResultados(bship) {
+        resolutionSound.currentTime = 0;
+        resolutionSound.play();
         divResultados.classList.remove("invisible");
         fondo.classList.remove("invisible");
         txtGanador.textContent = bship.Ganador;
@@ -814,7 +875,8 @@
                 }),
                 headers: { "Content-Type": "application/json" }
             });
-
+            btnSound.currentTime = 0;
+            btnSound.play();
         } catch (error) {
             console.error("Error al procesar revancha:", error);
         }
@@ -823,6 +885,8 @@
 
     btnSalir.addEventListener('click', function () {
         window.location.href = "/battleship/";
+        backSound.currentTime = 0;
+        backSound.play();
         return;
     });
 

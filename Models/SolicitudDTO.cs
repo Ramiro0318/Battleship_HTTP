@@ -58,6 +58,7 @@ namespace Battleship_HTTP.Models
     {
         public int IdNave { get; set; }
         public List<Coordenada>? Coordenadas { get; set; }
+        public string? Direccion { get; set; }
     }
 
     public class SolicitudRevancha

@@ -75,7 +75,7 @@ namespace Battleship_HTTP.Services
                     Longitud = seleccionada.Longitud,
                     SectoresRestantes = seleccionada.SectoresRestantes,
                     Coordenadas = new List<Coordenada>(),
-                    Direccion = seleccionada.Direccion
+                    Direccion = naveDto.Direccion ?? ""
                 };
 
                 foreach (var coordenada in naveDto.Coordenadas ?? new())
@@ -162,7 +162,7 @@ namespace Battleship_HTTP.Services
                             break; //Rompe la validación de celdas
                         }
 
-                        trayectoTentativo.Add(new Coordenada(f, c));
+                        trayectoTentativo.Insert(0, new Coordenada(f, c));
                     }
 
                     //Cabe y no choca

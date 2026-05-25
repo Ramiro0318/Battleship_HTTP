@@ -245,9 +245,6 @@ namespace Battleship_HTTP.Services
                         }
                         else
                         {
-
-
-                            // 📸 LA FOTO: Guardamos el estado exacto de la sala en el instante en que llegó la petición HTTP
                             string? idJ1Inicio = sala.IdJugador1;
                             string? idJ2Inicio = sala.IdJugador2;
                             int listosInicio = sala.JugadoresListos;
