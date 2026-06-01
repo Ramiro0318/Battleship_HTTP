@@ -41,8 +41,8 @@ header h1 {
     text-align: center;
     background-color: #163252;
     color: white;
-    padding: 25px 10px;
-    font-size: 2.6em;
+    padding: 16px 10px;
+    font-size: 2em;
     margin: 0em 0 0.8em 0;
 }
 
@@ -55,19 +55,19 @@ main .menu {
     position: absolute;
     justify-self: center;
     width: 80%;
-    max-width: 950px;
+    max-width: 720px;
     min-height: 150px;
     left: 50%;
     right: 50%;
     top: 25%;
-    font-size: 22px;
+    font-size: 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 20px 10px;
-    min-height: 210px;
+    gap: 8px;
+    padding: 16px 10px;
+    min-height: 180px;
     overflow: hidden;
 }
 
@@ -86,7 +86,7 @@ main #ingreso form label {
     text-align: center;
     font-size: 1.5em;
     font-weight: bold;
-    margin-bottom: 25px;
+    margin-bottom: 18px;
 }
 
 main menu .error {
@@ -275,12 +275,12 @@ main .menu dl {
     align-self: flex-start;
     margin: 20px 10%;
     width: calc(100% - 20%);
-    min-height: 250px;
+    min-height: 180px;
     font-size: 1em;
     background-color: var(--backgroundl);
     align-self: center;
     border: 6px solid #1c3c91;
-    border-radius: 24px;
+    border-radius: 16px;
     box-shadow: 1px 5px 6px var(--borderColorTable);
 }
 
@@ -290,13 +290,13 @@ main .menu dt {
 }
 
 main .menu dd {
-    margin: 0 0 10px 50px;
-    font-size: 1.18em;
+    margin: 0 0 8px 36px;
+    font-size: 1.05em;
 }
 
 main #instrucciones p {
-    font-size: 1.3em;
-    margin: 0.8em 0;
+    font-size: 1.05em;
+    margin: 0.6em 0;
 }
 
 
@@ -306,9 +306,9 @@ main .tituloJuego {
     text-align: center;
     background-color: #163252;
     color: white;
-    padding: 10px;
-    font-size: 2.5em;
-    margin: 0 0 0.8em 0;
+    padding: 8px;
+    font-size: 2em;
+    margin: 0 0 0.5em 0;
 }
 
 main #tarjeta {
@@ -318,12 +318,12 @@ main #tarjeta {
     grid-template-rows: 1fr 1fr;
     align-self: center;
     width: calc(100% - 40px);
-    margin: 10px;
+    margin: 6px;
     padding: 10px;
     background-color: var(--backgroundColorTable);
     border: 4px solid var(--fondoOscuro);
     box-shadow: rgba(112, 104, 166, 0.47) 0px 15px 15px;
-    gap: 10px 0;
+    gap: 6px 0;
     padding: 5px;
 }
 
@@ -331,12 +331,12 @@ main #tarjeta {
         justify-self: center;
         text-align: center;
         color: var(--primaryColor);
-        font-size: 1.5em;
+        font-size: 1.2em;
         vertical-align: top;
     }
 
         main #tarjeta span:first-of-type {
-            font-size: 1.3em;
+            font-size: 1.1em;
         }
 
     main #tarjeta div {
@@ -377,7 +377,7 @@ main table {
     margin-left: 10px; /* Espacio para que los números no se corten */
     table-layout: fixed;
     align-self: center;
-    margin: 25px 10px;
+    margin: 10px 10px;
 }
 
 
@@ -438,8 +438,8 @@ table tr::before {
 table tr td {
     box-sizing: border-box;
     border: 1px solid var(--borderColorTd);
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     padding: 0;
     cursor: pointer;
     position: relative;
@@ -450,12 +450,12 @@ table tr td {
     color: var(--borderColorTd);
     box-shadow: 4px 5px 4px var(--borderColorTable);
     border-radius: 12px;
-    padding: 12px 28px;
+    padding: 9px 20px;
     font-weight: bold;
-    font-size: 18px;
-    margin: 10px 25px 10px 10px;
+    font-size: 16px;
+    margin: 6px 20px 6px 10px;
     align-self: center;
-    min-width: 370px;
+    min-width: 300px;
     transition: 0.3s ease-out;
 }
 
@@ -470,13 +470,14 @@ table tr td {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 10px;
+    gap: 6px;
     align-self: center;
     margin: 0 20%;
+    padding: 6px 18px;
     /*background-color: var(--backgroundl);*/
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 14px;
+    border-radius: 10px;
 }
 
     #movimiento button {
@@ -484,21 +485,23 @@ table tr td {
     }
 
         #movimiento button img {
-            height: 50px;
+            height: 34px;
         }
 
 #contenedor {
-    margin: 20px;
-    padding: 20px;
+    margin: 10px;
+    padding: 10px;
     display: flex;
     gap: 10px;
     align-self: center;
     background-color: blue;
-    border: 10px solid var(--borderColorTable);
+    border: 6px solid var(--borderColorTable);
     border-radius: 10px;
+    min-width:270px;
     width: min-content;
-    max-width: 320px;
+    max-width: 280px;
     overflow: clip;
+    height: 30px;
 }
 
     #contenedor div {
@@ -507,8 +510,8 @@ table tr td {
     }
 
         #contenedor div img {
-            height: 32px;
-            width: 32px;
+            height: 28px;
+            width: 28px;
             pointer-events: none;
         }
 
@@ -523,10 +526,10 @@ main #instrucciones, main #resultados {
     z-index: 20;
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    margin-top: 50px;
+    padding: 16px;
+    margin-top: 32px;
     gap: 5px;
-    max-width: 950px;
+    max-width: 720px;
     background-color: var(--backgroundColorTable);
     border: 6px outset var(--borderColorTd);
     box-shadow: 0 15px 15px #7068a678;
@@ -534,12 +537,12 @@ main #instrucciones, main #resultados {
 }
 
     main #instrucciones strong {
-        font-size: 1.5em;
+        font-size: 1.2em;
     }
 
     main #instrucciones span {
         margin: 0 0 12px;
-        font-size: 1.3em;
+        font-size: 1.1em;
     }
 
 main #resultados {
@@ -548,11 +551,11 @@ main #resultados {
 
 #resultados span {
     align-self: center;
-    font-size: 1.7em;
+    font-size: 1.25em;
 }
 
 #resultados h3 {
-    font-size: 1.8em;
+    font-size: 1.4em;
     display: inline;
     align-content: center;
     text-align: center;
@@ -615,12 +618,12 @@ main #fondo {
 
 @media (min-width : 420px) {
     header h1 {
-        font-size: 2.7em;
+        font-size: 2.1em;
     }
 
     main .menu button, #instrucciones button, #resultados button {
-        font-size: 1.3em;
-        min-width: 300px;
+        font-size: 1.15em;
+        min-width: 250px;
     }
 
     main .menu form input[type="text"] {
@@ -628,108 +631,109 @@ main #fondo {
     }
 
     main div span {
-        font-size: 1.4em;
+        font-size: 1.2em;
     }
 
     main div .contenedor_char small {
-        font-size: 1.4em;
+        font-size: 1.2em;
         text-align: center;
     }
 
     main #instrucciones strong {
-        font-size: 1.6em;
+        font-size: 1.25em;
     }
 
     main #instrucciones p {
-        font-size: 1.4em;
+        font-size: 1.1em;
     }
 
     main .menu dl {
-        font-size: 1.2em;
-        margin: 20px 50px;
+        font-size: 1.05em;
+        margin: 16px 40px;
         width: calc(100% - 20%);
     }
 
     main .menu dd {
-        font-size: 1.3em;
-        margin: 0 0 10px 50px;
+        font-size: 1.08em;
+        margin: 0 0 8px 40px;
     }
 
     table thead tr th {
-        line-height: 30px;
-        font-size: 18px;
+        line-height: 28px;
+        font-size: 15px;
     }
 
     table tr::before {
-        left: -30px;
-        font-size: 18px;
+        left: -26px;
+        font-size: 15px;
     }
 
     #contenedor {
-        max-width: 350px;
+        min-width: 310px;
+        max-width: 310px;
     }
 }
 
 @media (min-width : 540px) {
     header h1 {
-        font-size: 2.7em;
+        font-size: 2.15em;
     }
 
     main .menu {
-        gap: 13px
+        gap: 10px
     }
 
     main div span {
-        font-size: 1.5em;
+        font-size: 1.25em;
     }
 
     main div .contenedor_char small {
-        font-size: 1.5em;
+        font-size: 1.25em;
     }
 
     main #ingreso form label {
-        font-size: 1.6em;
+        font-size: 1.35em;
     }
 
     main .menu form input[type="text"] {
-        font-size: 1.3em;
+        font-size: 1.1em;
         width: 80%;
     }
 
     main .menu dl {
-        font-size: 1.4em;
-        padding: 10px 30px
+        font-size: 1.12em;
+        padding: 8px 24px
     }
 
     main .menu dt {
-        font-size: 1.1em;
+        font-size: 1em;
     }
 
     main .menu dd {
-        font-size: 1.35em;
+        font-size: 1.1em;
     }
 
     main .menu button, #instrucciones button, #resultados button {
-        font-size: 1.5em;
+        font-size: 1.2em;
         width: 80%;
-        max-width: 500px;
+        max-width: 380px;
     }
 
     main #instrucciones strong {
-        font-size: 1.7em;
+        font-size: 1.3em;
     }
 
     main #instrucciones p {
-        font-size: 1.5em;
+        font-size: 1.12em;
     }
 
     #enviarNaves {
-        min-width: 470px;
-        font-size: 1.5em;
+        min-width: 360px;
+        font-size: 1.2em;
     }
 
     main #tarjeta {
-        width: 500px;
+        width: 420px;
     }
 
     main .reloj {
@@ -737,246 +741,279 @@ main #fondo {
         align-self: center;
         width: 120px;
         left: 200px;
-        font-size: 1.6em;
-        margin: 1em 0.5em;
+        font-size: 1.25em;
+        margin: 0.8em 0.5em;
     }
 
     main #resultados span {
-        font-size: 1.8em;
+        font-size: 1.3em;
     }
 
     #resultados span {
-        font-size: 1.8em;
+        font-size: 1.3em;
     }
 
     #resultados h3 {
-        font-size: 2em;
+        font-size: 1.5em;
     }
 
     table tr td {
-        width: 40px;
-        height: 40px;
+        width: 34px;
+        height: 34px;
     }
 
     table thead tr th {
-        line-height: 40px;
-        font-size: 18px;
+        line-height: 34px;
+        font-size: 16px;
     }
 
     table tr::before {
-        left: -30px;
-        font-size: 18px;
-        line-height: 40px;
+        left: -28px;
+        font-size: 16px;
+        line-height: 34px;
     }
 
     #contenedor div img {
-        height: 40px;
-        width: 40px;
+        height: 34px;
+        width: 34px;
     }
 
     #contenedor {
-        max-width: 450px;
+        min-width: 380px;
+        max-width: 380px;
+
     }
 }
 
 @media (min-width : 720px) {
 
     header h1 {
-        font-size: 2.9em;
+        font-size: 1.9em;
     }
 
     main .menu {
         /*width: 500px;*/
-        gap: 17px;
-        padding: 1.4em 0.6em;
+        gap: 12px;
+        padding: 1em 0.6em;
     }
 
     main #ingreso form label {
-        font-size: 1.9em;
+        font-size: 1.45em;
     }
 
 
     main .menu form input[type="text"] {
-        font-size: 1.4em;
+        font-size: 1.12em;
         width: 80%;
-        max-width: 500px;
+        max-width: 380px;
     }
 
     main div span {
-        font-size: 1.8em;
+        font-size: 1.3em;
     }
 
     main div .contenedor_char small {
-        font-size: 1.6em;
+        font-size: 1.3em;
     }
 
     main .menu dl {
-        font-size: 1.6em;
+        font-size: 1.16em;
     }
 
     main .menu dd {
-        font-size: 1.35em;
-        margin: 0 0 15px 50px;
+        font-size: 1.12em;
+        margin: 0 0 10px 40px;
     }
 
     main #resultados {
-        width: 530px;
+        width: 460px;
     }
 
     main #tarjeta {
-        width: 650px;
-        font-size: 20px;
-        gap: 15px 0;
+        width: 430px;
+        font-size: 14px;
+        gap: 5px 0;
     }
 
     #resultados span {
-        font-size: 1.85em;
+        font-size: 1.35em;
     }
 
     #resultados h3 {
-        font-size: 2.1em;
-    }
-
-    #enviarNaves {
-        width: 550px;
-        font-size: 2em;
-    }
-
-    main #instrucciones strong {
-        font-size: 2.2em;
-    }
-
-    #instrucciones button {
-        margin-top: 15px;
-    }
-
-    main #instrucciones p {
         font-size: 1.6em;
     }
 
+    #enviarNaves {
+        width: 330px;
+        font-size: 1.08em;
+        padding: 6px 16px;
+    }
+
+    main #instrucciones strong {
+        font-size: 1.45em;
+    }
+
+    #instrucciones button {
+        margin-top: 12px;
+    }
+
+    main #instrucciones p {
+        font-size: 1.16em;
+    }
+
     table thead tr th {
-        line-height: 48px;
-        font-size: 21px;
+        line-height: 31px;
+        font-size: 15px;
     }
 
     table tr td {
-        width: 48px;
-        height: 48px;
+        width: 31px;
+        height: 31px;
     }
 
     table tr::before {
-        left: -48px;
-        font-size: 21px;
+        left: -27px;
+        font-size: 15px;
+        line-height: 31px;
     }
 
     #contenedor {
-        max-width: 600px;
+        min-width: 390px;
+        max-width: 390px;
     }
 
 
         #contenedor div img {
-            height: 48px;
-            width: 48px;
+            height: 31px;
+            width: 31px;
         }
 }
 
 @media (min-width : 1120px) {
+    main .tituloJuego {
+        padding: 3px;
+        font-size: 1.45em;
+        margin: 0 0 0.15em 0;
+    }
+
+    main #tarjeta {
+        width: 390px;
+        margin: 3px;
+        font-size: 13px;
+        gap: 3px 0;
+        padding: 3px;
+        border-width: 3px;
+    }
+
+    main table {
+        margin: 4px 10px;
+    }
 
     main .menu {
-        gap: 24px;
-        padding: 2em 1em;
+        gap: 12px;
+        padding: 1em 1em;
     }
 
 
         main .menu form input[type="text"] {
-            font-size: 1.6em;
-            width: 500px;
+            font-size: 1.1em;
+            width: 340px;
         }
 
     #instrucciones button {
-        margin-top: 20px;
-        font-size: 2.1em;
+        margin-top: 12px;
+        font-size: 1.2em;
     }
 
     main .menu button, #instrucciones button, #resultados button {
-        font-size: 1.8em;
-        width: 550px;
-        padding: 0.4em 0.3em;
-    }
-
-    main #tarjeta {
-        font-size: 24px;
-        gap: 20px 0;
-        padding: 10px;
+        font-size: 1.15em;
+        width: 360px;
+        padding: 0.3em 0.3em;
     }
 
     #enviarNaves {
-        width: 600px;
-        margin: 25px;
-        font-size: 2.2em;
+        width: 310px;
+        margin: 3px;
+        padding: 5px 14px;
+        font-size: 1em;
     }
 
     main #instrucciones strong {
-        font-size: 2.4em;
+        font-size: 1.3em;
     }
 
     main #instrucciones p {
-        font-size: 1.8em;
+        font-size: 1.05em;
     }
 
     main #contenedor_tablas {
         flex-direction: row;
-        gap: 30px;
+        gap: 14px;
     }
 
     table thead tr th {
-        line-height: 52px;
-        font-size: 24px;
+        line-height: 30px;
+        font-size: 14px;
     }
 
     table tr td {
-        width: 52px;
-        height: 52px;
+        width: 30px;
+        height: 30px;
     }
 
     table tr::before {
-        left: -35px;
-        font-size: 24px;
-        line-height: 52px;
+        left: -25px;
+        font-size: 14px;
+        line-height: 30px;
     }
 
     #contenedor div img {
-        height: 52px;
-        width: 52px;
+        height: 30px;
+        width: 30px;
     }
 
     #contenedor {
-        max-width: 730px;
-        min-width: 655px;
+        margin: 5px;
+        padding: 7px;
+        max-width: 440px;
+        min-width: 440px;
     }
+
+    #movimiento {
+        gap: 4px;
+        padding: 8px 28px;
+    }
+
+        #movimiento button {
+            padding: 1px 6px;
+        }
+
+        #movimiento button img {
+            height: 26px;
+        }
 }
 
 @media (min-width : 1300px) {
     main #contenedor_tablas {
         flex-direction: row;
-        gap: 45px;
+        gap: 18px;
     }
 
     #contenedor {
         max-width: fit-content;
-        min-width: 855px;
+        min-width: 470px;
     }
 }
 
 @media (min-width : 1800px) {
     main #contenedor_tablas {
-        gap: 70px;
+        gap: 32px;
     }
 }
 
 
 @media (min-width : 2100px) {
     main #contenedor_tablas {
-        gap: 100px;
+        gap: 40px;
     }
 }

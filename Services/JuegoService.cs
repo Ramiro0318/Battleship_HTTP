@@ -584,17 +584,40 @@ namespace Battleship_HTTP.Services
                 }
 
             }
+            catch (HttpListenerException)
+            {
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+            catch (InvalidOperationException ex) when (!encendido)
+            {
+            }
             catch (Exception ex)
             {
-                response.StatusCode = 500;
+                try
+                {
+                    response.StatusCode = 500;
+                }
+                catch { }
+
                 MensajeError?.Invoke($"{ex}");
             }
             finally
             {
-                response.Close();
+                try
+                {
+                    response.Close();
+                }
+                catch (InvalidOperationException)
+                {
+                }
+                catch (HttpListenerException)
+                {
+                }
+
+
             }
-
-
         }
 
 

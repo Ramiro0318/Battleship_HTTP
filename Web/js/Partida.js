@@ -118,7 +118,7 @@
 
             monitorearPartida();
         } else {
-            window.location.href = "/battleship/";
+            volverAlMenuPrincipal();
         }
     }
 
@@ -214,20 +214,22 @@
                 setTimeout(monitorearPartida, 200);
 
             } else {
-                localStorage.removeItem("numeroSala");
-                localStorage.removeItem("idSala");
-                localStorage.removeItem("numJugador");
-                window.location.href = "/battleship/";
+                volverAlMenuPrincipal();
             }
         } catch (error) {
             console.error("Error en Long Polling:", error);
-            setTimeout(monitorearPartida, 2000);
+            volverAlMenuPrincipal();
         }
     }
 
 
 
-
+    function volverAlMenuPrincipal() {
+        localStorage.removeItem("numeroSala");
+        localStorage.removeItem("idSala");
+        localStorage.removeItem("numJugador");
+        window.location.href = "/battleship/";
+    }
 
 
     //Colocacion/////////////////////////////////////////////////////////////////////////////////
