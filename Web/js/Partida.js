@@ -130,6 +130,7 @@
             if (response.ok) {
                 battleship = await response.json();
 
+                console.log(battleship);
 
                 // spanTurno.textContent = `Turno de ${battleship.Turno}`;
                 spanTiempo.textContent = battleship.TiempoRestante;
@@ -809,9 +810,9 @@
                     const efectoViejo = td.querySelector(".efecto-ataque");
                     const img = document.createElement("img");
                     img.classList.add("efecto-ataque");
-                    if (casilla.Estado === 2) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/hitstar1.gif"; }
+                    if (casilla.Estado === 2) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/waterstar.gif"; }
                     if (casilla.Estado === 3) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/hitstar1.gif"; }
-                    if (casilla.Estado === 4) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/hitstar1.gif"; }
+                    if (casilla.Estado === 4) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/dust1.gif"; }
 
                     if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
                         td.appendChild(img);

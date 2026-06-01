@@ -12,8 +12,7 @@ namespace Battleship_HTTP.Services
 {
     public class PartidaService
     {
-        Sala Sala = new();
-        System.Timers.Timer timer = new System.Timers.Timer(1000);
+        private Dictionary<int, System.Timers.Timer> timersPorSala = new();
         Random r = new();
 
         public List<Nave> NavesElegir = new List<Nave>(){
@@ -31,25 +30,60 @@ namespace Battleship_HTTP.Services
                 TiempoRestante = 60
             };
 
-            Sala = sala;
-            timer.Elapsed += timer_Elapsed;
+            DetenerTimerSala(sala.Id);
+            var timer = new System.Timers.Timer(1000);
             timer.AutoReset = true;
-            timer.Enabled = true;
+
+            timer.Elapsed += (sender, e) =>
+            {
+                TimerPartidaElapsed(sala);
+            };
+
+            timersPorSala[sala.Id] = timer;
+            timer.Start();
         }
 
-        private void timer_Elapsed(object? sender, ElapsedEventArgs e)
+        private void TimerPartidaElapsed(Sala sala)
         {
-            if (Sala.battleship != null)
-            {
-                if (Sala.battleship.TiempoRestante > 0)
-                {
+            var bship = sala.battleship;
+            if (bship == null) return;
 
-                    Sala.battleship.TiempoRestante--;
-                }
-                else if (Sala.battleship.TiempoRestante == 0)
+            if (bship.TiempoRestante > 0)
+            {
+                bship.TiempoRestante--;
+            }
+            else if (bship.TiempoRestante == 0)
+            {
+                if (bship.Etapa == Etapa.Batalla)
                 {
-                    timer.Stop();
+                    if (bship.TurnoId == sala.IdJugador1)
+                    {
+                        bship.TurnoId = sala.IdJugador2;
+                        bship.Turno = sala.NombreJugador2;
+                    }
+                    else
+                    {
+                        bship.TurnoId = sala.IdJugador1;
+                        bship.Turno = sala.NombreJugador1;
+                    }
+
+                    bship.TiempoRestante = 30;
+                    bship.NumeroDisparos++;
                 }
+                else if (bship.Etapa == Etapa.Terminado)
+                {
+                    DetenerTimerSala(sala.Id);
+                }
+            }
+        }
+
+        private void DetenerTimerSala(int idSala)
+        {
+            if (timersPorSala.TryGetValue(idSala, out var timer))
+            {
+                timer.Stop();
+                timer.Dispose();
+                timersPorSala.Remove(idSala);
             }
         }
 
@@ -135,7 +169,7 @@ namespace Battleship_HTTP.Services
                         case 0: cambioFila = -1; direccion = "arriba"; break;
                         case 1: cambioColumna = 1; direccion = "derecha"; break;
                         case 2: cambioFila = 1; direccion = "abajo"; break;
-                        case 3: cambioColumna = -1; direccion = "izquierda";  break;
+                        case 3: cambioColumna = -1; direccion = "izquierda"; break;
                     }
 
                     int filaFinal = inicioFila + (cambioFila * (seleccionada.Longitud - 1));
@@ -310,6 +344,7 @@ namespace Battleship_HTTP.Services
                 bship.Etapa = Etapa.Terminado;
                 bship.Ganador = nombreAtacante;
                 bship.Turno = null;
+                DetenerTimerSala(sala.Id);
             }
             else
             {
