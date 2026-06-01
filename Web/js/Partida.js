@@ -206,6 +206,7 @@
                         resultadoMostrado = true;
                         console.log("El juego ha terminado.");
                         mostrarPantallaResultados(battleship);
+                        actualizarRechancha(battleship);
                     }
                     actualizarRechancha(battleship);
                 }
@@ -213,6 +214,9 @@
                 setTimeout(monitorearPartida, 200);
 
             } else {
+                localStorage.removeItem("numeroSala");
+                localStorage.removeItem("idSala");
+                localStorage.removeItem("numJugador");
                 window.location.href = "/battleship/";
             }
         } catch (error) {
@@ -912,7 +916,7 @@
         resolutionSound.play();
         divResultados.classList.remove("invisible");
         fondo.classList.remove("invisible");
-        txtGanador.textContent = bship.Ganador;
+        txtGanador.textContent = "Gana" + bship.Ganador;
         txtNumSalaResultados.textContent = "sala # " + numSala;
         txtRevancha.textContent = "";
 
@@ -961,18 +965,6 @@
             console.error("Error al procesar revancha:", error);
         }
     };
-
-
-    btnSalir.addEventListener('click', function () {
-        window.location.href = "/battleship/";
-        backSound.currentTime = 0;
-        backSound.play();
-        return;
-    });
-
-
-
-
 
 
 
@@ -1037,5 +1029,33 @@
 
 
 
+    btnSalir.addEventListener('click', function () {
+        backSound.currentTime = 0;
+        backSound.play();
+
+        salirDePartida();
+    });
+
+
+    async function salirDePartida() {
+        try {
+            await fetch("/battleship/salir-partida", {
+                method: "POST",
+                body: JSON.stringify({
+                    NumSala: numSala,
+                    Id: idUsuario
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+        } catch { }
+
+        localStorage.removeItem("numeroSala");
+        localStorage.removeItem("idSala");
+        localStorage.removeItem("numJugador");
+
+        window.location.href = "/battleship/";
+    }
 
 });

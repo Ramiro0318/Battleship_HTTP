@@ -185,7 +185,7 @@ namespace Battleship_HTTP.Services
                     }
 
                 }
-                if (request.HttpMethod == "POST" && url == "/battleship/cancelar")
+                else if (request.HttpMethod == "POST" && url == "/battleship/cancelar")
                 {
                     var buffer = new byte[request.ContentLength64];
                     request.InputStream.ReadExactly(buffer, 0, buffer.Length);
@@ -490,6 +490,12 @@ namespace Battleship_HTTP.Services
                             else
                             {
                                 partidaService.ProcesarAtaque(sala, ataque);
+
+                                if (sala.battleship?.Etapa == Etapa.Terminado)
+                                {
+                                    salasService.ProgramarCierreSalaTerminada(sala);
+                                }
+
                                 EnviarInfo(response, "Disparo procesado correctamente.", 200);
                             }
                         }
@@ -520,6 +526,35 @@ namespace Battleship_HTTP.Services
                             salasService.RegistrarVotoRevancha(sala, solicitud.IdUsuario, solicitud.Revancha);
                             response.StatusCode = 200;
 
+                        }
+                    }
+                }
+                else if (request.HttpMethod == "POST" && url == "/battleship/salir-partida")
+                {
+                    var buffer = new byte[request.ContentLength64];
+                    request.InputStream.ReadExactly(buffer, 0, buffer.Length);
+                    var json = Encoding.UTF8.GetString(buffer);
+
+                    var solicitud = JsonSerializer.Deserialize<SolicitudCancelacionDTO>(json);
+
+                    if (solicitud == null)
+                    {
+                        response.StatusCode = 400;
+                    }
+                    else
+                    {
+                        bool cerrada = salasService.CerrarSala(
+                            solicitud.NumSala,
+                            solicitud.Id
+                        );
+
+                        if (cerrada)
+                        {
+                            EnviarInfo(response, "Sala cerrada.", 200);
+                        }
+                        else
+                        {
+                            EnviarInfo(response, "Sala no encontrada o no activa.", 404);
                         }
                     }
                 }

@@ -227,5 +227,47 @@ namespace Battleship_HTTP.Services
             return sala;
         }
 
+        public void ProgramarCierreSalaTerminada(Sala sala)
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(30000);
+
+                lock (SalasList)
+                {
+                    var salaActual = SalasList.Find(x => x.Id == sala.Id);
+
+                    if (salaActual?.battleship == null) return;
+
+                    if (salaActual.battleship.Etapa == Etapa.Terminado)
+                    {
+                        SalasList.Remove(salaActual);
+                    }
+                }
+            });
+        }
+
+        public bool CerrarSala(string numSala, string idJugador)
+        {
+            lock (SalasList)
+            {
+                var sala = SalasList.Find(x => x.IdHash == numSala);
+
+                if (sala == null) return false;
+
+                bool perteneceASala = idJugador == sala.IdJugador1 || idJugador == sala.IdJugador2;
+
+                if (!perteneceASala) return false;
+
+                if (sala.Activa && sala.battleship != null)
+                {
+                    SalasList.Remove(sala);
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
     }
 }
