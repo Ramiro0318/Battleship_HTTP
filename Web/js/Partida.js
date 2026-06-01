@@ -766,7 +766,7 @@
 
 
                     if (casilla.Estado === 2) {
-                        img.src = "/battleship/Resources/Images/hitstar1.gif";
+                        img.src = "/battleship/Resources/Images/waterstar.gif";
                         if (!marcado) {
                             waterSound.currentTime = 0;
                             waterSound.play();
@@ -782,7 +782,7 @@
                         td.dataset.marcado = "true";
                     } // AtaqueAcertado
                     if (casilla.Estado === 4) {
-                        img.src = "/battleship/Resources/Images/hitstar1.gif";
+                        img.src = "/battleship/Resources/Images/dust1.gif";
                         if (!marcado) {
                             explosionSound.currentTime = 0;
                             explosionSound.play();

@@ -95,6 +95,9 @@
     <None Update="Web\Resources\Images\Arrow_Flip.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Web\Resources\Images\dust1.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Web\Resources\Images\hitstar1.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -105,6 +108,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Web\Resources\Images\submarine-2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Web\Resources\Images\waterstar.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Web\Resources\Sounds\btn-sound.mp3">

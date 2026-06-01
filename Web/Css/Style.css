@@ -246,7 +246,7 @@ main .menu button, #instrucciones button, #resultados button {
     border-radius: 12px;
 }
 
-    main .menu button:hover, #instrucciones button:hover {
+    main .menu button:hover, #instrucciones button:hover, #enviarNaves:hover {
         background: #d0e0f6;
         box-shadow: 4px 5px 4px var(--borderColorTable);
         color: var(--borderColorTd);
@@ -322,6 +322,7 @@ main #tarjeta {
     padding: 10px;
     background-color: var(--backgroundColorTable);
     border: 4px solid var(--fondoOscuro);
+    box-shadow: rgba(112, 104, 166, 0.47) 0px 15px 15px;
     gap: 10px 0;
     padding: 5px;
 }
@@ -343,17 +344,17 @@ main #tarjeta {
         text-align: center;
     }
 
-        main .reloj {
-            width: 120px;
-            display: flex;
-            flex-direction: column;
-            align-self: flex-end;
-            align-items: center;
-            font-size: 1.3em;
-            background-color: var(--fondoOscuro);
-            color: var(--colorRecuadro);
-            margin: 0.3em;
-        }
+main .reloj {
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    align-items: center;
+    font-size: 1.3em;
+    background-color: var(--fondoOscuro);
+    color: var(--colorRecuadro);
+    margin: 0.3em;
+}
 
 main #tiempoRestante {
     font-weight: bold;
@@ -376,7 +377,7 @@ main table {
     margin-left: 10px; /* Espacio para que los números no se corten */
     table-layout: fixed;
     align-self: center;
-    margin: 10px;
+    margin: 25px 10px;
 }
 
 
@@ -385,6 +386,7 @@ table tbody {
     outline: 2px solid var(--borderColorTable);
     background-color: #cfe1fd;
     counter-reset: rowNumber;
+    box-shadow: rgba(112, 104, 166, 0.47) 0px 15px 15px;
 }
 
 /* estos dos estilos tienen que ir juntos, 
@@ -444,8 +446,9 @@ table tr td {
 }
 
 #enviarNaves {
-    background: #bed2f3;
-    color: white;
+    background: var(--mainBackground);
+    color: var(--borderColorTd);
+    box-shadow: 4px 5px 4px var(--borderColorTable);
     border-radius: 12px;
     padding: 12px 28px;
     font-weight: bold;
@@ -453,12 +456,22 @@ table tr td {
     margin: 10px 25px 10px 10px;
     align-self: center;
     min-width: 370px;
+    transition: 0.3s ease-out;
+}
+
+#enviarNaves:hover {
+    background: #d0e0f6;
+    box-shadow: 4px 5px 4px var(--borderColorTable);
+    color: var(--borderColorTd);
+    /*transform: translateY(-7px);*/
 }
 
 #movimiento {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    align-self: center;
     margin: 0 20%;
     /*background-color: var(--backgroundl);*/
     background: rgba(255,255,255,0.08);
@@ -483,8 +496,9 @@ table tr td {
     background-color: blue;
     border: 10px solid var(--borderColorTable);
     border-radius: 10px;
-    width: 450px;
-    overflow:scroll;
+    width: min-content;
+    max-width: 320px;
+    overflow: clip;
 }
 
     #contenedor div {
@@ -562,7 +576,6 @@ main #fondo {
     .invisible * {
         display: none;
     }
-
 /* --- BARCO SELECCIONADO HORIZONTAL --- */
 .celda-seleccionada-h-inicio {
     outline: 3px solid #ffcc00;
@@ -651,6 +664,10 @@ main #fondo {
         left: -30px;
         font-size: 18px;
     }
+
+    #contenedor {
+        max-width: 350px;
+    }
 }
 
 @media (min-width : 540px) {
@@ -708,6 +725,7 @@ main #fondo {
 
     #enviarNaves {
         min-width: 470px;
+        font-size: 1.5em;
     }
 
     main #tarjeta {
@@ -749,6 +767,15 @@ main #fondo {
         left: -30px;
         font-size: 18px;
         line-height: 40px;
+    }
+
+    #contenedor div img {
+        height: 40px;
+        width: 40px;
+    }
+
+    #contenedor {
+        max-width: 450px;
     }
 }
 
@@ -810,14 +837,9 @@ main #fondo {
         font-size: 2.1em;
     }
 
-
-    table tr td {
-        width: 48px;
-        height: 48px;
-    }
-
     #enviarNaves {
         width: 550px;
+        font-size: 2em;
     }
 
     main #instrucciones strong {
@@ -837,10 +859,25 @@ main #fondo {
         font-size: 21px;
     }
 
+    table tr td {
+        width: 48px;
+        height: 48px;
+    }
+
     table tr::before {
         left: -48px;
         font-size: 21px;
     }
+
+    #contenedor {
+        max-width: 600px;
+    }
+
+
+        #contenedor div img {
+            height: 48px;
+            width: 48px;
+        }
 }
 
 @media (min-width : 1120px) {
@@ -876,6 +913,7 @@ main #fondo {
     #enviarNaves {
         width: 600px;
         margin: 25px;
+        font-size: 2.2em;
     }
 
     main #instrucciones strong {
@@ -891,20 +929,30 @@ main #fondo {
         gap: 30px;
     }
 
-    table tr td {
-        width: 52px;
-        height: 52px;
-    }
-
     table thead tr th {
         line-height: 52px;
         font-size: 24px;
+    }
+
+    table tr td {
+        width: 52px;
+        height: 52px;
     }
 
     table tr::before {
         left: -35px;
         font-size: 24px;
         line-height: 52px;
+    }
+
+    #contenedor div img {
+        height: 52px;
+        width: 52px;
+    }
+
+    #contenedor {
+        max-width: 730px;
+        min-width: 655px;
     }
 }
 
@@ -914,4 +962,21 @@ main #fondo {
         gap: 45px;
     }
 
+    #contenedor {
+        max-width: fit-content;
+        min-width: 855px;
+    }
+}
+
+@media (min-width : 1800px) {
+    main #contenedor_tablas {
+        gap: 70px;
+    }
+}
+
+
+@media (min-width : 2100px) {
+    main #contenedor_tablas {
+        gap: 100px;
+    }
 }
