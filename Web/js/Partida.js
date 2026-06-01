@@ -40,6 +40,7 @@
     const idUsuario = localStorage.getItem("IdUsuario") ?? "";
     const numSala = localStorage.getItem("numeroSala") ?? "";
     const idSala = localStorage.getItem("idSala") ?? "";
+    const numJugador = localStorage.getItem("numJugador") ?? "";
 
     //SONIDO
     const explosionSound = new Audio("/battleship/Resources/Sounds/explosion.mp3");
@@ -51,7 +52,17 @@
     const musicaJuego = new Audio("/battleship/Resources/Sounds/MusicaJuego.mp3");
     musicaJuego.volume = 0.3;
     musicaJuego.loop = true;
-    musicaJuego.play();
+
+    //Este metodo colocado aqui porque el navegador bloquea el autoplay
+    function iniciarMusica() {
+        musicaJuego.play().catch(() => {
+            document.addEventListener("click", iniciarMusica, { once: true });
+            document.addEventListener("keydown", iniciarMusica, { once: true });
+        });
+    }
+
+    iniciarMusica();
+
 
     let battleship;
     let naveSeleccionadaId = null;
@@ -68,11 +79,14 @@
     //Inicializar /////////////////////////////////////////////////////////////////////////////////
     bIdSala.textContent = numSala;
     spanTiempo.textContent = "60";
-
+    const instruccionesKey = `instruccionesVistas_${idSala}`;
 
     btnOk.addEventListener('click', function () {
         btnSound.currentTime = 0;
         btnSound.play();
+
+        sessionStorage.setItem(instruccionesKey, "true");
+
         divInstrucciones.classList.add("invisible");
         fondo.classList.add("invisible");
     });
@@ -91,14 +105,28 @@
         if (response.ok) {
             battleship = await response.json();
 
-            if (battleship.Etapa === 0) {
-                //console.log(battleship);
-                monitorearPartida();
+            if (battleship.Etapa !== 0 || sessionStorage.getItem(instruccionesKey) === "true") {
+                divInstrucciones.classList.add("invisible");
+                fondo.classList.add("invisible");
             }
+
+            if (battleship.Etapa === 2) {
+                resultadoMostrado = true;
+                mostrarPantallaResultados(battleship);
+                actualizarRechancha(battleship);
+            }
+
+            monitorearPartida();
         } else {
             window.location.href = "/battleship/";
         }
     }
+
+
+
+
+
+
 
 
 
@@ -158,8 +186,7 @@
                         console.log(battleship.NavesRestantesJ1);
                         console.log(battleship.NavesRestantesJ2);
 
-                        let navesRecibidas = (battleship.NavesRestantesJ1 && battleship.NavesRestantesJ1.length > 0)
-                            ? battleship.NavesRestantesJ1 : battleship.NavesRestantesJ2;
+                        let navesRecibidas = numJugador === "J1" ? battleship.NavesRestantesJ1 : battleship.NavesRestantesJ2;
 
 
                         if (navesRecibidas) {
@@ -748,7 +775,7 @@
 
     async function recibirAtaque(bship) {
         spanTurno.textContent = `Turno de ${bship.Turno}`;
-        const soyJugador1 = (bship.NavesRestantesJ1 && bship.NavesRestantesJ1.length > 0);
+        const soyJugador1 = numJugador === "J1";;
 
         const CuadriculaDefensa = soyJugador1 ? bship.CuadriculaJ1 : bship.CuadriculaJ2;
         const cuadrículaAtaque = soyJugador1 ? bship.CuadriculaJ2 : bship.CuadriculaJ1;
@@ -827,7 +854,7 @@
 
 
     function renderizarNavesHundidas(bship) {
-        const soyJugador1 = (bship.NavesRestantesJ1 && bship.NavesRestantesJ1.length > 0);
+        const soyJugador1 = numJugador === "J1";
         const navesHundidasRival = soyJugador1 ? bship.NavesRestantesJ2 : bship.NavesRestantesJ1;
 
         if (!navesHundidasRival || navesHundidasRival.length === 0) return;
@@ -957,6 +984,7 @@
         naveSeleccionadaId = null;
         naveSeleccionadaFila = null;
         naveSeleccionadaCol = null;
+        spanTurno.textContent = "";
         naveDireccion = "derecha";
         btnReiniciar.textContent = "Volver a jugar";
         btnReiniciar.disabled = false;

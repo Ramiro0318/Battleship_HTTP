@@ -303,6 +303,13 @@
         num = sala.IdHash;
         localStorage.setItem("numeroSala", sala.IdHash);
         localStorage.setItem("idSala", sala.Id);
+        if (id === sala.IdJugador1) {
+            localStorage.setItem("numJugador", "J1");
+        }
+        else if (id === sala.IdJugador2) {
+            localStorage.setItem("numJugador", "J2");
+        }
+
         lblNumSala.textContent = `#${sala.IdHash}`;
         ddJugador1.textContent = sala.NombreJugador1;
         ddJugador2.textContent = sala.NombreJugador2;
