@@ -214,11 +214,15 @@
                 setTimeout(monitorearPartida, 200);
 
             } else {
-                volverAlMenuPrincipal();
+                if (response.status === 404) {
+                    volverAlMenuPrincipal();
+                } else {
+                    setTimeout(monitorearPartida, 2000);
+                }
             }
         } catch (error) {
             console.error("Error en Long Polling:", error);
-            volverAlMenuPrincipal();
+            setTimeout(monitorearPartida, 2000);
         }
     }
 
@@ -238,6 +242,9 @@
     async function enviarNavesPosicionadas() {
         tableroEnviado = true;
         btnEnviar.disabled = true;
+        btnEnviar.classList.add("invisible");
+        divMovimientos.classList.add("invisible");
+        divContenedor.classList.add("invisible");
         btnSound.currentTime = 0;
         btnSound.play();
 
@@ -918,7 +925,7 @@
         resolutionSound.play();
         divResultados.classList.remove("invisible");
         fondo.classList.remove("invisible");
-        txtGanador.textContent = "Gana" + bship.Ganador;
+        txtGanador.textContent = `Gana ${bship.Ganador}`;
         txtNumSalaResultados.textContent = "sala # " + numSala;
         txtRevancha.textContent = "";
 
