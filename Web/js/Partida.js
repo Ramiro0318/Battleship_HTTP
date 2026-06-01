@@ -821,8 +821,60 @@
             });
         }
 
+        renderizarNavesHundidas(bship);
         battleship = bship;
     }
+
+
+    function renderizarNavesHundidas(bship) {
+        const soyJugador1 = (bship.NavesRestantesJ1 && bship.NavesRestantesJ1.length > 0);
+        const navesHundidasRival = soyJugador1 ? bship.NavesRestantesJ2 : bship.NavesRestantesJ1;
+
+        if (!navesHundidasRival || navesHundidasRival.length === 0) return;
+
+        const tbodyAtaque = TableJugador.querySelector("tbody");
+
+        navesHundidasRival.forEach(nave => {
+            const contenedorOriginal = document.querySelector(`#contenedor > div[id="${nave.IdNave}"]`);
+            if (!contenedorOriginal) return;
+
+            const fragmentos = Array.from(contenedorOriginal.querySelectorAll("img"));
+
+            let grados = 0;
+
+            // Usa el mismo criterio que ya usas cuando el barco viene del servidor
+            if (nave.Direccion === "izquierda") grados = 0;
+            if (nave.Direccion === "arriba") grados = 90;
+            if (nave.Direccion === "derecha") grados = 180;
+            if (nave.Direccion === "abajo") grados = 270;
+
+            nave.Coordenadas.forEach((coord, index) => {
+                const td = tbodyAtaque.rows[coord.Fila]?.cells[coord.Columna];
+                if (!td) return;
+
+                td.innerHTML = "";
+
+                const imgBarco = document.createElement("img");
+                imgBarco.src = fragmentos[index]?.src;
+                imgBarco.style.width = "100%";
+                imgBarco.style.height = "100%";
+                imgBarco.style.display = "block";
+                imgBarco.style.objectFit = "cover";
+                imgBarco.style.transform = `rotate(${grados}deg)`;
+
+                const polvo = document.createElement("img");
+                polvo.src = "/battleship/Resources/Images/dust1.gif";
+                polvo.classList.add("efecto-ataque");
+
+                td.appendChild(imgBarco);
+                td.appendChild(polvo);
+                td.dataset.marcado = "true";
+            });
+        });
+    }
+
+
+
 
 
 

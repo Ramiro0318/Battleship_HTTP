@@ -399,6 +399,10 @@ namespace Battleship_HTTP.Services
                                         )).ToList();
 
                                     partidaSanitizada.NavesRestantesJ1 = partida.NavesRestantesJ1;
+
+                                    partidaSanitizada.NavesRestantesJ2 = partida.NavesRestantesJ2
+                                        .Where(n => n.SectoresRestantes <= 0)
+                                        .ToList();
                                 }
                                 else
                                 {
@@ -409,6 +413,9 @@ namespace Battleship_HTTP.Services
                                             c.Estado == EstadoCasilla.Nave ? EstadoCasilla.Agua : c.Estado
                                         )).ToList();
                                     partidaSanitizada.NavesRestantesJ2 = partida.NavesRestantesJ2;
+                                    partidaSanitizada.NavesRestantesJ1 = partida.NavesRestantesJ1
+                                        .Where(n => n.SectoresRestantes <= 0)
+                                        .ToList();
 
                                 }
 
