@@ -258,23 +258,32 @@
             const columna = celdaPadre.cellIndex;
             const idNave = parseInt(img.id);
             const direccion = img.dataset.direccion
+            const parte = obtenerParteImagen(img, 0);
 
             let naveEncontrada = navesList.find(nave => nave.IdNave === idNave);
 
 
             if (naveEncontrada) {
-                naveEncontrada.Coordenadas.push({ "Fila": fila, "Columna": columna });
+                naveEncontrada.Coordenadas.push({ "Fila": fila, "Columna": columna, "Parte": parte });
                 naveEncontrada.Direccion = direccion;
             } else {
                 let naveDTO = {
                     IdNave: idNave,
                     Direccion: direccion,
                     Coordenadas: [
-                        { "Fila": fila, "Columna": columna }
+                        { "Fila": fila, "Columna": columna, "Parte": parte }
                     ]
                 };
                 navesList.push(naveDTO);
             }
+        });
+
+        navesList.forEach(nave => {
+            nave.Coordenadas.sort((a, b) => a.Parte - b.Parte);
+            nave.Coordenadas = nave.Coordenadas.map(coord => ({
+                Fila: coord.Fila,
+                Columna: coord.Columna
+            }));
         });
 
 
@@ -627,6 +636,35 @@
 
 
 
+    function obtenerParteImagen(img, fallback) {
+        const parte = parseInt(img.dataset.parte);
+        return Number.isFinite(parte) ? parte : fallback;
+    }
+
+    function ordenarFragmentosPorParte(fragmentosOrigen) {
+        return Array.from(fragmentosOrigen)
+            .map((img, index) => ({ img, parte: obtenerParteImagen(img, index) }))
+            .sort((a, b) => a.parte - b.parte)
+            .map(item => item.img);
+    }
+
+    function obtenerGradosPorCoordenadas(coordenadas) {
+        if (!coordenadas || coordenadas.length < 2) return 0;
+
+        const primera = coordenadas[0];
+        const segunda = coordenadas[1];
+
+        if (primera.Fila === segunda.Fila) {
+            return segunda.Columna > primera.Columna ? 0 : 180;
+        }
+
+        if (primera.Columna === segunda.Columna) {
+            return segunda.Fila > primera.Fila ? 90 : 270;
+        }
+
+        return 0;
+    }
+
 
     //Etapa de atacar/////////////////////////////////////////////////////////////////////////////
 
@@ -704,21 +742,8 @@
                 contadoresPorNave[idActual] = 0;
             }
 
-            let fragmentos = Array.from(fragmentosOrigen);
-
-            let grados = 0;
-            //:c
-            if (vieneDelTablero) {
-                if (nave.Direccion === "izquierda") grados = 0;
-                if (nave.Direccion === "abajo") grados = 90;
-                if (nave.Direccion === "derecha") grados = 180;
-                if (nave.Direccion === "arriba") grados = 270;
-            } else {
-                if (nave.Direccion === "izquierda") grados = 0;
-                if (nave.Direccion === "arriba") grados = 90;
-                if (nave.Direccion === "derecha") grados = 180;
-                if (nave.Direccion === "abajo") grados = 270;
-            }
+            let fragmentos = ordenarFragmentosPorParte(fragmentosOrigen);
+            let grados = obtenerGradosPorCoordenadas(nave.Coordenadas);
 
             nave.Coordenadas.forEach((coord) => {
                 const fila = coord.Fila;
@@ -878,15 +903,8 @@
             const contenedorOriginal = document.querySelector(`#contenedor > div[id="${nave.IdNave}"]`);
             if (!contenedorOriginal) return;
 
-            const fragmentos = Array.from(contenedorOriginal.querySelectorAll("img"));
-
-            let grados = 0;
-
-            // Usa el mismo criterio que ya usas cuando el barco viene del servidor
-            if (nave.Direccion === "izquierda") grados = 0;
-            if (nave.Direccion === "arriba") grados = 90;
-            if (nave.Direccion === "derecha") grados = 180;
-            if (nave.Direccion === "abajo") grados = 270;
+            const fragmentos = ordenarFragmentosPorParte(contenedorOriginal.querySelectorAll("img"));
+            let grados = obtenerGradosPorCoordenadas(nave.Coordenadas);
 
             nave.Coordenadas.forEach((coord, index) => {
                 const td = tbodyAtaque.rows[coord.Fila]?.cells[coord.Columna];

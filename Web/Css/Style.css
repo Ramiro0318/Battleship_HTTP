@@ -495,7 +495,7 @@ table tr td {
     gap: 10px;
     align-self: center;
     background-color: var(--backgroundl);
-    border: 6px solid #1c3c91;
+    border: 4px solid #1c3c91;
     border-radius: 10px;
     min-width: 270px;
     width: min-content;
