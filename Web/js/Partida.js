@@ -54,73 +54,73 @@
     musicaJuego.loop = true;
 
     //Este metodo colocado aqui porque el navegador bloquea el autoplay
-//     function iniciarMusica() {
-//         musicaJuego.play().catch(() => {
-//             document.addEventListener("click", iniciarMusica, { once: true });
-//             document.addEventListener("keydown", iniciarMusica, { once: true });
-//         });
-//     }
+    function iniciarMusica() {
+        musicaJuego.play().catch(() => {
+            document.addEventListener("click", iniciarMusica, { once: true });
+            document.addEventListener("keydown", iniciarMusica, { once: true });
+        });
+    }
 
-//     iniciarMusica();
+    iniciarMusica();
 
 
-//     let battleship;
-//     let naveSeleccionadaId = null;
-//     let naveSeleccionadaFila = null;
-//     let naveSeleccionadaCol = null;
-//     let naveDireccion = "derecha";
+    let battleship;
+    let naveSeleccionadaId = null;
+    let naveSeleccionadaFila = null;
+    let naveSeleccionadaCol = null;
+    let naveDireccion = "derecha";
 
-//     if (!numSala || !idUsuario) {
-//         window.location.href = "/battleship/";
-//         return;
-//     }
+    if (!numSala || !idUsuario) {
+        window.location.href = "/battleship/";
+        return;
+    }
 
 
-//     //Inicializar /////////////////////////////////////////////////////////////////////////////////
-//     bIdSala.textContent = numSala;
-//     spanTiempo.textContent = "60";
-//     const instruccionesKey = `instruccionesVistas_${idSala}`;
+    //Inicializar /////////////////////////////////////////////////////////////////////////////////
+    bIdSala.textContent = numSala;
+    spanTiempo.textContent = "60";
+    const instruccionesKey = `instruccionesVistas_${idSala}`;
 
-//     btnOk.addEventListener('click', function () {
-//         btnSound.currentTime = 0;
-//         btnSound.play();
+    btnOk.addEventListener('click', function () {
+        btnSound.currentTime = 0;
+        btnSound.play();
 
-//         sessionStorage.setItem(instruccionesKey, "true");
+        sessionStorage.setItem(instruccionesKey, "true");
 
-//         divInstrucciones.classList.add("invisible");
-//         fondo.classList.add("invisible");
-//     });
+        divInstrucciones.classList.add("invisible");
+        fondo.classList.add("invisible");
+    });
 
 
 
 
-//     //Etapa de Colocar barcos /////////////////////////////////////////////////////////////////////
-//     verificarEtapaColocacion(idSala);
+    //Etapa de Colocar barcos /////////////////////////////////////////////////////////////////////
+    verificarEtapaColocacion(idSala);
 
-//     async function verificarEtapaColocacion(idSala) {
-//         let response = await fetch(`/battleship/inicio-partida?idSala=${idSala}`, {
-//             method: "GET"
-//         });
+    async function verificarEtapaColocacion(idSala) {
+        let response = await fetch(`/battleship/inicio-partida?idSala=${idSala}`, {
+            method: "GET"
+        });
 
-//         if (response.ok) {
-//             battleship = await response.json();
+        if (response.ok) {
+            battleship = await response.json();
 
-//             if (battleship.Etapa !== 0 || sessionStorage.getItem(instruccionesKey) === "true") {
-//                 divInstrucciones.classList.add("invisible");
-//                 fondo.classList.add("invisible");
-//             }
+            if (battleship.Etapa !== 0 || sessionStorage.getItem(instruccionesKey) === "true") {
+                divInstrucciones.classList.add("invisible");
+                fondo.classList.add("invisible");
+            }
 
-//             if (battleship.Etapa === 2) {
-//                 resultadoMostrado = true;
-//                 mostrarPantallaResultados(battleship);
-//                 actualizarRechancha(battleship);
-//             }
+            if (battleship.Etapa === 2) {
+                resultadoMostrado = true;
+                mostrarPantallaResultados(battleship);
+                actualizarRechancha(battleship);
+            }
 
-//             monitorearPartida();
-//         } else {
-//             volverAlMenuPrincipal();
-//         }
-//     }
+            monitorearPartida();
+        } else {
+            volverAlMenuPrincipal();
+        }
+    }
 
 
 
@@ -130,502 +130,502 @@
 
 
 
-//     let tableroEnviado = false;
-//     let defensaRenderizada = false;
-//     let resultadoMostrado = false;
+    let tableroEnviado = false;
+    let defensaRenderizada = false;
+    let resultadoMostrado = false;
 
-//     async function monitorearPartida() {
-//         let payload = {
-//             IdSala: idSala,
-//             IdUsuario: idUsuario,
-//             TiempoCliente: battleship ? battleship.TiempoRestante : -1,
-//             EtapaCliente: battleship ? battleship.Etapa : 0,
-//             TurnoCliente: battleship ? battleship.Turno : "",
-//             FinalizadoCliente: battleship ? battleship.Finalizado : false,
-//             NumeroDisparos: battleship ? battleship.NumeroDisparos : 0,
-//             Revancha: battleship ? battleship.Revancha : 0
-//         };
+    async function monitorearPartida() {
+        let payload = {
+            IdSala: idSala,
+            IdUsuario: idUsuario,
+            TiempoCliente: battleship ? battleship.TiempoRestante : -1,
+            EtapaCliente: battleship ? battleship.Etapa : 0,
+            TurnoCliente: battleship ? battleship.Turno : "",
+            FinalizadoCliente: battleship ? battleship.Finalizado : false,
+            NumeroDisparos: battleship ? battleship.NumeroDisparos : 0,
+            Revancha: battleship ? battleship.Revancha : 0
+        };
 
-//         try {
+        try {
 
-//             let response = await fetch("/battleship/escuchar-partida", {
-//                 method: "POST",
-//                 body: JSON.stringify(payload),
-//                 headers: { "Content-Type": "application/json" }
-//             });
+            let response = await fetch("/battleship/escuchar-partida", {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: { "Content-Type": "application/json" }
+            });
 
 
-//             if (response.ok) {
-//                 battleship = await response.json();
-
-//                 console.log(battleship);
-
-//                 // spanTurno.textContent = `Turno de ${battleship.Turno}`;
-//                 spanTiempo.textContent = battleship.TiempoRestante;
-
-//                 if (battleship.Etapa === 0) {
-//                     if (resultadoMostrado) {
-//                         prepararNuevoJuego();
-//                     }
-//                     resultadoMostrado = false;
-//                     if (!tableroEnviado && battleship.TiempoRestante > 0) {
-//                         console.log("etapa de colocacion")
-//                         //btnEnviar.disabled = false;
-//                     }
-//                     if (battleship.TiempoRestante == 0 && !tableroEnviado) {
-//                         enviarNavesPosicionadas();
-//                     }
-//                 }
-//                 else if (battleship.Etapa === 1) {
-
-
-//                     tableroEnviado = false;
-//                     if (!defensaRenderizada) {
-//                         defensaRenderizada = true;
-
-//                         console.log(battleship.NavesRestantesJ1);
-//                         console.log(battleship.NavesRestantesJ2);
-
-//                         let navesRecibidas = numJugador === "J1" ? battleship.NavesRestantesJ1 : battleship.NavesRestantesJ2;
-
-
-//                         if (navesRecibidas) {
-//                             cargarDefensaServidor(navesRecibidas);
-//                         }
-//                         gestionarTurnoDeAtaque();
-
-//                     }
-//                     if (defensaRenderizada) {
-//                         recibirAtaque(battleship);
-//                     }
-
-//                 }
-//                 else if (battleship.Etapa === 2) {
-//                     defensaRenderizada = false;
-//                     if (!resultadoMostrado) {
-//                         resultadoMostrado = true;
-//                         console.log("El juego ha terminado.");
-//                         mostrarPantallaResultados(battleship);
-//                         actualizarRechancha(battleship);
-//                     }
-//                     actualizarRechancha(battleship);
-//                 }
-
-//                 setTimeout(monitorearPartida, 200);
-
-//             } else {
-//                 if (response.status === 404) {
-//                     volverAlMenuPrincipal();
-//                 } else {
-//                     setTimeout(monitorearPartida, 2000);
-//                 }
-//             }
-//         } catch (error) {
-//             console.error("Error en Long Polling:", error);
-//             setTimeout(monitorearPartida, 2000);
-//         }
-//     }
-
-
-
-//     function volverAlMenuPrincipal() {
-//         localStorage.removeItem("numeroSala");
-//         localStorage.removeItem("idSala");
-//         localStorage.removeItem("numJugador");
-//         window.location.href = "/battleship/";
-//     }
-
-
-//     //Colocacion/////////////////////////////////////////////////////////////////////////////////
-
-//     btnEnviar.addEventListener("click", enviarNavesPosicionadas);
-//     async function enviarNavesPosicionadas() {
-//         tableroEnviado = true;
-//         btnEnviar.disabled = true;
-//         btnEnviar.classList.add("invisible");
-//         divMovimientos.classList.add("invisible");
-//         divContenedor.classList.add("invisible");
-//         btnSound.currentTime = 0;
-//         btnSound.play();
-
-//         const navesEnTablero = document.querySelectorAll("#tablaJugador tbody td img");
-//         let navesList = [];
-
-
-//         navesEnTablero.forEach(img => {
-//             const celdaPadre = img.parentElement;
-//             const fila = celdaPadre.parentElement.sectionRowIndex;
-//             const columna = celdaPadre.cellIndex;
-//             const idNave = parseInt(img.id);
-//             const direccion = img.dataset.direccion
-//             const parte = obtenerParteImagen(img, 0);
-
-//             let naveEncontrada = navesList.find(nave => nave.IdNave === idNave);
-
-
-//             if (naveEncontrada) {
-//                 naveEncontrada.Coordenadas.push({ "Fila": fila, "Columna": columna, "Parte": parte });
-//                 naveEncontrada.Direccion = direccion;
-//             } else {
-//                 let naveDTO = {
-//                     IdNave: idNave,
-//                     Direccion: direccion,
-//                     Coordenadas: [
-//                         { "Fila": fila, "Columna": columna, "Parte": parte }
-//                     ]
-//                 };
-//                 navesList.push(naveDTO);
-//             }
-//         });
-
-//         navesList.forEach(nave => {
-//             nave.Coordenadas.sort((a, b) => a.Parte - b.Parte);
-//             nave.Coordenadas = nave.Coordenadas.map(coord => ({
-//                 Fila: coord.Fila,
-//                 Columna: coord.Columna
-//             }));
-//         });
-
-
-//         let json = {
-//             IdSala: idSala,
-//             IdUsuario: idUsuario,
-//             NavesColocadas: navesList
-//         };
-//         try {
-//             let response = await fetch("/battleship/enviar-naves", {
-//                 method: "POST",
-//                 body: JSON.stringify(json),
-//                 headers: {
-//                     "Content-Type": "application/json"
-//                 }
-//             });
-
-//             if (response.ok) {
-//                 console.log("Tablero guardado con éxito en el servidor.");
-//             } else {
-//                 console.error("El servidor rechazó la configuración del tablero.");
-//                 //Creo que deberiamos regresarlo a la sala
-//             }
-//         } catch (error) {
-//             console.error("Error de red al enviar las naves:", error);
-//         }
-//     }
-
-
-//     //DRAG
-//     let naveMoviendo = null;
-//     document.addEventListener("dragstart", dragStart);
-
-//     function dragStart(e) {
-
-//         if (e.target.tagName == "DIV") {
-//             naveMoviendo = e.target;
-//             e.dataTransfer.setData("text/plain", e.target.id);
-//             console.log("arrastrando:", e.target.id);
-//         }
-//         else {
-//             e.preventDefault();
-//         }
-//     }
-
-
-//     const tbodyTablero = document.querySelector("#tablaJugador tbody");
-//     if (tbodyTablero) {
-//         //DRAG OVER
-//         tbodyTablero.addEventListener("dragover", dragOver);
-//         function dragOver(e) {
-//             e.preventDefault();
-//         }
-
-
-//         //DROP
-//         tbodyTablero.addEventListener("drop", drop);
-//         function drop(e) {
-//             e.preventDefault();
-
-//             let celdaDestino = e.target;
-
-//             if (celdaDestino.tagName === "IMG") {
-//                 celdaDestino = celdaDestino.parentElement;
-//             }
-
-//             if (celdaDestino.tagName !== "TD") return;
-
-//             const idNave = e.dataTransfer.getData("text/plain");
-
-//             if (!naveMoviendo) return;
-
-//             const cuadritosBarco = naveMoviendo.querySelectorAll("img");
-//             const longitudBarco = cuadritosBarco.length;
-
-//             const filaInicial = celdaDestino.parentElement.sectionRowIndex;
-//             const columnaInicial = celdaDestino.cellIndex;
-
-//             let posicionesProyectadas = [];
-//             for (let i = 0; i < longitudBarco; i++) {
-//                 posicionesProyectadas.push({
-//                     fila: filaInicial,
-//                     col: columnaInicial + i,
-//                     indiceCuerpo: i
-//                 });
-//             }
-
-//             const dropPermitido = comprobarOcupadas(posicionesProyectadas, idNave);
-
-//             if (!dropPermitido) {
-//                 console.warn(`Colocado fuera de límites o colisión en (${filaInicial}, ${columnaInicial}).`);
-//                 return;
-//             }
-
-//             const filaActual = tbodyTablero.rows[filaInicial];
-
-//             cuadritosBarco.forEach((imgOriginal, indice) => {
-//                 const columnaDestino = columnaInicial + indice;
-//                 const celdaObjetivo = filaActual.cells[columnaDestino];
-
-//                 const nuevoCuadrito = imgOriginal.cloneNode(true);
-//                 nuevoCuadrito.id = idNave;
-//                 nuevoCuadrito.dataset.direccion = "izquierda";
-//                 nuevoCuadrito.dataset.parte = indice;
-
-//                 nuevoCuadrito.style.width = "100%";
-//                 nuevoCuadrito.style.height = "100%";
-//                 nuevoCuadrito.style.display = "block";
-
-//                 celdaObjetivo.innerHTML = "";
-//                 celdaObjetivo.appendChild(nuevoCuadrito);
-//             });
-
-//             naveMoviendo.setAttribute("draggable", "false");
-//             naveMoviendo.style.display = "none";
-//             console.log(`Nave ${idNave} colocada exitosamente desde la columna ${columnaInicial}`);
-
-//             naveMoviendo = null;
-//         }
-
-//     }
-
-
-//     //MOVIMIENTO TRAS COLOCAR
-//     tbodyTablero.addEventListener("click", seleccionarBarcoEnTablero);
-//     function seleccionarBarcoEnTablero(e) {
-//         if (e.target.tagName !== "IMG") return;
-
-//         const idNave = e.target.id;
-
-//         tbodyTablero.querySelectorAll(".celda-seleccionada").forEach(celda => {
-//             celda.classList.remove("celda-seleccionada");
-//         });
-
-//         let celdasNave = [];
-
-//         for (let f = 0; f < tbodyTablero.rows.length; f++) {
-//             for (let c = 0; c < tbodyTablero.rows[f].cells.length; c++) {
-//                 const celda = tbodyTablero.rows[f].cells[c];
-//                 const img = celda.querySelector("img");
-
-//                 // Si la celda tiene una imagen y coincide con el ID del barco tocado
-//                 if (img && img.id === idNave) {
-//                     celdasNave.push({ celda, fila: f, col: c });
-//                 }
-//             }
-//         }
-
-//         if (celdasNave.length === 0) return;
-
-//         // la punta columna más alta. //de menor a mayor
-//         const puntaDetectada = celdasNave.find(item => {
-//             const img = item.celda.querySelector("img");
-//             return img && img.dataset.parte === "0";
-//         });
-
-//         if (!puntaDetectada) return;
-
-//         naveSeleccionadaId = idNave;
-//         naveSeleccionadaFila = puntaDetectada.fila;
-//         naveSeleccionadaCol = puntaDetectada.col;
-//         naveDireccion = e.target.dataset.direccion;
-
-//         celdasNave.forEach((item, indice) => { item.celda.classList.add("celda-seleccionada"); });
-
-//         console.log(`Nave ${idNave} con punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}) apuntando a la ${naveDireccion}.`);
-//     }
-
-
-//     //MOVER
-//     function moverNave(direccionBoton) {
-//         if (!naveSeleccionadaId) return;
-//         if (direccionBoton !== "arriba" && direccionBoton !== "abajo" &&
-//             direccionBoton !== "izquierda" && direccionBoton !== "derecha") return;
-
-//         const fragmentosEnTablero = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
-//         const longitud = fragmentosEnTablero.length;
-
-//         if (longitud === 0) return;
-
-//         let imgsParaClonar = Array.from(fragmentosEnTablero).sort((a, b) => parseInt(a.dataset.parte) - parseInt(b.dataset.parte));
-
-//         let nuevaFilaPunta = naveSeleccionadaFila;
-//         let nuevaColPunta = naveSeleccionadaCol;
-
-//         if (direccionBoton === "arriba") nuevaFilaPunta--;
-//         if (direccionBoton === "abajo") nuevaFilaPunta++;
-//         if (direccionBoton === "izquierda") nuevaColPunta--;
-//         if (direccionBoton === "derecha") nuevaColPunta++;
-
-//         let nuevasPosiciones = [];
-//         for (let i = 0; i < longitud; i++) {
-//             let f = nuevaFilaPunta;
-//             let c = nuevaColPunta;
-
-//             if (naveDireccion === "derecha") c = nuevaColPunta - i;
-//             if (naveDireccion === "izquierda") c = nuevaColPunta + i;
-//             if (naveDireccion === "abajo") f = nuevaFilaPunta + i;
-//             if (naveDireccion === "arriba") f = nuevaFilaPunta - i;
-
-//             nuevasPosiciones.push({ fila: f, col: c, indiceCuerpo: i });
-//         }
-
-//         const esPosible = comprobarOcupadas(nuevasPosiciones, naveSeleccionadaId);
-
-//         if (!esPosible) {
-//             console.warn(`Bloqueado hacia la ${direccionBoton}.`);
-//             return;
-//         }
-
-//         fragmentosEnTablero.forEach(img => {
-//             const celdaVieja = img.parentElement;
-//             if (celdaVieja) {
-//                 celdaVieja.innerHTML = "";
-//                 celdaVieja.classList.remove("celda-seleccionada");
-//             }
-//         });
-
-//         nuevasPosiciones.forEach(pos => {
-//             const celdaObjetivo = tbodyTablero.rows[pos.fila].cells[pos.col];
-//             const nuevoCuadrito = imgsParaClonar[pos.indiceCuerpo].cloneNode(true);
-
-//             nuevoCuadrito.id = naveSeleccionadaId;
-//             nuevoCuadrito.dataset.direccion = naveDireccion;
-//             nuevoCuadrito.dataset.parte = imgsParaClonar[pos.indiceCuerpo].dataset.parte;
-
-//             nuevoCuadrito.style.width = "100%";
-//             nuevoCuadrito.style.height = "100%";
-//             nuevoCuadrito.style.display = "block";
-//             celdaObjetivo.classList.add("celda-seleccionada");
-
-//             celdaObjetivo.appendChild(nuevoCuadrito);
-//         });
-
-//         naveSeleccionadaFila = nuevaFilaPunta;
-//         naveSeleccionadaCol = nuevaColPunta;
-
-//         console.log(`Éxito. Nueva punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}).`);
-//     }
-
-//     //ROTAR
-//     function rotarNave(sentidoRotacion) {
-//         if (!naveSeleccionadaId) return;
-//         if (sentidoRotacion !== "derecha" && sentidoRotacion !== "izquierda") return;
-
-//         const fragmentosEnTablero = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
-//         const longitud = fragmentosEnTablero.length;
+            if (response.ok) {
+                battleship = await response.json();
+
+                console.log(battleship);
+
+                // spanTurno.textContent = `Turno de ${battleship.Turno}`;
+                spanTiempo.textContent = battleship.TiempoRestante;
+
+                if (battleship.Etapa === 0) {
+                    if (resultadoMostrado) {
+                        prepararNuevoJuego();
+                    }
+                    resultadoMostrado = false;
+                    if (!tableroEnviado && battleship.TiempoRestante > 0) {
+                        console.log("etapa de colocacion")
+                        //btnEnviar.disabled = false;
+                    }
+                    if (battleship.TiempoRestante == 0 && !tableroEnviado) {
+                        enviarNavesPosicionadas();
+                    }
+                }
+                else if (battleship.Etapa === 1) {
+
+
+                    tableroEnviado = false;
+                    if (!defensaRenderizada) {
+                        defensaRenderizada = true;
+
+                        console.log(battleship.NavesRestantesJ1);
+                        console.log(battleship.NavesRestantesJ2);
+
+                        let navesRecibidas = numJugador === "J1" ? battleship.NavesRestantesJ1 : battleship.NavesRestantesJ2;
+
+
+                        if (navesRecibidas) {
+                            cargarDefensaServidor(navesRecibidas);
+                        }
+                        gestionarTurnoDeAtaque();
+
+                    }
+                    if (defensaRenderizada) {
+                        recibirAtaque(battleship);
+                    }
+
+                }
+                else if (battleship.Etapa === 2) {
+                    defensaRenderizada = false;
+                    if (!resultadoMostrado) {
+                        resultadoMostrado = true;
+                        console.log("El juego ha terminado.");
+                        mostrarPantallaResultados(battleship);
+                        actualizarRechancha(battleship);
+                    }
+                    actualizarRechancha(battleship);
+                }
+
+                setTimeout(monitorearPartida, 200);
+
+            } else {
+                if (response.status === 404) {
+                    volverAlMenuPrincipal();
+                } else {
+                    setTimeout(monitorearPartida, 2000);
+                }
+            }
+        } catch (error) {
+            console.error("Error en Long Polling:", error);
+            setTimeout(monitorearPartida, 2000);
+        }
+    }
+
+
+
+    function volverAlMenuPrincipal() {
+        localStorage.removeItem("numeroSala");
+        localStorage.removeItem("idSala");
+        localStorage.removeItem("numJugador");
+        window.location.href = "/battleship/";
+    }
+
+
+    //Colocacion/////////////////////////////////////////////////////////////////////////////////
+
+    btnEnviar.addEventListener("click", enviarNavesPosicionadas);
+    async function enviarNavesPosicionadas() {
+        tableroEnviado = true;
+        btnEnviar.disabled = true;
+        btnEnviar.classList.add("invisible");
+        divMovimientos.classList.add("invisible");
+        divContenedor.classList.add("invisible");
+        btnSound.currentTime = 0;
+        btnSound.play();
+
+        const navesEnTablero = document.querySelectorAll("#tablaJugador tbody td img");
+        let navesList = [];
+
+
+        navesEnTablero.forEach(img => {
+            const celdaPadre = img.parentElement;
+            const fila = celdaPadre.parentElement.sectionRowIndex;
+            const columna = celdaPadre.cellIndex;
+            const idNave = parseInt(img.id);
+            const direccion = img.dataset.direccion
+            const parte = obtenerParteImagen(img, 0);
+
+            let naveEncontrada = navesList.find(nave => nave.IdNave === idNave);
+
+
+            if (naveEncontrada) {
+                naveEncontrada.Coordenadas.push({ "Fila": fila, "Columna": columna, "Parte": parte });
+                naveEncontrada.Direccion = direccion;
+            } else {
+                let naveDTO = {
+                    IdNave: idNave,
+                    Direccion: direccion,
+                    Coordenadas: [
+                        { "Fila": fila, "Columna": columna, "Parte": parte }
+                    ]
+                };
+                navesList.push(naveDTO);
+            }
+        });
+
+        navesList.forEach(nave => {
+            nave.Coordenadas.sort((a, b) => a.Parte - b.Parte);
+            nave.Coordenadas = nave.Coordenadas.map(coord => ({
+                Fila: coord.Fila,
+                Columna: coord.Columna
+            }));
+        });
+
+
+        let json = {
+            IdSala: idSala,
+            IdUsuario: idUsuario,
+            NavesColocadas: navesList
+        };
+        try {
+            let response = await fetch("/battleship/enviar-naves", {
+                method: "POST",
+                body: JSON.stringify(json),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                console.log("Tablero guardado con éxito en el servidor.");
+            } else {
+                console.error("El servidor rechazó la configuración del tablero.");
+                //Creo que deberiamos regresarlo a la sala
+            }
+        } catch (error) {
+            console.error("Error de red al enviar las naves:", error);
+        }
+    }
+
+
+    //DRAG
+    let naveMoviendo = null;
+    document.addEventListener("dragstart", dragStart);
+
+    function dragStart(e) {
+
+        if (e.target.tagName == "DIV") {
+            naveMoviendo = e.target;
+            e.dataTransfer.setData("text/plain", e.target.id);
+            console.log("arrastrando:", e.target.id);
+        }
+        else {
+            e.preventDefault();
+        }
+    }
+
+
+    const tbodyTablero = document.querySelector("#tablaJugador tbody");
+    if (tbodyTablero) {
+        //DRAG OVER
+        tbodyTablero.addEventListener("dragover", dragOver);
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+
+        //DROP
+        tbodyTablero.addEventListener("drop", drop);
+        function drop(e) {
+            e.preventDefault();
+
+            let celdaDestino = e.target;
+
+            if (celdaDestino.tagName === "IMG") {
+                celdaDestino = celdaDestino.parentElement;
+            }
+
+            if (celdaDestino.tagName !== "TD") return;
+
+            const idNave = e.dataTransfer.getData("text/plain");
+
+            if (!naveMoviendo) return;
+
+            const cuadritosBarco = naveMoviendo.querySelectorAll("img");
+            const longitudBarco = cuadritosBarco.length;
+
+            const filaInicial = celdaDestino.parentElement.sectionRowIndex;
+            const columnaInicial = celdaDestino.cellIndex;
+
+            let posicionesProyectadas = [];
+            for (let i = 0; i < longitudBarco; i++) {
+                posicionesProyectadas.push({
+                    fila: filaInicial,
+                    col: columnaInicial + i,
+                    indiceCuerpo: i
+                });
+            }
+
+            const dropPermitido = comprobarOcupadas(posicionesProyectadas, idNave);
+
+            if (!dropPermitido) {
+                console.warn(`Colocado fuera de límites o colisión en (${filaInicial}, ${columnaInicial}).`);
+                return;
+            }
+
+            const filaActual = tbodyTablero.rows[filaInicial];
+
+            cuadritosBarco.forEach((imgOriginal, indice) => {
+                const columnaDestino = columnaInicial + indice;
+                const celdaObjetivo = filaActual.cells[columnaDestino];
+
+                const nuevoCuadrito = imgOriginal.cloneNode(true);
+                nuevoCuadrito.id = idNave;
+                nuevoCuadrito.dataset.direccion = "izquierda";
+                nuevoCuadrito.dataset.parte = indice;
+
+                nuevoCuadrito.style.width = "100%";
+                nuevoCuadrito.style.height = "100%";
+                nuevoCuadrito.style.display = "block";
+
+                celdaObjetivo.innerHTML = "";
+                celdaObjetivo.appendChild(nuevoCuadrito);
+            });
+
+            naveMoviendo.setAttribute("draggable", "false");
+            naveMoviendo.style.display = "none";
+            console.log(`Nave ${idNave} colocada exitosamente desde la columna ${columnaInicial}`);
+
+            naveMoviendo = null;
+        }
+
+    }
+
+
+    //MOVIMIENTO TRAS COLOCAR
+    tbodyTablero.addEventListener("click", seleccionarBarcoEnTablero);
+    function seleccionarBarcoEnTablero(e) {
+        if (e.target.tagName !== "IMG") return;
+
+        const idNave = e.target.id;
+
+        tbodyTablero.querySelectorAll(".celda-seleccionada").forEach(celda => {
+            celda.classList.remove("celda-seleccionada");
+        });
+
+        let celdasNave = [];
+
+        for (let f = 0; f < tbodyTablero.rows.length; f++) {
+            for (let c = 0; c < tbodyTablero.rows[f].cells.length; c++) {
+                const celda = tbodyTablero.rows[f].cells[c];
+                const img = celda.querySelector("img");
+
+                // Si la celda tiene una imagen y coincide con el ID del barco tocado
+                if (img && img.id === idNave) {
+                    celdasNave.push({ celda, fila: f, col: c });
+                }
+            }
+        }
+
+        if (celdasNave.length === 0) return;
+
+        // la punta columna más alta. //de menor a mayor
+        const puntaDetectada = celdasNave.find(item => {
+            const img = item.celda.querySelector("img");
+            return img && img.dataset.parte === "0";
+        });
+
+        if (!puntaDetectada) return;
+
+        naveSeleccionadaId = idNave;
+        naveSeleccionadaFila = puntaDetectada.fila;
+        naveSeleccionadaCol = puntaDetectada.col;
+        naveDireccion = e.target.dataset.direccion;
+
+        celdasNave.forEach((item, indice) => { item.celda.classList.add("celda-seleccionada"); });
+
+        console.log(`Nave ${idNave} con punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}) apuntando a la ${naveDireccion}.`);
+    }
+
+
+    //MOVER
+    function moverNave(direccionBoton) {
+        if (!naveSeleccionadaId) return;
+        if (direccionBoton !== "arriba" && direccionBoton !== "abajo" &&
+            direccionBoton !== "izquierda" && direccionBoton !== "derecha") return;
+
+        const fragmentosEnTablero = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
+        const longitud = fragmentosEnTablero.length;
+
+        if (longitud === 0) return;
+
+        let imgsParaClonar = Array.from(fragmentosEnTablero).sort((a, b) => parseInt(a.dataset.parte) - parseInt(b.dataset.parte));
+
+        let nuevaFilaPunta = naveSeleccionadaFila;
+        let nuevaColPunta = naveSeleccionadaCol;
+
+        if (direccionBoton === "arriba") nuevaFilaPunta--;
+        if (direccionBoton === "abajo") nuevaFilaPunta++;
+        if (direccionBoton === "izquierda") nuevaColPunta--;
+        if (direccionBoton === "derecha") nuevaColPunta++;
+
+        let nuevasPosiciones = [];
+        for (let i = 0; i < longitud; i++) {
+            let f = nuevaFilaPunta;
+            let c = nuevaColPunta;
+
+            if (naveDireccion === "derecha") c = nuevaColPunta - i;
+            if (naveDireccion === "izquierda") c = nuevaColPunta + i;
+            if (naveDireccion === "abajo") f = nuevaFilaPunta + i;
+            if (naveDireccion === "arriba") f = nuevaFilaPunta - i;
+
+            nuevasPosiciones.push({ fila: f, col: c, indiceCuerpo: i });
+        }
+
+        const esPosible = comprobarOcupadas(nuevasPosiciones, naveSeleccionadaId);
+
+        if (!esPosible) {
+            console.warn(`Bloqueado hacia la ${direccionBoton}.`);
+            return;
+        }
+
+        fragmentosEnTablero.forEach(img => {
+            const celdaVieja = img.parentElement;
+            if (celdaVieja) {
+                celdaVieja.innerHTML = "";
+                celdaVieja.classList.remove("celda-seleccionada");
+            }
+        });
+
+        nuevasPosiciones.forEach(pos => {
+            const celdaObjetivo = tbodyTablero.rows[pos.fila].cells[pos.col];
+            const nuevoCuadrito = imgsParaClonar[pos.indiceCuerpo].cloneNode(true);
+
+            nuevoCuadrito.id = naveSeleccionadaId;
+            nuevoCuadrito.dataset.direccion = naveDireccion;
+            nuevoCuadrito.dataset.parte = imgsParaClonar[pos.indiceCuerpo].dataset.parte;
+
+            nuevoCuadrito.style.width = "100%";
+            nuevoCuadrito.style.height = "100%";
+            nuevoCuadrito.style.display = "block";
+            celdaObjetivo.classList.add("celda-seleccionada");
+
+            celdaObjetivo.appendChild(nuevoCuadrito);
+        });
+
+        naveSeleccionadaFila = nuevaFilaPunta;
+        naveSeleccionadaCol = nuevaColPunta;
+
+        console.log(`Éxito. Nueva punta en (${naveSeleccionadaFila}, ${naveSeleccionadaCol}).`);
+    }
+
+    //ROTAR
+    function rotarNave(sentidoRotacion) {
+        if (!naveSeleccionadaId) return;
+        if (sentidoRotacion !== "derecha" && sentidoRotacion !== "izquierda") return;
+
+        const fragmentosEnTablero = tbodyTablero.querySelectorAll(`img[id="${naveSeleccionadaId}"]`);
+        const longitud = fragmentosEnTablero.length;
 
-//         if (longitud === 0) return;
+        if (longitud === 0) return;
 
-//         let imgsParaClonar = Array.from(fragmentosEnTablero).sort((a, b) => parseInt(a.dataset.parte) - parseInt(b.dataset.parte));
+        let imgsParaClonar = Array.from(fragmentosEnTablero).sort((a, b) => parseInt(a.dataset.parte) - parseInt(b.dataset.parte));
 
 
-//         const direcciones = ["izquierda", "abajo", "derecha", "arriba"];
-//         let indiceActual = direcciones.indexOf(naveDireccion);
+        const direcciones = ["izquierda", "abajo", "derecha", "arriba"];
+        let indiceActual = direcciones.indexOf(naveDireccion);
 
-//         let nuevaDireccion = naveDireccion;
-//         if (sentidoRotacion === "derecha") {
-//             nuevaDireccion = direcciones[(indiceActual + 1) % 4];   //Sentido de las manecillas
-//         } else if (sentidoRotacion === "izquierda") {
-//             nuevaDireccion = direcciones[(indiceActual - 1 + 4) % 4];
-//         }
+        let nuevaDireccion = naveDireccion;
+        if (sentidoRotacion === "derecha") {
+            nuevaDireccion = direcciones[(indiceActual + 1) % 4];   //Sentido de las manecillas
+        } else if (sentidoRotacion === "izquierda") {
+            nuevaDireccion = direcciones[(indiceActual - 1 + 4) % 4];
+        }
 
-//         let nuevasPosiciones = [];
-//         for (let i = 0; i < longitud; i++) {
-//             let f = naveSeleccionadaFila; // La punta se queda en su misma fila y columna
-//             let c = naveSeleccionadaCol;
+        let nuevasPosiciones = [];
+        for (let i = 0; i < longitud; i++) {
+            let f = naveSeleccionadaFila; // La punta se queda en su misma fila y columna
+            let c = naveSeleccionadaCol;
 
-//             if (nuevaDireccion === "derecha") c = naveSeleccionadaCol - i;
-//             if (nuevaDireccion === "izquierda") c = naveSeleccionadaCol + i;
-//             if (nuevaDireccion === "abajo") f = naveSeleccionadaFila + i;
-//             if (nuevaDireccion === "arriba") f = naveSeleccionadaFila - i;
+            if (nuevaDireccion === "derecha") c = naveSeleccionadaCol - i;
+            if (nuevaDireccion === "izquierda") c = naveSeleccionadaCol + i;
+            if (nuevaDireccion === "abajo") f = naveSeleccionadaFila + i;
+            if (nuevaDireccion === "arriba") f = naveSeleccionadaFila - i;
 
-//             nuevasPosiciones.push({ fila: f, col: c, indiceCuerpo: i });
-//         }
+            nuevasPosiciones.push({ fila: f, col: c, indiceCuerpo: i });
+        }
 
-//         const esPosible = comprobarOcupadas(nuevasPosiciones, naveSeleccionadaId);
+        const esPosible = comprobarOcupadas(nuevasPosiciones, naveSeleccionadaId);
 
-//         if (!esPosible) {
-//             console.warn(`Bloqueada hacia la ${sentidoRotacion}. Fuera de límites o colisión.`);
-//             return;
-//         }
+        if (!esPosible) {
+            console.warn(`Bloqueada hacia la ${sentidoRotacion}. Fuera de límites o colisión.`);
+            return;
+        }
 
-//         fragmentosEnTablero.forEach(img => {
-//             const celdaVieja = img.parentElement;
-//             if (celdaVieja) {
-//                 celdaVieja.innerHTML = "";
-//                 celdaVieja.classList.remove("celda-seleccionada");
-//             }
-//         });
+        fragmentosEnTablero.forEach(img => {
+            const celdaVieja = img.parentElement;
+            if (celdaVieja) {
+                celdaVieja.innerHTML = "";
+                celdaVieja.classList.remove("celda-seleccionada");
+            }
+        });
 
 
-//         let grados = 0; 
-//         if (nuevaDireccion === "izquierda") grados = 0;
-//         if (nuevaDireccion === "abajo") grados = 90;
-//         if (nuevaDireccion === "derecha") grados = 180;
-//         if (nuevaDireccion === "arriba") grados = 270;
+        let grados = 0; 
+        if (nuevaDireccion === "izquierda") grados = 0;
+        if (nuevaDireccion === "abajo") grados = 90;
+        if (nuevaDireccion === "derecha") grados = 180;
+        if (nuevaDireccion === "arriba") grados = 270;
 
-//         nuevasPosiciones.forEach(pos => {
-//             const celdaObjetivo = tbodyTablero.rows[pos.fila].cells[pos.col];
-//             const nuevoCuadrito = imgsParaClonar[pos.indiceCuerpo].cloneNode(true);
+        nuevasPosiciones.forEach(pos => {
+            const celdaObjetivo = tbodyTablero.rows[pos.fila].cells[pos.col];
+            const nuevoCuadrito = imgsParaClonar[pos.indiceCuerpo].cloneNode(true);
 
-//             nuevoCuadrito.id = naveSeleccionadaId;
-//             nuevoCuadrito.dataset.direccion = nuevaDireccion;
-//             nuevoCuadrito.dataset.parte = imgsParaClonar[pos.indiceCuerpo].dataset.parte;
+            nuevoCuadrito.id = naveSeleccionadaId;
+            nuevoCuadrito.dataset.direccion = nuevaDireccion;
+            nuevoCuadrito.dataset.parte = imgsParaClonar[pos.indiceCuerpo].dataset.parte;
 
-//             nuevoCuadrito.style.width = "100%";
-//             nuevoCuadrito.style.height = "100%";
-//             nuevoCuadrito.style.display = "block";
+            nuevoCuadrito.style.width = "100%";
+            nuevoCuadrito.style.height = "100%";
+            nuevoCuadrito.style.display = "block";
 
-//             // Aplicar la rotación
-//             nuevoCuadrito.style.transform = `rotate(${grados}deg)`;
+            // Aplicar la rotación
+            nuevoCuadrito.style.transform = `rotate(${grados}deg)`;
 
-//             celdaObjetivo.appendChild(nuevoCuadrito);
-//             celdaObjetivo.classList.add("celda-seleccionada");
-//         });
+            celdaObjetivo.appendChild(nuevoCuadrito);
+            celdaObjetivo.classList.add("celda-seleccionada");
+        });
 
-//         naveDireccion = nuevaDireccion;
+        naveDireccion = nuevaDireccion;
 
-//         console.log(`Éxito. Nave ${naveSeleccionadaId} ahora apunta hacia la ${naveDireccion}.`);
-//     }
+        console.log(`Éxito. Nave ${naveSeleccionadaId} ahora apunta hacia la ${naveDireccion}.`);
+    }
 
 
-//     function comprobarOcupadas(posicionesDeseadas, idNave) {
-//         for (let coord of posicionesDeseadas) {
+    function comprobarOcupadas(posicionesDeseadas, idNave) {
+        for (let coord of posicionesDeseadas) {
 
-//             if (coord.fila < 0 || coord.fila > 9 || coord.col < 0 || coord.col > 9) {
-//                 console.warn(`Posición inválida: (${coord.fila}, ${coord.col}) está fuera del tablero.`);
-//                 return false;
-//             }
+            if (coord.fila < 0 || coord.fila > 9 || coord.col < 0 || coord.col > 9) {
+                console.warn(`Posición inválida: (${coord.fila}, ${coord.col}) está fuera del tablero.`);
+                return false;
+            }
 
-//             const celdaDestino = tbodyTablero.rows[coord.fila].cells[coord.col];
-//             const imgExistente = celdaDestino.querySelector("img");
+            const celdaDestino = tbodyTablero.rows[coord.fila].cells[coord.col];
+            const imgExistente = celdaDestino.querySelector("img");
 
-//             if (imgExistente && imgExistente.id !== idNave) {
-//                 console.warn(`Colisión detectada en la celda (${coord.fila}, ${coord.col}) con la nave ID: ${imgExistente.id}`);
-//                 return false;
-//             }
-//         }
+            if (imgExistente && imgExistente.id !== idNave) {
+                console.warn(`Colisión detectada en la celda (${coord.fila}, ${coord.col}) con la nave ID: ${imgExistente.id}`);
+                return false;
+            }
+        }
 
-//         return true;
-//     }
+        return true;
+    }
 
 
 
@@ -636,453 +636,453 @@
 
 
 
-//     function obtenerParteImagen(img, fallback) {
-//         const parte = parseInt(img.dataset.parte);
-//         return Number.isFinite(parte) ? parte : fallback;
-//     }
+    function obtenerParteImagen(img, fallback) {
+        const parte = parseInt(img.dataset.parte);
+        return Number.isFinite(parte) ? parte : fallback;
+    }
 
-//     function ordenarFragmentosPorParte(fragmentosOrigen) {
-//         return Array.from(fragmentosOrigen)
-//             .map((img, index) => ({ img, parte: obtenerParteImagen(img, index) }))
-//             .sort((a, b) => a.parte - b.parte)
-//             .map(item => item.img);
-//     }
+    function ordenarFragmentosPorParte(fragmentosOrigen) {
+        return Array.from(fragmentosOrigen)
+            .map((img, index) => ({ img, parte: obtenerParteImagen(img, index) }))
+            .sort((a, b) => a.parte - b.parte)
+            .map(item => item.img);
+    }
 
-//     function obtenerGradosPorCoordenadas(coordenadas) {
-//         if (!coordenadas || coordenadas.length < 2) return 0;
+    function obtenerGradosPorCoordenadas(coordenadas) {
+        if (!coordenadas || coordenadas.length < 2) return 0;
 
-//         const primera = coordenadas[0];
-//         const segunda = coordenadas[1];
+        const primera = coordenadas[0];
+        const segunda = coordenadas[1];
 
-//         if (primera.Fila === segunda.Fila) {
-//             return segunda.Columna > primera.Columna ? 0 : 180;
-//         }
+        if (primera.Fila === segunda.Fila) {
+            return segunda.Columna > primera.Columna ? 0 : 180;
+        }
 
-//         if (primera.Columna === segunda.Columna) {
-//             return segunda.Fila > primera.Fila ? 90 : 270;
-//         }
+        if (primera.Columna === segunda.Columna) {
+            return segunda.Fila > primera.Fila ? 90 : 270;
+        }
 
-//         return 0;
-//     }
+        return 0;
+    }
 
 
-//     //Etapa de atacar/////////////////////////////////////////////////////////////////////////////
+    //Etapa de atacar/////////////////////////////////////////////////////////////////////////////
 
 
-//     function gestionarTurnoDeAtaque() {
-//         btnEnviar.classList.add("invisible");
-//         divMovimientos.classList.add("invisible");
-//         divContenedor.classList.add("invisible");
-//         tableroDefensa.style.display = "table";
+    function gestionarTurnoDeAtaque() {
+        btnEnviar.classList.add("invisible");
+        divMovimientos.classList.add("invisible");
+        divContenedor.classList.add("invisible");
+        tableroDefensa.style.display = "table";
 
-//         document.removeEventListener("dragstart", dragStart)
-//         tbodyTablero.removeEventListener("dragover", dragOver);
-//         tbodyTablero.removeEventListener("drop", drop);
+        document.removeEventListener("dragstart", dragStart)
+        tbodyTablero.removeEventListener("dragover", dragOver);
+        tbodyTablero.removeEventListener("drop", drop);
 
-//         tbodyTablero.querySelectorAll(".celda-seleccionada").forEach(celda => {
-//             celda.classList.remove("celda-seleccionada");
-//         });
+        tbodyTablero.querySelectorAll(".celda-seleccionada").forEach(celda => {
+            celda.classList.remove("celda-seleccionada");
+        });
 
 
-//         if (TableJugador) {
-//             TableJugador.addEventListener('click', function (event) {
-//                 const celda = event.target;
+        if (TableJugador) {
+            TableJugador.addEventListener('click', function (event) {
+                const celda = event.target;
 
-//                 if (celda.tagName === 'TD') {
-//                     if (battleship.TurnoId !== idUsuario) {
-//                         console.warn("No es tu turno de atacar.");
-//                         return;
-//                     }
+                if (celda.tagName === 'TD') {
+                    if (battleship.TurnoId !== idUsuario) {
+                        console.warn("No es tu turno de atacar.");
+                        return;
+                    }
 
-//                     const fila = celda.parentElement.sectionRowIndex;
-//                     const columna = celda.cellIndex;
+                    const fila = celda.parentElement.sectionRowIndex;
+                    const columna = celda.cellIndex;
 
-//                     if (celda.dataset.marcado === "true") {
-//                         console.log("Esta casilla ya fue atacada.");
-//                         return;
-//                     }
+                    if (celda.dataset.marcado === "true") {
+                        console.log("Esta casilla ya fue atacada.");
+                        return;
+                    }
 
-//                     enviarAtaqueAlServidor(fila, columna, celda);
-//                 }
-//             });
-//         }
-//     }
+                    enviarAtaqueAlServidor(fila, columna, celda);
+                }
+            });
+        }
+    }
 
 
 
-//     function cargarDefensaServidor(navesList) {
-//         const tbodyDefensa = document.querySelector("#tablaDefensa tbody");
-//         if (!tbodyDefensa) return;
+    function cargarDefensaServidor(navesList) {
+        const tbodyDefensa = document.querySelector("#tablaDefensa tbody");
+        if (!tbodyDefensa) return;
 
-//         const celdas = tbodyDefensa.querySelectorAll("td");
-//         celdas.forEach(celda => {
-//             celda.innerHTML = "";
-//             celda.removeAttribute("data-id-nave");
-//         });
+        const celdas = tbodyDefensa.querySelectorAll("td");
+        celdas.forEach(celda => {
+            celda.innerHTML = "";
+            celda.removeAttribute("data-id-nave");
+        });
 
-//         //No entiendo por qué no se puede usar in indice regular, se reinicia en cada ciclo
-//         //:c
-//         let contadoresPorNave = {};
-//         console.log(navesList);
+        //No entiendo por qué no se puede usar in indice regular, se reinicia en cada ciclo
+        //:c
+        let contadoresPorNave = {};
+        console.log(navesList);
 
-//         navesList.forEach(nave => {
-//             const idActual = nave.IdNave;
+        navesList.forEach(nave => {
+            const idActual = nave.IdNave;
 
-//             let fragmentosOrigen = tbodyTablero.querySelectorAll(`img[id="${idActual}"]`);
-//             const vieneDelTablero = fragmentosOrigen.length > 0;
+            let fragmentosOrigen = tbodyTablero.querySelectorAll(`img[id="${idActual}"]`);
+            const vieneDelTablero = fragmentosOrigen.length > 0;
 
-//             if (!vieneDelTablero) {
-//                 const contenedorOriginal = document.querySelector(`#contenedor > div[id="${idActual}"]`);
-//                 if (!contenedorOriginal) return;
+            if (!vieneDelTablero) {
+                const contenedorOriginal = document.querySelector(`#contenedor > div[id="${idActual}"]`);
+                if (!contenedorOriginal) return;
 
-//                 fragmentosOrigen = contenedorOriginal.querySelectorAll("img");
-//             }
+                fragmentosOrigen = contenedorOriginal.querySelectorAll("img");
+            }
 
-//             if (contadoresPorNave[idActual] === undefined) {
-//                 contadoresPorNave[idActual] = 0;
-//             }
+            if (contadoresPorNave[idActual] === undefined) {
+                contadoresPorNave[idActual] = 0;
+            }
 
-//             let fragmentos = ordenarFragmentosPorParte(fragmentosOrigen);
-//             let grados = obtenerGradosPorCoordenadas(nave.Coordenadas);
+            let fragmentos = ordenarFragmentosPorParte(fragmentosOrigen);
+            let grados = obtenerGradosPorCoordenadas(nave.Coordenadas);
 
-//             nave.Coordenadas.forEach((coord) => {
-//                 const fila = coord.Fila;
-//                 const columna = coord.Columna;
+            nave.Coordenadas.forEach((coord) => {
+                const fila = coord.Fila;
+                const columna = coord.Columna;
 
-//                 if (tbodyDefensa.rows[fila] && tbodyDefensa.rows[fila].cells[columna]) {
-//                     const celda = tbodyDefensa.rows[fila].cells[columna];
-//                     const imgBarco = document.createElement("img");
+                if (tbodyDefensa.rows[fila] && tbodyDefensa.rows[fila].cells[columna]) {
+                    const celda = tbodyDefensa.rows[fila].cells[columna];
+                    const imgBarco = document.createElement("img");
 
-//                     // Sacar el índice acumulado real para esta nave
-//                     let iReal = contadoresPorNave[idActual];
+                    // Sacar el índice acumulado real para esta nave
+                    let iReal = contadoresPorNave[idActual];
 
-//                     if (fragmentos[iReal]) {
-//                         imgBarco.src = fragmentos[iReal].src;
-//                         imgBarco.style.transform = `rotate(${grados}deg)`;
-//                     }
+                    if (fragmentos[iReal]) {
+                        imgBarco.src = fragmentos[iReal].src;
+                        imgBarco.style.transform = `rotate(${grados}deg)`;
+                    }
 
-//                     imgBarco.style.width = "100%";
-//                     imgBarco.style.height = "100%";
-//                     imgBarco.style.display = "block";
-//                     imgBarco.style.objectFit = "cover";
+                    imgBarco.style.width = "100%";
+                    imgBarco.style.height = "100%";
+                    imgBarco.style.display = "block";
+                    imgBarco.style.objectFit = "cover";
 
-//                     celda.appendChild(imgBarco);
-//                     celda.dataset.idNave = idActual;
+                    celda.appendChild(imgBarco);
+                    celda.dataset.idNave = idActual;
 
-//                     contadoresPorNave[idActual]++;
-//                 }
-//             });
-//         });
-//         if (tbodyTablero) {
-//             const barcosArrastrados = tbodyTablero.querySelectorAll("img");
-//             barcosArrastrados.forEach(img => img.remove());
-//         }
-//         console.log("Flota renderizada.");
-//     }
-
-
-//     async function enviarAtaqueAlServidor(fila, columna, celda) {
-
-//         let ataqueDTO = {
-//             IdSala: idSala,
-//             IdJugador: idUsuario,
-//             Posicion: { Fila: fila, Columna: columna }
-//         };
-
-//         try {
-//             let response = await fetch("/battleship/procesar-ataque", {
-//                 method: "POST",
-//                 body: JSON.stringify(ataqueDTO),
-//                 headers: { "Content-Type": "application/json" }
-//             });
-
-//             if (response.ok) {
-//                 console.log("Disparo enviado con éxito. Esperando sincronización...");
-//             } else {
-//                 console.error("El servidor rechazó el disparo.");
-//                 celda.removeAttribute("data-marcado");
-//             }
-//         } catch (error) {
-//             console.error("Error de red al enviar el ataque:", error);
-//             // celda.removeAttribute("data-marcado");
-//         }
-//     }
+                    contadoresPorNave[idActual]++;
+                }
+            });
+        });
+        if (tbodyTablero) {
+            const barcosArrastrados = tbodyTablero.querySelectorAll("img");
+            barcosArrastrados.forEach(img => img.remove());
+        }
+        console.log("Flota renderizada.");
+    }
+
+
+    async function enviarAtaqueAlServidor(fila, columna, celda) {
+
+        let ataqueDTO = {
+            IdSala: idSala,
+            IdJugador: idUsuario,
+            Posicion: { Fila: fila, Columna: columna }
+        };
+
+        try {
+            let response = await fetch("/battleship/procesar-ataque", {
+                method: "POST",
+                body: JSON.stringify(ataqueDTO),
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (response.ok) {
+                console.log("Disparo enviado con éxito. Esperando sincronización...");
+            } else {
+                console.error("El servidor rechazó el disparo.");
+                celda.removeAttribute("data-marcado");
+            }
+        } catch (error) {
+            console.error("Error de red al enviar el ataque:", error);
+            // celda.removeAttribute("data-marcado");
+        }
+    }
 
 
 
 
-//     async function recibirAtaque(bship) {
-//         spanTurno.textContent = `Turno de ${bship.Turno}`;
-//         const soyJugador1 = numJugador === "J1";;
+    async function recibirAtaque(bship) {
+        spanTurno.textContent = `Turno de ${bship.Turno}`;
+        const soyJugador1 = numJugador === "J1";;
 
-//         const CuadriculaDefensa = soyJugador1 ? bship.CuadriculaJ1 : bship.CuadriculaJ2;
-//         const cuadrículaAtaque = soyJugador1 ? bship.CuadriculaJ2 : bship.CuadriculaJ1;
+        const CuadriculaDefensa = soyJugador1 ? bship.CuadriculaJ1 : bship.CuadriculaJ2;
+        const cuadrículaAtaque = soyJugador1 ? bship.CuadriculaJ2 : bship.CuadriculaJ1;
 
-//         // 1. Actualizar el tablero de ATAQUE
-//         if (cuadrículaAtaque) {
-//             cuadrículaAtaque.forEach(casilla => {
-//                 const f = casilla.Posicion.Fila;
-//                 const c = casilla.Posicion.Columna;
-//                 const td = TableJugador.querySelector(`tbody tr:nth-child(${f + 1}) td:nth-child(${c + 1})`);
+        // 1. Actualizar el tablero de ATAQUE
+        if (cuadrículaAtaque) {
+            cuadrículaAtaque.forEach(casilla => {
+                const f = casilla.Posicion.Fila;
+                const c = casilla.Posicion.Columna;
+                const td = TableJugador.querySelector(`tbody tr:nth-child(${f + 1}) td:nth-child(${c + 1})`);
 
-//                 if (td) {
-//                     const marcado = td.dataset.marcado === "true";
-//                     const img = document.createElement("img");
-//                     img.classList.add("efecto-ataque");
-
-
-//                     if (casilla.Estado === 2) {
-//                         img.src = "/battleship/Resources/Images/waterstar.gif";
-//                         if (!marcado) {
-//                             waterSound.currentTime = 0;
-//                             waterSound.play();
-//                         }
-//                         td.dataset.marcado = "true";
-//                     } // AtaqueFallido
-//                     if (casilla.Estado === 3) {
-//                         img.src = "/battleship/Resources/Images/hitstar1.gif";
-//                         if (!marcado) {
-//                             explosionSound.currentTime = 0;
-//                             explosionSound.play();
-//                         }
-//                         td.dataset.marcado = "true";
-//                     } // AtaqueAcertado
-//                     if (casilla.Estado === 4) {
-//                         img.src = "/battleship/Resources/Images/dust1.gif";
-//                         if (!marcado) {
-//                             explosionSound.currentTime = 0;
-//                             explosionSound.play();
-//                         }
-//                         td.dataset.marcado = "true";
-//                     } // NaveHundida
+                if (td) {
+                    const marcado = td.dataset.marcado === "true";
+                    const img = document.createElement("img");
+                    img.classList.add("efecto-ataque");
+
+
+                    if (casilla.Estado === 2) {
+                        img.src = "/battleship/Resources/Images/waterstar.gif";
+                        if (!marcado) {
+                            waterSound.currentTime = 0;
+                            waterSound.play();
+                        }
+                        td.dataset.marcado = "true";
+                    } // AtaqueFallido
+                    if (casilla.Estado === 3) {
+                        img.src = "/battleship/Resources/Images/hitstar1.gif";
+                        if (!marcado) {
+                            explosionSound.currentTime = 0;
+                            explosionSound.play();
+                        }
+                        td.dataset.marcado = "true";
+                    } // AtaqueAcertado
+                    if (casilla.Estado === 4) {
+                        img.src = "/battleship/Resources/Images/dust1.gif";
+                        if (!marcado) {
+                            explosionSound.currentTime = 0;
+                            explosionSound.play();
+                        }
+                        td.dataset.marcado = "true";
+                    } // NaveHundida
 
-//                     if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
-//                         td.innerHTML = "";
-//                         td.appendChild(img);
-//                     }
-//                 }
-//             });
-//         }
+                    if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
+                        td.innerHTML = "";
+                        td.appendChild(img);
+                    }
+                }
+            });
+        }
 
-//         if (CuadriculaDefensa) {
-//             CuadriculaDefensa.forEach(casilla => {
+        if (CuadriculaDefensa) {
+            CuadriculaDefensa.forEach(casilla => {
 
-//                 const f = casilla.Posicion.Fila;
-//                 const c = casilla.Posicion.Columna;
-//                 const td = tableroDefensa.querySelector(`tbody tr:nth-child(${f + 1}) td:nth-child(${c + 1})`);
+                const f = casilla.Posicion.Fila;
+                const c = casilla.Posicion.Columna;
+                const td = tableroDefensa.querySelector(`tbody tr:nth-child(${f + 1}) td:nth-child(${c + 1})`);
 
-//                 if (td) {
-//                     const efectoViejo = td.querySelector(".efecto-ataque");
-//                     const img = document.createElement("img");
-//                     img.classList.add("efecto-ataque");
-//                     if (casilla.Estado === 2) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/waterstar.gif"; }
-//                     if (casilla.Estado === 3) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/hitstar1.gif"; }
-//                     if (casilla.Estado === 4) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/dust1.gif"; }
+                if (td) {
+                    const efectoViejo = td.querySelector(".efecto-ataque");
+                    const img = document.createElement("img");
+                    img.classList.add("efecto-ataque");
+                    if (casilla.Estado === 2) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/waterstar.gif"; }
+                    if (casilla.Estado === 3) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/hitstar1.gif"; }
+                    if (casilla.Estado === 4) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/dust1.gif"; }
 
-//                     if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
-//                         td.appendChild(img);
-//                     }
-//                 }
-//             });
-//         }
+                    if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
+                        td.appendChild(img);
+                    }
+                }
+            });
+        }
 
-//         renderizarNavesHundidas(bship);
-//         battleship = bship;
-//     }
-
-
-//     function renderizarNavesHundidas(bship) {
-//         const soyJugador1 = numJugador === "J1";
-//         const navesHundidasRival = soyJugador1 ? bship.NavesRestantesJ2 : bship.NavesRestantesJ1;
+        renderizarNavesHundidas(bship);
+        battleship = bship;
+    }
+
+
+    function renderizarNavesHundidas(bship) {
+        const soyJugador1 = numJugador === "J1";
+        const navesHundidasRival = soyJugador1 ? bship.NavesRestantesJ2 : bship.NavesRestantesJ1;
 
-//         if (!navesHundidasRival || navesHundidasRival.length === 0) return;
+        if (!navesHundidasRival || navesHundidasRival.length === 0) return;
 
-//         const tbodyAtaque = TableJugador.querySelector("tbody");
+        const tbodyAtaque = TableJugador.querySelector("tbody");
 
-//         navesHundidasRival.forEach(nave => {
-//             const contenedorOriginal = document.querySelector(`#contenedor > div[id="${nave.IdNave}"]`);
-//             if (!contenedorOriginal) return;
-
-//             const fragmentos = ordenarFragmentosPorParte(contenedorOriginal.querySelectorAll("img"));
-//             let grados = obtenerGradosPorCoordenadas(nave.Coordenadas);
-
-//             nave.Coordenadas.forEach((coord, index) => {
-//                 const td = tbodyAtaque.rows[coord.Fila]?.cells[coord.Columna];
-//                 if (!td) return;
-
-//                 td.innerHTML = "";
-
-//                 const imgBarco = document.createElement("img");
-//                 imgBarco.src = fragmentos[index]?.src;
-//                 imgBarco.style.width = "100%";
-//                 imgBarco.style.height = "100%";
-//                 imgBarco.style.display = "block";
-//                 imgBarco.style.objectFit = "cover";
-//                 imgBarco.style.transform = `rotate(${grados}deg)`;
-
-//                 const polvo = document.createElement("img");
-//                 polvo.src = "/battleship/Resources/Images/dust1.gif";
-//                 polvo.classList.add("efecto-ataque");
-
-//                 td.appendChild(imgBarco);
-//                 td.appendChild(polvo);
-//                 td.dataset.marcado = "true";
-//             });
-//         });
-//     }
-
-
-
-
-
-
-//     //Etapa finalizar ///////////////////////////////////////////////////////////////////////////
-
-//     function mostrarPantallaResultados(bship) {
-//         resolutionSound.currentTime = 0;
-//         resolutionSound.play();
-//         divResultados.classList.remove("invisible");
-//         fondo.classList.remove("invisible");
-//         txtGanador.textContent = `Gana ${bship.Ganador}`;
-//         txtNumSalaResultados.textContent = "sala # " + numSala;
-//         txtRevancha.textContent = "";
-
-//     }
-
-//     function actualizarRechancha(bship) {
-//         if (bship.Revancha == 0) {
-//             txtRevancha.textContent = "";
-//         }
-//         if (bship.Revancha == 1) {
-//             txtRevancha.textContent = "Esperando revancha";
-//         }
-//         if (bship.Revancha == 2) {
-//             txtRevancha.textContent = "Reiniciando partida.";
-//             btnReiniciar.disabled = true;
-//         }
-//     }
-
-
-
+        navesHundidasRival.forEach(nave => {
+            const contenedorOriginal = document.querySelector(`#contenedor > div[id="${nave.IdNave}"]`);
+            if (!contenedorOriginal) return;
+
+            const fragmentos = ordenarFragmentosPorParte(contenedorOriginal.querySelectorAll("img"));
+            let grados = obtenerGradosPorCoordenadas(nave.Coordenadas);
+
+            nave.Coordenadas.forEach((coord, index) => {
+                const td = tbodyAtaque.rows[coord.Fila]?.cells[coord.Columna];
+                if (!td) return;
+
+                td.innerHTML = "";
+
+                const imgBarco = document.createElement("img");
+                imgBarco.src = fragmentos[index]?.src;
+                imgBarco.style.width = "100%";
+                imgBarco.style.height = "100%";
+                imgBarco.style.display = "block";
+                imgBarco.style.objectFit = "cover";
+                imgBarco.style.transform = `rotate(${grados}deg)`;
+
+                const polvo = document.createElement("img");
+                polvo.src = "/battleship/Resources/Images/dust1.gif";
+                polvo.classList.add("efecto-ataque");
+
+                td.appendChild(imgBarco);
+                td.appendChild(polvo);
+                td.dataset.marcado = "true";
+            });
+        });
+    }
+
+
+
+
+
+
+    //Etapa finalizar ///////////////////////////////////////////////////////////////////////////
+
+    function mostrarPantallaResultados(bship) {
+        resolutionSound.currentTime = 0;
+        resolutionSound.play();
+        divResultados.classList.remove("invisible");
+        fondo.classList.remove("invisible");
+        txtGanador.textContent = `Gana ${bship.Ganador}`;
+        txtNumSalaResultados.textContent = "sala # " + numSala;
+        txtRevancha.textContent = "";
+
+    }
+
+    function actualizarRechancha(bship) {
+        if (bship.Revancha == 0) {
+            txtRevancha.textContent = "";
+        }
+        if (bship.Revancha == 1) {
+            txtRevancha.textContent = "Esperando revancha";
+        }
+        if (bship.Revancha == 2) {
+            txtRevancha.textContent = "Reiniciando partida.";
+            btnReiniciar.disabled = true;
+        }
+    }
+
+
+
 
-//     let votoRevancha = false;
+    let votoRevancha = false;
 
-//     btnReiniciar.addEventListener('click', MandarRevancha);
-//     async function MandarRevancha() {
-//         votoRevancha = !votoRevancha;
-
-//         if (votoRevancha) {
-//             btnReiniciar.textContent = "Cancelar";
-//         } else {
-//             btnReiniciar.textContent = "Volver a jugar";
-//         }
-//         try {
-//             await fetch("/battleship/votar-revancha", {
-//                 method: "POST",
-//                 body: JSON.stringify({
-//                     IdSala: idSala,
-//                     IdUsuario: idUsuario,
-//                     Revancha: votoRevancha
-//                 }),
-//                 headers: { "Content-Type": "application/json" }
-//             });
-//             btnSound.currentTime = 0;
-//             btnSound.play();
-//         } catch (error) {
-//             console.error("Error al procesar revancha:", error);
-//         }
-//     };
-
-
-
-//     function prepararNuevoJuego() {
-//         tableroEnviado = false;
-//         defensaRenderizada = false;
-//         resultadoMostrado = false;
-//         votoRevancha = false;
-//         naveSeleccionadaId = null;
-//         naveSeleccionadaFila = null;
-//         naveSeleccionadaCol = null;
-//         spanTurno.textContent = "";
-//         naveDireccion = "derecha";
-//         btnReiniciar.textContent = "Volver a jugar";
-//         btnReiniciar.disabled = false;
-
-//         divResultados.classList.add("invisible");
-//         fondo.classList.add("invisible");
-
-//         divMovimientos.classList.remove("invisible");
-//         divContenedor.classList.remove("invisible");
-//         btnEnviar.classList.remove("invisible");
-//         btnEnviar.disabled = false;
-
-//         tableroDefensa.style.display = "none";
-
-//         reiniciarTablero();
-
-//         document.addEventListener("dragstart", dragStart);
-//         if (tbodyTablero) {
-//             tbodyTablero.addEventListener("dragover", dragOver);
-//             tbodyTablero.addEventListener("drop", drop);
-//         }
-
-//         document.querySelectorAll(".contenedor-nave").forEach(barco => {
-//             barco.style.display = "flex";
-//             barco.setAttribute("draggable", "true");
-//         });
-//     }
-
-
-//     //Hacer un clear de la tabla //
-//     function reiniciarTablero() {
-//         const tbodyAtaque = document.querySelector("#tablaJugador tbody");
-//         const tbodyDefensa = document.querySelector("#tablaDefensa tbody");
-
-//         if (tbodyAtaque) tbodyAtaque.innerHTML = "";
-//         if (tbodyDefensa) tbodyDefensa.innerHTML = "";
-
-//         for (let f = 0; f < 10; f++) {
-//             let trA = document.createElement("tr");
-//             let trD = document.createElement("tr");
-
-//             for (let c = 0; c < 10; c++) {
-//                 trA.appendChild(document.createElement("td"));
-//                 trD.appendChild(document.createElement("td"));
-//             }
-//             tbodyAtaque.appendChild(trA);
-//             tbodyDefensa.appendChild(trD);
-//         }
-//     }
-
-
-
-//     btnSalir.addEventListener('click', function () {
-//         backSound.currentTime = 0;
-//         backSound.play();
-
-//         salirDePartida();
-//     });
-
-
-//     async function salirDePartida() {
-//         try {
-//             await fetch("/battleship/salir-partida", {
-//                 method: "POST",
-//                 body: JSON.stringify({
-//                     NumSala: numSala,
-//                     Id: idUsuario
-//                 }),
-//                 headers: {
-//                     "Content-Type": "application/json"
-//                 }
-//             });
-//         } catch { }
-
-//         localStorage.removeItem("numeroSala");
-//         localStorage.removeItem("idSala");
-//         localStorage.removeItem("numJugador");
-
-//         window.location.href = "/battleship/";
-//     }
-
-// });
+    btnReiniciar.addEventListener('click', MandarRevancha);
+    async function MandarRevancha() {
+        votoRevancha = !votoRevancha;
+
+        if (votoRevancha) {
+            btnReiniciar.textContent = "Cancelar";
+        } else {
+            btnReiniciar.textContent = "Volver a jugar";
+        }
+        try {
+            await fetch("/battleship/votar-revancha", {
+                method: "POST",
+                body: JSON.stringify({
+                    IdSala: idSala,
+                    IdUsuario: idUsuario,
+                    Revancha: votoRevancha
+                }),
+                headers: { "Content-Type": "application/json" }
+            });
+            btnSound.currentTime = 0;
+            btnSound.play();
+        } catch (error) {
+            console.error("Error al procesar revancha:", error);
+        }
+    };
+
+
+
+    function prepararNuevoJuego() {
+        tableroEnviado = false;
+        defensaRenderizada = false;
+        resultadoMostrado = false;
+        votoRevancha = false;
+        naveSeleccionadaId = null;
+        naveSeleccionadaFila = null;
+        naveSeleccionadaCol = null;
+        spanTurno.textContent = "";
+        naveDireccion = "derecha";
+        btnReiniciar.textContent = "Volver a jugar";
+        btnReiniciar.disabled = false;
+
+        divResultados.classList.add("invisible");
+        fondo.classList.add("invisible");
+
+        divMovimientos.classList.remove("invisible");
+        divContenedor.classList.remove("invisible");
+        btnEnviar.classList.remove("invisible");
+        btnEnviar.disabled = false;
+
+        tableroDefensa.style.display = "none";
+
+        reiniciarTablero();
+
+        document.addEventListener("dragstart", dragStart);
+        if (tbodyTablero) {
+            tbodyTablero.addEventListener("dragover", dragOver);
+            tbodyTablero.addEventListener("drop", drop);
+        }
+
+        document.querySelectorAll(".contenedor-nave").forEach(barco => {
+            barco.style.display = "flex";
+            barco.setAttribute("draggable", "true");
+        });
+    }
+
+
+    //Hacer un clear de la tabla //
+    function reiniciarTablero() {
+        const tbodyAtaque = document.querySelector("#tablaJugador tbody");
+        const tbodyDefensa = document.querySelector("#tablaDefensa tbody");
+
+        if (tbodyAtaque) tbodyAtaque.innerHTML = "";
+        if (tbodyDefensa) tbodyDefensa.innerHTML = "";
+
+        for (let f = 0; f < 10; f++) {
+            let trA = document.createElement("tr");
+            let trD = document.createElement("tr");
+
+            for (let c = 0; c < 10; c++) {
+                trA.appendChild(document.createElement("td"));
+                trD.appendChild(document.createElement("td"));
+            }
+            tbodyAtaque.appendChild(trA);
+            tbodyDefensa.appendChild(trD);
+        }
+    }
+
+
+
+    btnSalir.addEventListener('click', function () {
+        backSound.currentTime = 0;
+        backSound.play();
+
+        salirDePartida();
+    });
+
+
+    async function salirDePartida() {
+        try {
+            await fetch("/battleship/salir-partida", {
+                method: "POST",
+                body: JSON.stringify({
+                    NumSala: numSala,
+                    Id: idUsuario
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+        } catch { }
+
+        localStorage.removeItem("numeroSala");
+        localStorage.removeItem("idSala");
+        localStorage.removeItem("numJugador");
+
+        window.location.href = "/battleship/";
+    }
+
+});
