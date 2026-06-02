@@ -282,16 +282,24 @@ main .menu dl {
     border: 6px solid #1c3c91;
     border-radius: 16px;
     box-shadow: 1px 5px 6px var(--borderColorTable);
+    padding:8px;
 }
 
 
 main .menu dt {
     font-size: 1em;
+    margin: 0 0 8px 0px;
 }
 
 main .menu dd {
     margin: 0 0 8px 36px;
-    font-size: 1.05em;
+    font-size: 1.1em;
+    background: var(--mainBackground);
+    border: 3px solid var(--borderColorTable);
+    border-radius: 8px;
+    padding: 5px;
+    margin: 0 0 15px 0px;
+    min-height: 23px;
 }
 
 main #instrucciones p {
@@ -648,14 +656,20 @@ main #fondo {
     }
 
     main .menu dl {
-        font-size: 1.05em;
+        font-size: 1.15em;
         margin: 16px 40px;
         width: calc(100% - 20%);
     }
 
+
     main .menu dd {
-        font-size: 1.08em;
-        margin: 0 0 8px 40px;
+        margin: 0 0 8px 0px;
+        min-height: 28px;
+    }
+
+    main .menu dd {
+        font-size: 1.2em;
+        margin: 0 0 8px 0px;
     }
 
     table thead tr th {
@@ -706,11 +720,13 @@ main #fondo {
     }
 
     main .menu dt {
-        font-size: 1em;
+        font-size: 1.15em;
     }
 
     main .menu dd {
-        font-size: 1.1em;
+        font-size: 1.25em;
+        padding: 6px 8px;
+        min-height: 29px;
     }
 
     main .menu button, #instrucciones button, #resultados button {
@@ -817,12 +833,14 @@ main #fondo {
     }
 
     main .menu dl {
-        font-size: 1.16em;
+        font-size: 1.2em;
     }
 
     main .menu dd {
-        font-size: 1.12em;
-        margin: 0 0 10px 40px;
+        font-size: 1.3em;
+        margin: 0 0 10px 0px;
+        padding: 6px 10px;
+        min-height: 32px;
     }
 
     main #resultados {
