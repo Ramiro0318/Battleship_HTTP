@@ -153,7 +153,8 @@
         id = localStorage.getItem("IdUsuario");
 
         if (!id) {
-            id = crypto.randomUUID();
+            // id = crypto.randomUUID();
+            id = generarUUID();
             localStorage.setItem("IdUsuario", id);
         }
         if (!num) num = "";
@@ -201,7 +202,7 @@
         id = localStorage.getItem("IdUsuario");
 
         if (!id) {
-            id = crypto.randomUUID();
+            id = generarUUID();
             localStorage.setItem("IdUsuario", id);
         }
 
@@ -255,20 +256,19 @@
 
     btnsCancelar.forEach(btn => {
         backSound.currentTime = 0;
-        backSound.play();
         btn.addEventListener("click", cancelar);
     });
 
     btnCancelarBuscar.addEventListener("click", () => {
         backSound.currentTime = 0;
-        backSound.play();
+        backSound.play().catch(() => { });
         ultimaPagina.classList.remove("invisible");
         paginaActual.classList.add("invisible");
     });
 
     async function cancelar() {
         backSound.currentTime = 0;
-        backSound.play();
+        backSound.play().catch(() => { });
         let json = { NumSala: num, Id: id };
 
         let response = await fetch("/battleship/cancelar", {
@@ -377,4 +377,12 @@
 
     function reconectar() { }
 
+    // resulta que no funciona el uuid
+    function generarUUID() {
+        if (crypto && crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+
+        return "id-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+    }
 });

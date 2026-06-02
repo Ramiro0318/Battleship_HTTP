@@ -303,17 +303,6 @@
 
         <button id="enviarNaves">Listo</button>
 
-        <div id="movimiento">
-            <button id="arriba" style="grid-column: 2; grid-row: 1;"><img src="/battleship/Resources/Images/Arrow_Up.png" /></button>
-            <button id="derecha" style="grid-column: 3; grid-row: 2;"><img src="/battleship/Resources/Images/Arrow_Right.png" /></button>
-            <button id="abajo" style="grid-column: 2; grid-row: 3;"><img src="/battleship/Resources/Images/Arrow_Down.png" /></button>
-            <button id="izquierda" style="grid-column: 1; grid-row: 2;"><img src="/battleship/Resources/Images/Arrow_Left.png" /></button>
-
-            <!--mix-blend-mode-->
-            <button id="rotarDerecha" style="grid-column: 5; grid-row: 2;"><img src="/battleship/Resources/Images/Arrow_Flip.png" /></button>
-            <button id="rotarIzquierda" style="grid-column: 6; grid-row: 2; transform: scaleX(-1);"><img src="/battleship/Resources/Images/Arrow_Flip.png" /></button>
-        </div>
-
         <div id="contenedor">
             <div id="1" class="contenedor-nave" draggable="true">
                 <img src="/battleship/Resources/Images/destroyer-0.png" />
@@ -346,24 +335,36 @@
                 <img src="/battleship/Resources/Images/carrier-3.png" />
                 <img src="/battleship/Resources/Images/carrier-4.png" />
             </div>
-
         </div>
 
-        <div id="instrucciones">
-            <strong>Objetivo:</strong>
-            <p>Hunde la flota de 5 naves que tiene tu adversario antes de que él hunda la tuya.</p>
+        <div id="movimiento">
+            <button id="arriba" style="grid-column: 2; grid-row: 1;"><img src="/battleship/Resources/Images/Arrow_Up.png" /></button>
+            <button id="derecha" style="grid-column: 3; grid-row: 2;"><img src="/battleship/Resources/Images/Arrow_Right.png" /></button>
+            <button id="abajo" style="grid-column: 2; grid-row: 3;"><img src="/battleship/Resources/Images/Arrow_Down.png" /></button>
+            <button id="izquierda" style="grid-column: 1; grid-row: 2;"><img src="/battleship/Resources/Images/Arrow_Left.png" /></button>
 
-            <strong>Instrucciones:</strong>
-            <p>
-                Arrastra las naves del recuadro inferior al sector de la cuadricula donde quieras colocarlas. <br />
-                Después tendrás que intentar adivinar la posición del enemigo,
-                Seleccionarla y analizar las posibles ubicaciones en base a la información que te de el tablero.
-            </p>
-            <p>
-                En caso de que una bomba haya tocado a la flota enemiga, el jugador atacante podrá repetir turno.
-            </p>
-            <button id="ok" type="button">Ok!</button>
+            <!--mix-blend-mode-->
+            <button id="rotarDerecha" style="grid-column: 5; grid-row: 2;"><img src="/battleship/Resources/Images/Arrow_Flip.png" /></button>
+            <button id="rotarIzquierda" style="grid-column: 7; grid-row: 2;"><img src="/battleship/Resources/Images/Arrow_Flip-L.png" /></button>
         </div>
+
+
+
+        <!--<div id="instrucciones">
+        <strong>Objetivo:</strong>
+        <p>Hunde la flota de 5 naves que tiene tu adversario antes de que él hunda la tuya.</p>
+
+        <strong>Instrucciones:</strong>
+        <p>
+            Arrastra las naves del recuadro inferior al sector de la cuadricula donde quieras colocarlas. <br />
+            Después tendrás que intentar adivinar la posición del enemigo,
+            Seleccionarla y analizar las posibles ubicaciones en base a la información que te de el tablero.
+        </p>
+        <p>
+            En caso de que una bomba haya tocado a la flota enemiga, el jugador atacante podrá repetir turno.
+        </p>
+        <button id="ok" type="button">Ok!</button>
+    </div>-->
 
         <div class="invisible" id="resultados">
             <span id="numSalaResultados">sala #1234</span>

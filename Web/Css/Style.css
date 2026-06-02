@@ -282,7 +282,7 @@ main .menu dl {
     border: 6px solid #1c3c91;
     border-radius: 16px;
     box-shadow: 1px 5px 6px var(--borderColorTable);
-    padding:8px;
+    padding: 8px;
 }
 
 
@@ -316,7 +316,7 @@ main .tituloJuego {
     color: white;
     padding: 8px;
     font-size: 2em;
-    margin: 0 0 0.5em 0;
+    margin: 0 0 0.2em 0;
 }
 
 main #tarjeta {
@@ -328,11 +328,12 @@ main #tarjeta {
     width: calc(100% - 40px);
     margin: 6px;
     padding: 10px;
-    background-color: var(--backgroundColorTable);
-    border: 4px solid var(--fondoOscuro);
+    background-color: var(--backgroundl);
+    border: 4px solid #1c3c91;
     box-shadow: rgba(112, 104, 166, 0.47) 0px 15px 15px;
-    gap: 6px 0;
+    gap: 3px 0;
     padding: 5px;
+    border-radius: 12px;
 }
 
     main #tarjeta span {
@@ -467,37 +468,68 @@ table tr td {
     transition: 0.3s ease-out;
 }
 
-#enviarNaves:hover {
-    background: #d0e0f6;
-    box-shadow: 4px 5px 4px var(--borderColorTable);
-    color: var(--borderColorTd);
-    /*transform: translateY(-7px);*/
-}
+    #enviarNaves:hover {
+        background: #d0e0f6;
+        box-shadow: 4px 5px 4px var(--borderColorTable);
+        color: var(--borderColorTd);
+        /*transform: translateY(-7px);*/
+    }
 
 #movimiento {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.2fr 1fr;
     grid-template-rows: repeat(3, 1fr);
-    gap: 6px;
+    gap: 0px;
     align-self: center;
     margin: 0 20%;
-    padding: 6px 18px;
+    padding: 6px 18px 3px 18px;
     /*background-color: var(--backgroundl);*/
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 10px;
+    align-items: center;
 }
 
     #movimiento button {
-        background-color: #1f3c883b;
+        justify-self: center;
+        width: 50px;
+        height: 50px;
+        padding: 0px;
+        border-radius: 45%;
+        background-color: var(--mainBackground);
+        transition: ease-out;
     }
+
+        #movimiento button:hover {
+            background: #d0e0f6;
+            box-shadow: 4px 3px 4px var(--borderColorTable);
+            color: var(--borderColorTd);
+            transform: translateY(-3px);
+            transition-duration: 0.3s;
+        }
+
+        #movimiento button:active {
+            background: #3256b9;
+            box-shadow: 2px 1px 2px var(--borderColorTable);
+            transform: translateY(3px);
+            transform: scaleY(0.94);
+            transition-duration: 0.4s;
+            /*filter: brightness(0.9);*/
+        }
 
         #movimiento button img {
             height: 34px;
         }
 
+    #movimiento > :nth-child(5), #movimiento > :nth-child(6) {
+        width: 55px;
+        height: 55px;
+    }
+
+
+
 #contenedor {
-    margin: 10px;
+    margin: 4px 10px 10px 10px;
     padding: 10px;
     display: flex;
     gap: 10px;
@@ -567,6 +599,7 @@ main #resultados {
     display: inline;
     align-content: center;
     text-align: center;
+    color: #1c3c91;
 }
 
 
@@ -808,7 +841,6 @@ main #fondo {
     }
 
     main .menu {
-        /*width: 500px;*/
         gap: 12px;
         padding: 1em 0.6em;
     }
@@ -896,9 +928,45 @@ main #fondo {
     }
 
     #contenedor {
-        min-width: 390px;
-        max-width: 390px;
+        position: absolute;
+        top: 200px;
+        left: calc(50% + 160px);
+        display: grid;
+        grid-template-columns: repeat(5, 30px);
+        grid-auto-rows: 30px;
+        gap: 3px 6px;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        padding: 10px;
+        overflow: visible;
+        min-height: 132px;
     }
+
+        #contenedor div[id="1"] {
+            grid-column: span 2;
+        }
+
+        #contenedor div[id="2"] {
+            grid-column: span 3;
+        }
+
+        #contenedor div[id="3"] {
+            grid-column: 1 / span 3;
+        }
+
+        #contenedor div[id="4"] {
+            grid-column: 1 / span 4;
+        }
+
+        #contenedor div[id="5"] {
+            grid-column: 1 / span 5;
+        }
+
+        #contenedor div img {
+            height: 34px;
+            width: 34px;
+        }
 
 
         #contenedor div img {
@@ -909,9 +977,9 @@ main #fondo {
 
 @media (min-width : 1120px) {
     main .tituloJuego {
-        padding: 3px;
-        font-size: 1.45em;
-        margin: 0 0 0.15em 0;
+        padding: 10px;
+        font-size: 2.1em;
+        margin: 0 0 0.45em 0;
     }
 
     main #tarjeta {
@@ -985,16 +1053,13 @@ main #fondo {
         line-height: 30px;
     }
 
+    #contenedor {
+        top: 190px;
+    }
+
     #contenedor div img {
         height: 30px;
         width: 30px;
-    }
-
-    #contenedor {
-        margin: 5px;
-        padding: 7px;
-        max-width: 440px;
-        min-width: 440px;
     }
 
     #movimiento {
@@ -1006,20 +1071,15 @@ main #fondo {
             padding: 1px 6px;
         }
 
-        #movimiento button img {
-            height: 26px;
-        }
+            #movimiento button img {
+                height: 26px;
+            }
 }
 
 @media (min-width : 1300px) {
     main #contenedor_tablas {
         flex-direction: row;
         gap: 18px;
-    }
-
-    #contenedor {
-        max-width: fit-content;
-        min-width: 470px;
     }
 }
 

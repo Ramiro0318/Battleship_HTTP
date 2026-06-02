@@ -41,6 +41,9 @@
     <None Update="Web\Resources\Images\Arrow_Down.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Web\Resources\Images\Arrow_Flip-L.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Web\Resources\Images\Arrow_Left.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
