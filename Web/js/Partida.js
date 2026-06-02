@@ -50,7 +50,7 @@
     btnSound.volume = 0.9;
     const backSound = new Audio("/battleship/Resources/Sounds/warning.mp3");
     const musicaJuego = new Audio("/battleship/Resources/Sounds/MusicaJuego.mp3");
-    musicaJuego.volume = 0.3;
+    musicaJuego.volume = 0.4;
     musicaJuego.loop = true;
 
     //Este metodo colocado aqui porque el navegador bloquea el autoplay
@@ -576,7 +576,7 @@
         });
 
 
-        let grados = 0; 
+        let grados = 0;
         if (nuevaDireccion === "izquierda") grados = 0;
         if (nuevaDireccion === "abajo") grados = 90;
         if (nuevaDireccion === "derecha") grados = 180;
@@ -848,14 +848,13 @@
                         td.dataset.marcado = "true";
                     } // AtaqueAcertado
                     if (casilla.Estado === 4) {
-                        img.src = "/battleship/Resources/Images/dust1.gif";
                         if (!marcado) {
+                            img.src = "/battleship/Resources/Images/dust1.gif";
                             explosionSound.currentTime = 0;
                             explosionSound.play();
                         }
                         td.dataset.marcado = "true";
                     } // NaveHundida
-
                     if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
                         td.innerHTML = "";
                         td.appendChild(img);
@@ -876,8 +875,26 @@
                     const img = document.createElement("img");
                     img.classList.add("efecto-ataque");
                     if (casilla.Estado === 2) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/waterstar.gif"; }
-                    if (casilla.Estado === 3) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/hitstar1.gif"; }
-                    if (casilla.Estado === 4) { if (efectoViejo) efectoViejo.remove(); img.src = "/battleship/Resources/Images/dust1.gif"; }
+                    if (casilla.Estado === 3) {
+                        if (efectoViejo) {
+                            efectoViejo.remove();
+                        }
+                        else {
+                            reproducirImpacto(tableroDefensa);
+                        }
+                        img.src = "/battleship/Resources/Images/hitstar1.gif";
+                    }
+                    if (casilla.Estado === 4)
+                    {
+                        if (efectoViejo) {
+                            efectoViejo.remove();
+                        }
+                        else {
+                            reproducirImpacto(tableroDefensa);
+                        }
+                        img.src = "/battleship/Resources/Images/dust1.gif";
+                        img.
+                    }
 
                     if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
                         td.appendChild(img);
@@ -890,6 +907,11 @@
         battleship = bship;
     }
 
+    function reproducirImpacto(tablero) {
+        tablero.classList.remove("impacto");
+        void tablero.offsetWidth;
+        tablero.classList.add("impacto");
+    }
 
     function renderizarNavesHundidas(bship) {
         const soyJugador1 = numJugador === "J1";
