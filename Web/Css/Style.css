@@ -369,7 +369,28 @@ main .reloj {
 
 main #tiempoRestante {
     font-weight: bold;
+    display: inline-block;
 }
+
+.crecimiento {
+    animation: crecimiento 0.9s;
+}
+
+@keyframes crecimiento {
+    0%, 100% {
+        transform: scale(1,1);
+    }
+
+    40%,70% {
+        transform: scale(1.1, 1.2);
+    }
+
+    45% {
+        transform: scale(1.15, 1.22);
+    }
+}
+
+
 
 main #tarjeta #turno {
     grid-column: span 2;
@@ -464,24 +485,31 @@ table tr td {
     0% {
         transform: translate(0, 0);
     }
+
     10% {
         transform: translate(0, 0);
     }
+
     15% {
         transform: translate(-10px, -2);
     }
+
     30% {
         transform: translate(8px, 5px);
     }
+
     45% {
         transform: translate(-3px, -2px);
     }
+
     60% {
         transform: translate(3px, 7px);
     }
+
     75% {
         transform: translate(-8px, 5px);
     }
+
     100% {
         transform: translate(0, 0);
     }

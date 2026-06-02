@@ -162,6 +162,13 @@
 
                 // spanTurno.textContent = `Turno de ${battleship.Turno}`;
                 spanTiempo.textContent = battleship.TiempoRestante;
+                if (battleship.TiempoRestante <= 10) {
+                    spanTiempo.style.color = "crimson";
+                    reproducirAnimacion(spanTiempo, "crecimiento");
+                }
+                else {
+                    spanTiempo.style.color = ""
+                }
 
                 if (battleship.Etapa === 0) {
                     if (resultadoMostrado) {
@@ -848,8 +855,8 @@
                         td.dataset.marcado = "true";
                     } // AtaqueAcertado
                     if (casilla.Estado === 4) {
+                        img.src = "/battleship/Resources/Images/dust1.gif";
                         if (!marcado) {
-                            img.src = "/battleship/Resources/Images/dust1.gif";
                             explosionSound.currentTime = 0;
                             explosionSound.play();
                         }
@@ -880,20 +887,18 @@
                             efectoViejo.remove();
                         }
                         else {
-                            reproducirImpacto(tableroDefensa);
+                            reproducirAnimacion(tableroDefensa, "impacto");
                         }
                         img.src = "/battleship/Resources/Images/hitstar1.gif";
                     }
-                    if (casilla.Estado === 4)
-                    {
+                    if (casilla.Estado === 4) {
                         if (efectoViejo) {
                             efectoViejo.remove();
                         }
                         else {
-                            reproducirImpacto(tableroDefensa);
+                            reproducirAnimacion(tableroDefensa, "impacto");
                         }
                         img.src = "/battleship/Resources/Images/dust1.gif";
-                        img.
                     }
 
                     if (casilla.Estado === 2 || casilla.Estado === 3 || casilla.Estado === 4) {
@@ -907,17 +912,19 @@
         battleship = bship;
     }
 
-    function reproducirImpacto(tablero) {
-        tablero.classList.remove("impacto");
-        void tablero.offsetWidth;
-        tablero.classList.add("impacto");
+    function reproducirAnimacion(elemento, clase) {
+        elemento.classList.remove(clase);
+        void elemento.offsetWidth;
+        elemento.classList.add(clase);
     }
 
     function renderizarNavesHundidas(bship) {
         const soyJugador1 = numJugador === "J1";
-        const navesHundidasRival = soyJugador1 ? bship.NavesRestantesJ2 : bship.NavesRestantesJ1;
+        let navesHundidasRival = soyJugador1 ? bship.NavesRestantesJ2 : bship.NavesRestantesJ1;
 
-        if (!navesHundidasRival || navesHundidasRival.length === 0) return;
+        navesHundidasRival = (navesHundidasRival ?? []).filter(nave => nave.SectoresRestantes <= 0);
+
+        if (navesHundidasRival.length === 0) return;
 
         const tbodyAtaque = TableJugador.querySelector("tbody");
 
