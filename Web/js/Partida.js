@@ -34,6 +34,7 @@
     const txtRevancha = document.querySelector("#revancha");
     const btnReiniciar = document.querySelector("#reiniciar");
     const btnSalir = document.querySelector("#salir");
+    const btnExit = document.querySelector("#btnExit");
 
     //ahora son constantes
     const nombre = localStorage.getItem("nombre") ?? "";
@@ -1111,6 +1112,13 @@
 
 
     btnSalir.addEventListener('click', function () {
+        backSound.currentTime = 0;
+        backSound.play();
+
+        salirDePartida();
+    });
+
+    btnExit.addEventListener('click', function () {
         backSound.currentTime = 0;
         backSound.play();
 

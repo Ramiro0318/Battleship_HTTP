@@ -255,17 +255,28 @@ main .menu button, #instrucciones button, #resultados button {
         transform: translateY(-7px);
     }
 
-    main .menu button#cerrarSesion {
+    main .menu button#cerrarSesion, button#btnExit {
         margin-top: 4px;
         background-color: #ffe4e5;
         box-shadow: 4px 5px 4px #980011;
         color: #913d31;
     }
 
-        main .menu button#cerrarSesion:hover {
+        main .menu button#cerrarSesion:hover, button#btnExit:hover {
             background: #ffaba3;
             transform: translateY(-7px);
         }
+
+button#btnExit {
+    position: absolute;
+    top: 10px;
+    right: 24px;
+    padding: 0.3em;
+    overflow: hidden;
+    text-wrap-mode: nowrap;
+    transition: all 0.3s ease-out;
+    border-radius: 12px;
+}
 
 main .menu input[type="text"] {
     text-align: center;
@@ -784,7 +795,12 @@ main #fondo {
         min-width: 310px;
         max-width: 310px;
     }
-}
+
+    button#btnExit {
+        top: 8px;
+        right: 20px;
+        font-size: 0.8em
+    }
 
 @media (min-width : 540px) {
     header h1 {
@@ -895,6 +911,12 @@ main #fondo {
     #contenedor {
         min-width: 380px;
         max-width: 380px;
+    }
+
+    button#btnExit {
+        top: 6px;
+        right: 24px;
+        font-size: 0.9em
     }
 }
 
