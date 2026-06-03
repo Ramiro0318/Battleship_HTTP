@@ -105,15 +105,21 @@ namespace Battleship_HTTP.Services
             if (bship == null) return;
 
             var ListaNaves = (sala.IdJugador1 == idUsuario) ? bship.NavesRestantesJ1 : bship.NavesRestantesJ2;
-            //var ListaNaves = (partida.IdJugador1 == idUsuario) ? partida.battleship.CuadriculaJ1 : partida.battleship.CuadriculaJ2;
-
             if (ListaNaves == null) return;
 
             ListaNaves.Clear();
 
             foreach (var naveDto in navesColocadas)
             {
-                var seleccionada = NavesElegir.First(x => x.IdNave == naveDto.IdNave);
+                var seleccionada = NavesElegir.FirstOrDefault(x => x.IdNave == naveDto.IdNave);
+
+                if (seleccionada == null) continue;
+
+                if (!ValidarNave(naveDto, seleccionada, ListaNaves))
+                {
+                    continue;
+                }
+
                 Nave nuevaNave = new Nave()
                 {
                     IdNave = seleccionada.IdNave,
@@ -135,11 +141,11 @@ namespace Battleship_HTTP.Services
                 ListaNaves.Add(nuevaNave);
             }
 
-            //Si se le acabó el tiempo
             if (ListaNaves.Count < 5)
             {
                 RellenarNavesAleatorias(ListaNaves);
             }
+
             if (bship.NavesRestantesJ1.Count > 0 && bship.NavesRestantesJ2.Count > 0)
             {
                 InicializarCuadriculasMatriz(sala);
@@ -149,6 +155,33 @@ namespace Battleship_HTTP.Services
                 bship.TurnoId = r.Next(0, 2) == 0 ? sala.IdJugador1 : sala.IdJugador2;
                 bship.Turno = bship.TurnoId == sala.IdJugador1 ? sala.NombreJugador1 : sala.NombreJugador2;
             }
+        }
+
+
+
+        private bool ValidarNave(NaveColocadaDTO naveDto, Nave naveBase, List<Nave> navesAceptadas)
+        {
+            if (naveDto.Coordenadas == null) return false;
+
+            if (navesAceptadas.Any(n => n.IdNave == naveDto.IdNave)) return false;
+
+            if (naveDto.Coordenadas.Count != naveBase.Longitud) return false;
+
+            foreach (var coord in naveDto.Coordenadas)
+            {
+                if (coord.Fila < 0 || coord.Fila > 9 || coord.Columna < 0 || coord.Columna > 9)
+                {
+                    return false;
+                }
+
+                bool ocupada = navesAceptadas.Any(nave => nave.Coordenadas != null && nave.Coordenadas.Any(c =>c.Fila == coord.Fila &&c.Columna == coord.Columna));
+                if (ocupada)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
 
