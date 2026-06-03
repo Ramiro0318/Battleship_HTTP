@@ -70,7 +70,7 @@
     let naveSeleccionadaCol = null;
     let naveDireccion = "derecha";
 
-    if (!numSala || !idUsuario) {
+    if (!idSala || !numSala || !idUsuario) {
         window.location.href = "/battleship/";
         return;
     }
@@ -133,6 +133,7 @@
     let tableroEnviado = false;
     let defensaRenderizada = false;
     let resultadoMostrado = false;
+    let desconexionMostrada = false;
 
     async function monitorearPartida() {
         let payload = {
@@ -222,7 +223,31 @@
 
             } else {
                 if (response.status === 404) {
-                    volverAlMenuPrincipal();
+                    let info = "";
+
+                    try {
+                        const data = await response.json();
+                        info = data.Info ?? "";
+                    }
+                    catch {
+                        info = "";
+                    }
+
+                    if (info === "Jugador desconectado.") {
+                        if (desconexionMostrada) return;
+
+                        desconexionMostrada = true;
+                        fondo.classList.remove("invisible");
+                        divResultados.classList.remove("invisible");
+                        txtNumSalaResultados.textContent = "sala # " + numSala;
+                        txtGanador.textContent = "El rival se desconectó";
+                        txtRevancha.textContent = "Volviendo al menú principal...";
+                        btnReiniciar.classList.add("invisible");
+
+                        setTimeout(volverAlMenuPrincipal, 5000);
+                    } else {
+                        volverAlMenuPrincipal();
+                    }
                 } else {
                     setTimeout(monitorearPartida, 2000);
                 }

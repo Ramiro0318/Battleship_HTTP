@@ -24,5 +24,8 @@ namespace Battleship_HTTP.Models
 
         public bool Activa { set; get; }
         public Battleship? battleship { set; get; }
+
+        public DateTime UltimaActividadJugador1 { get; set; } = DateTime.Now;
+        public DateTime UltimaActividadJugador2 { get; set; } = DateTime.Now;
     }
 }

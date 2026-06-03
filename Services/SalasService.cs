@@ -17,6 +17,7 @@ namespace Battleship_HTTP.Services
 
         Random r = new();
         private readonly PartidaService partidaService;
+        private readonly TimeSpan tiempoMaximoSinActividad = TimeSpan.FromSeconds(35);
 
         public SalasService(PartidaService partidaService)
         {
@@ -42,6 +43,7 @@ namespace Battleship_HTTP.Services
                     IdJugador1 = idJ,
                     NombreJugador1 = nombreJ,
                     ListoJugador1 = false,
+                    UltimaActividadJugador1 = DateTime.Now,
                     JugadoresListos = 0,
                     Publica = true,
                     Activa = false
@@ -55,6 +57,7 @@ namespace Battleship_HTTP.Services
             {
                 salaDisponible.IdJugador2 = idJ;
                 salaDisponible.NombreJugador2 = nombreJ;
+                salaDisponible.UltimaActividadJugador2 = DateTime.Now;
                 salaDisponible.JugadoresListos = (byte)(salaDisponible.ListoJugador1 == true ? 1 : 0);
                 return salaDisponible;
             }
@@ -69,6 +72,7 @@ namespace Battleship_HTTP.Services
                 IdJugador1 = idJ,
                 NombreJugador1 = nombreJ,
                 ListoJugador1 = false,
+                UltimaActividadJugador1 = DateTime.Now,
                 JugadoresListos = 0,
                 Publica = false,
                 Activa = false
@@ -85,6 +89,7 @@ namespace Battleship_HTTP.Services
 
             salaUnirse.IdJugador2 = idJ;
             salaUnirse.NombreJugador2 = nombreJ;
+            salaUnirse.UltimaActividadJugador2 = DateTime.Now;
             salaUnirse.JugadoresListos = (byte)(salaUnirse.ListoJugador1 == true ? 1 : 0);
 
             return salaUnirse;
@@ -119,6 +124,8 @@ namespace Battleship_HTTP.Services
                     lock (SalasList)
                     {
                         partidaService.InicializarNuevaPartida(sala);
+                        sala.UltimaActividadJugador1 = DateTime.Now;
+                        sala.UltimaActividadJugador2 = DateTime.Now;
                         sala.Activa = true;
                         sala.ListoJugador1 = false;
                         sala.ListoJugador2 = false;
@@ -144,10 +151,12 @@ namespace Battleship_HTTP.Services
                         sala.IdJugador1 = sala.IdJugador2;
                         sala.NombreJugador1 = sala.NombreJugador2;
                         sala.ListoJugador1 = sala.ListoJugador2;
+                        sala.UltimaActividadJugador1 = sala.UltimaActividadJugador2;
 
                         sala.IdJugador2 = null;
                         sala.NombreJugador2 = null;
                         sala.ListoJugador2 = false;
+                        sala.UltimaActividadJugador2 = DateTime.Now;
                     }
                     else
                     {
@@ -216,6 +225,8 @@ namespace Battleship_HTTP.Services
                             if (sala.battleship.RevanchaJ1 && sala.battleship.RevanchaJ2)
                             {
                                 partidaService.InicializarNuevaPartida(sala);
+                                sala.UltimaActividadJugador1 = DateTime.Now;
+                                sala.UltimaActividadJugador2 = DateTime.Now;
                                 sala.battleship.RevanchaJ1 = false;
                                 sala.battleship.RevanchaJ2 = false;
                                 sala.Activa = true;
@@ -227,7 +238,7 @@ namespace Battleship_HTTP.Services
             return sala;
         }
 
-        public void ProgramarCierreSalaTerminada(Sala sala)
+        public void IniciarCierreSalaTerminada(Sala sala)
         {
             Task.Run(async () =>
             {
@@ -241,10 +252,59 @@ namespace Battleship_HTTP.Services
 
                     if (salaActual.battleship.Etapa == Etapa.Terminado)
                     {
+                        partidaService.DetenerTimerSala(salaActual.Id);
                         SalasList.Remove(salaActual);
                     }
                 }
             });
+        }
+
+        public void RegistrarActividad(Sala sala, string idJugador)
+        {
+            if (sala == null || string.IsNullOrWhiteSpace(idJugador)) return;
+
+            lock (SalasList)
+            {
+                if (idJugador == sala.IdJugador1)
+                {
+                    sala.UltimaActividadJugador1 = DateTime.Now;
+                }
+                else if (idJugador == sala.IdJugador2)
+                {
+                    sala.UltimaActividadJugador2 = DateTime.Now;
+                }
+            }
+        }
+
+        public bool CerrarSalaDesconexion(Sala sala)
+        {
+            if (sala == null || !sala.Activa || sala.battleship == null || !sala.Llena)
+            {
+                return false;
+            }
+
+            lock (SalasList)
+            {
+                var salaActual = SalasList.Find(x => x.Id == sala.Id);
+
+                if (salaActual == null || !salaActual.Activa || salaActual.battleship == null || !salaActual.Llena)
+                {
+                    return false;
+                }
+
+                var ahora = DateTime.Now;
+                bool j1Desconectado = ahora - salaActual.UltimaActividadJugador1 > tiempoMaximoSinActividad;
+                bool j2Desconectado = ahora - salaActual.UltimaActividadJugador2 > tiempoMaximoSinActividad;
+
+                if (!j1Desconectado && !j2Desconectado)
+                {
+                    return false;
+                }
+
+                partidaService.DetenerTimerSala(salaActual.Id);
+                SalasList.Remove(salaActual);
+                return true;
+            }
         }
 
         public bool CerrarSala(string numSala, string idJugador)
@@ -261,6 +321,7 @@ namespace Battleship_HTTP.Services
 
                 if (sala.Activa && sala.battleship != null)
                 {
+                    partidaService.DetenerTimerSala(sala.Id);
                     SalasList.Remove(sala);
                     return true;
                 }

@@ -324,6 +324,13 @@ namespace Battleship_HTTP.Services
 
                             if (sala == null || sala.battleship == null) { break; }
 
+                            salasService.RegistrarActividad(sala, solicitud.IdUsuario);
+                            if (salasService.CerrarSalaDesconexion(sala))
+                            {
+                                EnviarInfo(response, "Jugador desconectado.", 404);
+                                return;
+                            }
+
                             var partida = sala.battleship;
                             if ((int)partida.Etapa != solicitud.EtapaCliente)
                             {
@@ -493,7 +500,7 @@ namespace Battleship_HTTP.Services
 
                                 if (sala.battleship?.Etapa == Etapa.Terminado)
                                 {
-                                    salasService.ProgramarCierreSalaTerminada(sala);
+                                    salasService.IniciarCierreSalaTerminada(sala);
                                 }
 
                                 EnviarInfo(response, "Disparo procesado correctamente.", 200);

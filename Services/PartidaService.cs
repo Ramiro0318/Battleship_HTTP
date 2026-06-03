@@ -77,7 +77,7 @@ namespace Battleship_HTTP.Services
             }
         }
 
-        private void DetenerTimerSala(int idSala)
+        public void DetenerTimerSala(int idSala)
         {
             if (timersPorSala.TryGetValue(idSala, out var timer))
             {
