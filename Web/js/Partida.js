@@ -718,26 +718,29 @@
 
 
         if (TableJugador) {
-            TableJugador.addEventListener('click', function (event) {
-                const celda = event.target;
+            TableJugador.removeEventListener("click", Atacar);
+            TableJugador.addEventListener("click", Atacar);
+        }
+    }
 
-                if (celda.tagName === 'TD') {
-                    if (battleship.TurnoId !== idUsuario) {
-                        console.warn("No es tu turno de atacar.");
-                        return;
-                    }
+    function Atacar(event) {
+        let celda = event.target;
 
-                    const fila = celda.parentElement.sectionRowIndex;
-                    const columna = celda.cellIndex;
+        if (celda.tagName === 'TD') {
+            if (battleship.TurnoId !== idUsuario) {
+                console.warn("No es tu turno de atacar.");
+                return;
+            }
 
-                    if (celda.dataset.marcado === "true") {
-                        console.log("Esta casilla ya fue atacada.");
-                        return;
-                    }
+            const fila = celda.parentElement.sectionRowIndex;
+            const columna = celda.cellIndex;
 
-                    enviarAtaqueAlServidor(fila, columna, celda);
-                }
-            });
+            if (celda.dataset.marcado === "true") {
+                console.log("Esta casilla ya fue atacada.");
+                return;
+            }
+
+            enviarAtaqueAlServidor(fila, columna, celda);
         }
     }
 

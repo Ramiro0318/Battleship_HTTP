@@ -801,6 +801,7 @@ main #fondo {
         right: 20px;
         font-size: 0.8em
     }
+}
 
 @media (min-width : 540px) {
     header h1 {

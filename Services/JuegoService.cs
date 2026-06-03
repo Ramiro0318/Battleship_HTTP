@@ -496,14 +496,21 @@ namespace Battleship_HTTP.Services
                             }
                             else
                             {
-                                partidaService.ProcesarAtaque(sala, ataque);
+                                var salaActualizada = partidaService.ProcesarAtaque(sala, ataque);
 
-                                if (sala.battleship?.Etapa == Etapa.Terminado)
+                                if (salaActualizada == null)
                                 {
-                                    salasService.IniciarCierreSalaTerminada(sala);
+                                    EnviarInfo(response, "Disparo inválido.", 400);
                                 }
+                                else
+                                {
 
-                                EnviarInfo(response, "Disparo procesado correctamente.", 200);
+                                    if (sala.battleship?.Etapa == Etapa.Terminado)
+                                    {
+                                        salasService.IniciarCierreSalaTerminada(sala);
+                                    }
+                                    EnviarInfo(response, "Disparo procesado correctamente.", 200);
+                                }
                             }
                         }
                     }
