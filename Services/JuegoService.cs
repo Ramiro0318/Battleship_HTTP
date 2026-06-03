@@ -60,6 +60,7 @@ namespace Battleship_HTTP.Services
             }
             catch { }
 
+            salasService.LimpiarSalas();
             servidor.Stop();
             ToogleServidor?.Invoke(encendido, "ServidorDetenido");
         }

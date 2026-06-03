@@ -87,6 +87,17 @@ namespace Battleship_HTTP.Services
             }
         }
 
+        public void DetenerTodosLosTimers()
+        {
+            foreach (var timer in timersPorSala.Values.ToList())
+            {
+                timer.Stop();
+                timer.Dispose();
+            }
+
+            timersPorSala.Clear();
+        }
+
 
         public void RegistrarTableroJugador(Sala sala, string idUsuario, List<NaveColocadaDTO> navesColocadas)
         {

@@ -190,12 +190,15 @@ namespace Battleship_HTTP.Services
 
         public Sala? BuscarSalaId(string id)
         {
-            Sala? sala = null;
+            if (!int.TryParse(id, out int idSala))
+            {
+                return null;
+            }
+
             lock (SalasList)
             {
-                sala = SalasList.Find(x => x.Id == int.Parse(id));
+                return SalasList.Find(x => x.Id == idSala);
             }
-            return sala;
         }
 
 
@@ -327,6 +330,15 @@ namespace Battleship_HTTP.Services
                 }
 
                 return false;
+            }
+        }
+
+        public void LimpiarSalas()
+        {
+            lock (SalasList)
+            {
+                partidaService.DetenerTodosLosTimers();
+                SalasList.Clear();
             }
         }
 
